@@ -7,6 +7,7 @@ package frc.robot;
 import java.util.Optional;
 
 import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
 
 import choreo.Choreo;
 import choreo.trajectory.SwerveSample;
@@ -36,6 +37,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     FollowPathCommand.warmupCommand().schedule();
+    PathfindingCommand.warmupCommand().schedule();
   }
 
   @Override

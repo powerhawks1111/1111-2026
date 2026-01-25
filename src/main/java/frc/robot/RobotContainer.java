@@ -35,10 +35,10 @@ public class RobotContainer {
   
     public RobotContainer() {
       autoFactory = new AutoFactory(
-        m_drivetrain::getOdometry, // A function that returns the current robot pose
-        m_drivetrain::resetOdometry, // A function that resets the current robot pose to the provided Pose2d
+        m_drivetrain::getEstimatedPose, // A function that returns the current robot pose
+        m_drivetrain::resetPose, // A function that resets the current robot pose to the provided Pose2d
         m_drivetrain::followTrajectory, // The drive subsystem trajectory follower 
-        false, // If alliance flipping should be enabled 
+        true, // If alliance flipping should be enabled 
         m_drivetrain 
       );
   
@@ -61,7 +61,11 @@ public class RobotContainer {
     );
 
     m_driverController.button(2).onTrue(
-      Commands.runOnce(() -> m_drivetrain.resetOdometry(new Pose2d()), m_drivetrain)
+      Commands.runOnce(() -> m_drivetrain.resetPose(new Pose2d()), m_drivetrain)
+    );
+
+    m_driverController.button(3).onTrue(
+      m_drivetrain.pathfind(null, false)
     );
   }
 
@@ -82,4 +86,5 @@ public class RobotContainer {
 
     return autoFactory.trajectoryCmd("SquarePath");
   }
+
 }

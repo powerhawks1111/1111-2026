@@ -7,16 +7,13 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.config.SparkFlexConfig;
-import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.*;
 import com.revrobotics.*;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.config.*;
-import com.revrobotics.config.BaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkBase.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,6 +29,7 @@ public class SwerveModule extends SubsystemBase {
         private SparkFlexConfig m_driveMotorConfig;
         private RelativeEncoder m_driveEncoder;
         private MAXMotionConfig m_MaxMotionConfig;
+
         private SparkFlexConfig m_DRSConfig;
 
         //components for the turning section of the module. 
@@ -62,11 +60,10 @@ public class SwerveModule extends SubsystemBase {
             m_driveMotorConfig.encoder
                 .positionConversionFactor(DriveConst.rotationsToMetersScaler)
                 .velocityConversionFactor(DriveConst.rpmToVelocityScaler);
-
             m_MaxMotionConfig = new MAXMotionConfig();
             m_MaxMotionConfig
-                .maxAcceleration(DriveConst.kMaxAccel)
-                .cruiseVelocity(DriveConst.kMaxSpeed)
+                .maxAcceleration(DriveConst.kMaxModuleAccel)
+                .cruiseVelocity(DriveConst.kMaxModuleSpeed)
                 .allowedProfileError(DriveConst.kVelocityTolerance);
             m_driveController = m_driveMotor.getClosedLoopController();
 
@@ -74,9 +71,14 @@ public class SwerveModule extends SubsystemBase {
                 .pid(DriveConst.kP, DriveConst.kI, DriveConst.kD)
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .outputRange(-1,1)
-                .velocityFF(DriveConst.kV)
                 .maxMotion
                     .apply(m_MaxMotionConfig);
+            m_driveMotorConfig.closedLoop
+                .feedForward
+                    .kS(DriveConst.kS)
+                    .kV(DriveConst.kV)
+                    .kA(DriveConst.kA);
+
 
             m_driveMotor.configure(m_driveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
