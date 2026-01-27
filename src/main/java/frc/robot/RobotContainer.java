@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Meters;
 
+import org.photonvision.PhotonCamera;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -22,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import frc.robot.Constants.CameraConstants;
 import frc.robot.subsystems.Drivetrain;
 
 public class RobotContainer {
@@ -29,6 +32,9 @@ public class RobotContainer {
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final AutoFactory autoFactory;
   private final CommandPS4Controller m_driverController = new CommandPS4Controller(0);
+
+  private final PhotonCamera cam1 = new PhotonCamera(CameraConstants.pvCamOne);
+  private final PhotonCamera cam2 = new PhotonCamera(CameraConstants.pvCamTwo);
     
     private final StructSubscriber<Pose2d> poseSub = NetworkTableInstance.getDefault()
       .getStructTopic("Robot/CurrentPose", Pose2d.struct).subscribe(new Pose2d());
@@ -67,6 +73,8 @@ public class RobotContainer {
     m_driverController.button(3).onTrue(
       m_drivetrain.pathfind(null, false)
     );
+
+    Command updateVision = Commands.run(() -> cam1.getLatestResult(), null);
   }
 
   public void updateTelemetry() {

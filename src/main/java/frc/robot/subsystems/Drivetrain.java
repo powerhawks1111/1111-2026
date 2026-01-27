@@ -169,6 +169,10 @@ public class Drivetrain extends SubsystemBase{
         return m_PoseEstimator.getEstimatedPosition();
     }
 
+    public void updatePoseWithVision() {
+        m_PoseEstimator.addVisionMeasurement(null, 0);
+    }
+
     //TODO call whenever we get apriltag data
     public void resetPose(Pose2d pose) {
         m_PoseEstimator.resetPose(pose);
@@ -177,9 +181,8 @@ public class Drivetrain extends SubsystemBase{
     //resets without any recalibration, use this method because it's very fast. 
     public void resetNavx() {
         navx.reset();
-
-    //MUST call resetPosition after resetting the NavX: https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-odometry.html 
-    m_PoseEstimator.resetPose(
+        //MUST call resetPosition after resetting the NavX: https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-odometry.html 
+        m_PoseEstimator.resetPose(
             new Pose2d(
                 m_PoseEstimator.getEstimatedPosition().getX(),
                 m_PoseEstimator.getEstimatedPosition().getX(),

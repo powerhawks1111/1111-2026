@@ -34,7 +34,7 @@ public class Constants {
             public static final double turnEncoderScaler = 2* Math.PI;
             public static final double rotationsToMetersScaler = (kWheelCircumference/drivingWheelGearRatio);
             public static final double rpmToVelocityScaler = (kWheelCircumference)/(60*drivingWheelGearRatio); //SDS Mk4I standard gear ratio from motor to wheel, divide by 60 to go from secs to mins
-            
+
             public static final double kMaxModuleSpeed = 2.5; // 5.88 meters per second or 19.3 ft/s (max speed of SDS Mk4i with Vortex motor)
             public static final double kMaxModuleAccel = 5;
             public static final double kP = 0.072;//0.228;
@@ -46,6 +46,9 @@ public class Constants {
             public static final double kVelocityTolerance = 0.001; // m/s  
             public static final double kClosedLoopRampRate = 0.07;
             public static final int kMaxDriveAmps = 50;
+
+            public static final double kMaxRamSpeed = 
+
     }   
     public class TrajectoryConst {
         public static final double kMaxSpeed = DrivetrainConst.kMaxVelocity;
@@ -59,7 +62,11 @@ public class Constants {
         //rotation section of our pid loops for auto alignment.
         public static final double kPRot = 0;
         public static final double kIRot = 0;
-        public static final double kDRot = 0;
-        
+        public static final double kDRot = 0;   
+    }
+
+    public class CameraConstants {
+        public static final String pvCamOne = "camera1";
+        public static final String pvCamTwo = "camera2";
     }
 }

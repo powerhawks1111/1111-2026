@@ -132,16 +132,26 @@ public class SwerveModule extends SubsystemBase {
         }
 
         /*
-         * further testing (on ground) is needed for this
+         * i am become tank
          */
-        public void DRSMode() {
+        public void RamMode() {
             m_DRSConfig.apply(m_driveMotorConfig);
-            m_DRSConfig.smartCurrentLimit(70,20);
+            m_DRSConfig.smartCurrentLimit(70,20, 750);
             m_driveMotor.configure(m_DRSConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         }
+        /*
+         * duh duh duh duh MAX VERSTAPPEN
+         */
+        public void AccelerationMode() {
+            m_DRSConfig.apply(m_driveMotorConfig);
+            m_DRSConfig.smartCurrentLimit(70,20, 3000);
+            m_driveMotor.configure(m_DRSConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        }
+
         public void regularMode() {
             m_driveMotor.configure(m_driveMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         }
+        
         /*
          * Makes sure we can run our "turbo mode". Returns true if can run, false if can't.
          */
