@@ -55,10 +55,14 @@ public class Drivetrain extends SubsystemBase{
     //pose controllers for choreo + misc. wpilib tasks. pathplanner uses own controllers, same kP kI kD though. probably.
     private final PIDController xTranslationController = new PIDController(TrajectoryConst.kPT, TrajectoryConst.kIT, TrajectoryConst.kDT);
     private final PIDController yTranslationController = new PIDController(TrajectoryConst.kPT, TrajectoryConst.kIT, TrajectoryConst.kDT);
-    private final PIDController rotController = new PIDController(TrajectoryConst.kPRot, TrajectoryConst.kIRot, TrajectoryConst.kDRot); //different from other controller bc continuous input is from -Pi to PI
-    
-    private final PIDController choreoTranslationController = new PIDController(TrajectoryConst.kPT, TrajectoryConst.kIT, TrajectoryConst.kDT);
-    private final PIDController choreoRotController = new PIDController(TrajectoryConst.kPRot, TrajectoryConst.kIRot, TrajectoryConst.kDRot); //different from other controller bc continuous input is from -Pi to PI
+    private final PIDController rotController = new PIDController(TrajectoryConst.kPRot, TrajectoryConst.kIRot, TrajectoryConst.kDRot);
+        
+    private final PIDController ppxTranslationController = new PIDController(TrajectoryConst.kPTPP, TrajectoryConst.kITPP, TrajectoryConst.kDTPP);
+    private final PIDController ppyTranslationController = new PIDController(TrajectoryConst.kPTPP, TrajectoryConst.kITPP, TrajectoryConst.kDTPP);
+    private final PIDController pprotController = new PIDController(TrajectoryConst.kPRotPP, TrajectoryConst.kIRotPP, TrajectoryConst.kDRotPP);
+
+    private final PIDController choreoTranslationController = new PIDController(TrajectoryConst.kPTC, TrajectoryConst.kITC, TrajectoryConst.kDTC);
+    private final PIDController choreoRotController = new PIDController(TrajectoryConst.kPRotC, TrajectoryConst.kIRotC, TrajectoryConst.kDRotC); //different from other controller bc continuous input is from -Pi to PI
     
     private final SwerveDrivePoseEstimator m_PoseEstimator;
     private final StructPublisher<Pose2d> posePub = NetworkTableInstance.getDefault()
@@ -80,8 +84,8 @@ public class Drivetrain extends SubsystemBase{
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 (speeds, feedforwards) -> driveWithChassisSpeeds(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                        new PIDConstants(TrajectoryConst.kPT, TrajectoryConst.kIT, TrajectoryConst.kDT), // Translation PID constants
-                        new PIDConstants(TrajectoryConst.kPRot, TrajectoryConst.kIRot, TrajectoryConst.kDRot) // Rotation PID constants
+                        new PIDConstants(TrajectoryConst.kPTPP, TrajectoryConst.kITPP, TrajectoryConst.kDTPP), // Translation PID constants
+                        new PIDConstants(TrajectoryConst.kPRotPP, TrajectoryConst.kIRotPP, TrajectoryConst.kDRotPP) // Rotation PID constants
                 ),
                 RobotConfig.fromGUISettings(), // The robot configuration
                 () -> {
@@ -193,7 +197,7 @@ public class Drivetrain extends SubsystemBase{
 
     //TODO fix for field flipping, then fix for concatenating additional paths
     //flipped if on red alliance
-    public Command pathfind(Pose2d targetPose, boolean isFlipped) {
+    public Command pathfind(Pose2d targetPose) {
         PathConstraints pathConstraints = new PathConstraints(
             DrivetrainConst.kMaxVelocity, 
             DrivetrainConst.kMaxAccel, 
@@ -212,9 +216,9 @@ public class Drivetrain extends SubsystemBase{
         return Commands.run(
             () -> driveWithChassisSpeeds(
                 new ChassisSpeeds(
-                    xTranslationController.calculate(targetPose.getX(), 0),
-                    yTranslationController.calculate(targetPose.getY(), 0),
-                    rotController.calculate(targetPose.getRotation().getDegrees(), 0) //NOTE: Drive is CCW positive (or it should be)
+                    xTranslationController.calculate(getEstimatedPose().getX(), targetPose.getX()),
+                    yTranslationController.calculate(getEstimatedPose().getY(), targetPose.getY()),
+                    rotController.calculate(getEstimatedPose().getRotation().getDegrees(), targetPose.getRotation().getDegrees()) //NOTE: Drive is CCW positive (or it should be)
                 )
             ), this //the "this" may not be necessary
         )

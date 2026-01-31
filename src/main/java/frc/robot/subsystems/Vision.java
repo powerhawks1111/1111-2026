@@ -41,15 +41,18 @@ public class Vision extends SubsystemBase {
                 return cam2.getAllUnreadResults();
             } 
         }
-    
+
+        /*
+         * NOTE: This method returns a Pose2d as the distance away from 
+         */
         public Pose2d getPoseMultiTag() {
             List<PhotonPipelineResult> results = cam1.getAllUnreadResults();
             for (PhotonPipelineResult result : results) {
                 var multiTagResult = result.getMultiTagResult();
                 if (multiTagResult.isPresent()) {
                     fieldToCamera = multiTagResult.get().estimatedPose.best;
+                }
             }
+            return new Pose2d(fieldToCamera.getX(), fieldToCamera.getY(), Rotation2d.fromDegrees(cam1.getLatestResult().getBestTarget().getYaw()));
         }
-        return new Pose2d(fieldToCamera.getX(), fieldToCamera.getY(), Rotation2d.fromDegrees(cam1.getLatestResult().getBestTarget().getYaw()));
-    }
 }

@@ -17,9 +17,8 @@ public class Constants {
             public static final double halfSideLength = sideLength/2;
             public static final double kMaxVelocity = 2; //note that this value must be lower than the max speed for a swerve module, because for a given path a module may need to move further than the drivetrain.
             public static final double kMaxAccel = 5;
-            public static final double kMaxChassisRotsPerSecond = 2 * (2 * Math.PI); //front coefficient is how many rots/sec we have. 
-            public static final double kMaxChassisRotsPerSecondPerSecond = 8 * (2 * Math.PI); //Acceleration.
-            
+            public static final double kMaxChassisRotsPerSecond = 3 * (2 * Math.PI); //front coefficient is how many rots/sec we have. 
+            public static final double kMaxChassisRotsPerSecondPerSecond = 8 * (2 * Math.PI); //Acceleration
     }
     public class ModuleConst {
 
@@ -45,15 +44,17 @@ public class Constants {
             public static final double kA = 3.44;
             public static final double kVelocityTolerance = 0.001; // m/s  
             public static final double kClosedLoopRampRate = 0.07;
-            public static final int kMaxDriveAmps = 50;
+            public static final int kMaxDriveAmps = 40;
 
-            public static final double kMaxRamSpeed = 
+            public static final double kMaxRamSpeed = 1.5; //meters per second. there's a trade-off where lower speed means we push better, but if it's too low it's not gonna matter.
+            public static final int kRamSpeedRPMLimit = (int) ((kMaxRamSpeed/rotationsToMetersScaler)*60); //converts desired speed to max RPM. see upper comment about lower=better
 
     }   
     public class TrajectoryConst {
         public static final double kMaxSpeed = DrivetrainConst.kMaxVelocity;
         public static final double kMaxAcceleration = DrivetrainConst.kMaxVelocity;
         
+        //REGULAR SELF-ALIGN 
         //translation section of our pid loops for auto alignment
         public static final double kPT = 0;
         public static final double kIT = 0;
@@ -63,6 +64,30 @@ public class Constants {
         public static final double kPRot = 0;
         public static final double kIRot = 0;
         public static final double kDRot = 0;   
+
+        
+        //PP STANDS FOR PATHPLANNER
+        //translation section
+        public static final double kPTPP = 0;
+        public static final double kITPP = 0;
+        public static final double kDTPP = 0;
+        
+        //rotation section of our pid loops for auto alignment.
+        public static final double kPRotPP = 0;
+        public static final double kIRotPP = 0;
+        public static final double kDRotPP = 0;   
+
+
+        //C STANDS FOR CHOREO
+        //translation section of our pid loops for auto alignment
+        public static final double kPTC = 0;
+        public static final double kITC = 0;
+        public static final double kDTC = 0;
+        
+        //rotation section of our pid loops for auto alignment.
+        public static final double kPRotC = 0;
+        public static final double kIRotC = 0;
+        public static final double kDRotC = 0;  
     }
 
     public class CameraConstants {

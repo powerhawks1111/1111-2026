@@ -71,10 +71,13 @@ public class RobotContainer {
     );
 
     m_driverController.button(3).onTrue(
-      m_drivetrain.pathfind(null, false)
+      m_drivetrain.pathfind(new Pose2d()) //resets to 0,0,0
     );
 
-    Command updateVision = Commands.run(() -> cam1.getLatestResult(), null);
+    m_driverController.button(4).onTrue(
+      m_drivetrain.simpleAutoMove(new Pose2d()) //resets to 0,0,0
+    );
+
   }
 
   public void updateTelemetry() {

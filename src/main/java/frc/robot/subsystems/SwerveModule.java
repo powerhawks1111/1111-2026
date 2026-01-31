@@ -118,7 +118,7 @@ public class SwerveModule extends SubsystemBase {
             m_driveController.setSetpoint(desiredState.speedMetersPerSecond, ControlType.kVelocity); //desired state gives velocity, to convert: rpm = (Velocity(in m/s) * 60)/pi*diameter(aka wheel circumference)
             m_turnController.setSetpoint(desiredState.angle.getRadians(), ControlType.kPosition);
         }
-        
+
         public SwerveModuleState getState() {
             m_state.angle = Rotation2d.fromRadians(m_turningEncoder.getPosition());
             m_state.speedMetersPerSecond = m_driveEncoder.getVelocity();
@@ -136,24 +136,27 @@ public class SwerveModule extends SubsystemBase {
          */
         public void RamMode() {
             m_DRSConfig.apply(m_driveMotorConfig);
-            m_DRSConfig.smartCurrentLimit(70,20, 750);
-            m_driveMotor.configure(m_DRSConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        }
-        /*
-         * duh duh duh duh MAX VERSTAPPEN
-         */
-        public void AccelerationMode() {
-            m_DRSConfig.apply(m_driveMotorConfig);
-            m_DRSConfig.smartCurrentLimit(70,20, 3000);
+            m_DRSConfig.smartCurrentLimit(90,20, DriveConst.kRamSpeedRPMLimit); //500 - 1k rpm gives max push at lowest speeds
             m_driveMotor.configure(m_DRSConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         }
 
-        public void regularMode() {
+        /*
+         * duh duh duh duh MAX VERSTAPPEN
+         * note: provides good *acceleration*, not velocity. this will get you away from a robot but not for long (in this mode at least). be very careful
+         */
+        public void AccelerationMode() {
+            m_DRSConfig.apply(m_driveMotorConfig);
+            m_DRSConfig.smartCurrentLimit(70,40, 3000);
+            m_DRSConfig.openLoopRampRate(.35); //makes sure we don't slip. this value may need to be tuned.
+            m_driveMotor.configure(m_DRSConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        }
+
+        public void RegularMode() {
             m_driveMotor.configure(m_driveMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         }
-        
+
         /*
-         * Makes sure we can run our "turbo mode". Returns true if can run, false if can't.
+         * Makes sure we can run our "turbo modes". Returns true if can run, false if can't.
          */
         public boolean tempCheck() {
             boolean coolDownMode = false;
