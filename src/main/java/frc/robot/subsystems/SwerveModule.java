@@ -113,8 +113,8 @@ public class SwerveModule extends SubsystemBase {
             desiredState.optimize(Rotation2d.fromRadians(m_turningEncoder.getPosition()));// Optimize the reference state to avoid spinning further than 90 degrees
             desiredState.cosineScale(Rotation2d.fromRadians(m_turningEncoder.getPosition()));
 
-            m_driveMotor.set((desiredState.speedMetersPerSecond/DriveConst.kMaxModuleSpeed)*DriveConst.SpeedLimiter);
-            //m_driveController.setSetpoint(desiredState.speedMetersPerSecond, ControlType.kVelocity); //desired state gives velocity, to convert: rpm = (Velocity(in m/s) * 60)/pi*diameter(aka wheel circumference)
+            //m_driveMotor.set((desiredState.speedMetersPerSecond/DriveConst.kMaxModuleSpeed)*DriveConst.SpeedLimiter);
+            m_driveController.setSetpoint(desiredState.speedMetersPerSecond, ControlType.kMAXMotionVelocityControl); //desired state gives velocity, to convert: rpm = (Velocity(in m/s) * 60)/pi*diameter(aka wheel circumference)
             m_turnController.setSetpoint(desiredState.angle.getRadians(), ControlType.kPosition);
         }
 
