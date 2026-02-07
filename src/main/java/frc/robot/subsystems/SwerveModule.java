@@ -65,12 +65,9 @@ public class SwerveModule extends SubsystemBase {
                 .maxAcceleration(DriveConst.kMaxModuleAccel)
                 .cruiseVelocity(DriveConst.kMaxModuleSpeed)
                 .allowedProfileError(DriveConst.kVelocityTolerance);
-            m_driveController = m_driveMotor.getClosedLoopController();
-
             m_driveMotorConfig.closedLoop
                 .pid(DriveConst.kP, DriveConst.kI, DriveConst.kD)
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .outputRange(-1,1)
                 .maxMotion
                     .apply(m_MaxMotionConfig);
             m_driveMotorConfig.closedLoop
@@ -81,6 +78,7 @@ public class SwerveModule extends SubsystemBase {
 
 
             m_driveMotor.configure(m_driveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            m_driveController = m_driveMotor.getClosedLoopController();
 
             m_turningMotor = new SparkMax(turningMotorChannel, SparkLowLevel.MotorType.kBrushless);
             m_turningMotorConfig = new SparkMaxConfig(); 
@@ -115,7 +113,8 @@ public class SwerveModule extends SubsystemBase {
             desiredState.optimize(Rotation2d.fromRadians(m_turningEncoder.getPosition()));// Optimize the reference state to avoid spinning further than 90 degrees
             desiredState.cosineScale(Rotation2d.fromRadians(m_turningEncoder.getPosition()));
 
-            m_driveController.setSetpoint(desiredState.speedMetersPerSecond, ControlType.kVelocity); //desired state gives velocity, to convert: rpm = (Velocity(in m/s) * 60)/pi*diameter(aka wheel circumference)
+            m_driveMotor.set((desiredState.speedMetersPerSecond/DriveConst.kMaxModuleSpeed)*DriveConst.SpeedLimiter);
+            //m_driveController.setSetpoint(desiredState.speedMetersPerSecond, ControlType.kVelocity); //desired state gives velocity, to convert: rpm = (Velocity(in m/s) * 60)/pi*diameter(aka wheel circumference)
             m_turnController.setSetpoint(desiredState.angle.getRadians(), ControlType.kPosition);
         }
 
