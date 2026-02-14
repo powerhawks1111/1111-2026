@@ -9,6 +9,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.controller.PIDController;
@@ -115,8 +116,20 @@ public class Drivetrain extends SubsystemBase{
         );
         posePub.set(m_PoseEstimator.getEstimatedPosition());
 
+        xTranslationController.setTolerance(.4);
+        yTranslationController.setTolerance(.4);
+        rotController.setTolerance(1);
+
         m_field.setRobotPose(m_PoseEstimator.getEstimatedPosition());
+
+        PathPlannerLogging.setLogCurrentPoseCallback(
+        (pose) -> {
+        m_field.setRobotPose(pose);
+        });
+        
         SmartDashboard.putData(m_field);
+        SmartDashboard.putNumber("NavX", navx.getRotation2d().getDegrees());
+        SmartDashboard.putNumber("Rotation Estimation", m_PoseEstimator.getEstimatedPosition().getRotation().getDegrees());
     }
 
     //drives based on manual input
@@ -143,7 +156,7 @@ public class Drivetrain extends SubsystemBase{
     //simplest method for driving, used for auto
     public void driveWithChassisSpeeds(ChassisSpeeds chassisSpeeds) {
         m_swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DrivetrainConst.kMaxVelocity);
+        //SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DrivetrainConst.kMaxVelocity);
         m_frontLeft.setDesiredState(m_swerveModuleStates[0]);
         m_frontRight.setDesiredState(m_swerveModuleStates[1]);
         m_backLeft.setDesiredState(m_swerveModuleStates[2]);
@@ -218,7 +231,7 @@ public class Drivetrain extends SubsystemBase{
                 new ChassisSpeeds(
                     xTranslationController.calculate(getEstimatedPose().getX(), targetPose.getX()),
                     yTranslationController.calculate(getEstimatedPose().getY(), targetPose.getY()),
-                    rotController.calculate(getEstimatedPose().getRotation().getDegrees(), targetPose.getRotation().getDegrees()) //NOTE: Drive is CCW positive (or it should be)
+                    rotController.calculate(getEstimatedPose().getRotation().getRadians(), targetPose.getRotation().getRadians()) //NOTE: Drive is CCW positive (or it should be)
                 )
             ), this //the "this" may not be necessary
         )

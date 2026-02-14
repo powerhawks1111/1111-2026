@@ -10,9 +10,12 @@ import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import choreo.auto.AutoFactory;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -75,9 +78,13 @@ public class RobotContainer {
     );
 
     m_driverController.button(4).onTrue(
-      m_drivetrain.simpleAutoMove(new Pose2d()) //resets to 0,0,0
+      m_drivetrain.simpleAutoMove(new Pose2d(0, 0, new Rotation2d())) //resets to 0,0,0
     );
 
+  }
+
+  public void test() {
+    m_drivetrain.driveWithChassisSpeeds(new ChassisSpeeds(0,0,1));
   }
 
   public void updateTelemetry() {
@@ -87,15 +94,15 @@ public class RobotContainer {
   }
 
    public Command getAutonomousCommand() {
-    // try{
-    //     PathPlannerPath path = PathPlannerPath.fromPathFile("Path1");
-    //     return AutoBuilder.followPath(path);
-    // } catch (Exception e) {
-    //     DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
-    //     return Commands.none();
-    // }
+    try{
+        PathPlannerPath path = PathPlannerPath.fromPathFile("jack");
+        return AutoBuilder.followPath(path);
+    } catch (Exception e) {
+        DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
 
-    return autoFactory.trajectoryCmd("SquarePath");
+    //return autoFactory.trajectoryCmd("SquarePath");
   }
 
 }
