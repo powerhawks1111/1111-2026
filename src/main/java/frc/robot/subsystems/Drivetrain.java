@@ -57,11 +57,7 @@ public class Drivetrain extends SubsystemBase{
     private final PIDController xTranslationController = new PIDController(TrajectoryConst.kPT, TrajectoryConst.kIT, TrajectoryConst.kDT);
     private final PIDController yTranslationController = new PIDController(TrajectoryConst.kPT, TrajectoryConst.kIT, TrajectoryConst.kDT);
     private final PIDController rotController = new PIDController(TrajectoryConst.kPRot, TrajectoryConst.kIRot, TrajectoryConst.kDRot);
-        
-    private final PIDController ppxTranslationController = new PIDController(TrajectoryConst.kPTPP, TrajectoryConst.kITPP, TrajectoryConst.kDTPP);
-    private final PIDController ppyTranslationController = new PIDController(TrajectoryConst.kPTPP, TrajectoryConst.kITPP, TrajectoryConst.kDTPP);
-    private final PIDController pprotController = new PIDController(TrajectoryConst.kPRotPP, TrajectoryConst.kIRotPP, TrajectoryConst.kDRotPP);
-
+   
     private final PIDController choreoTranslationController = new PIDController(TrajectoryConst.kPTC, TrajectoryConst.kITC, TrajectoryConst.kDTC);
     private final PIDController choreoRotController = new PIDController(TrajectoryConst.kPRotC, TrajectoryConst.kIRotC, TrajectoryConst.kDRotC); //different from other controller bc continuous input is from -Pi to PI
     
@@ -77,6 +73,10 @@ public class Drivetrain extends SubsystemBase{
             m_positions, new Pose2d()); //TODO add lookup from SmartDashboard based on starting auto path
 
         rotController.enableContinuousInput(-Math.PI, Math.PI); //for choreo
+
+        xTranslationController.setTolerance(.4);
+        yTranslationController.setTolerance(.4);
+        rotController.setTolerance(1);
 
          try {
             AutoBuilder.configure(
@@ -115,10 +115,6 @@ public class Drivetrain extends SubsystemBase{
             m_positions
         );
         posePub.set(m_PoseEstimator.getEstimatedPosition());
-
-        xTranslationController.setTolerance(.4);
-        yTranslationController.setTolerance(.4);
-        rotController.setTolerance(1);
 
         m_field.setRobotPose(m_PoseEstimator.getEstimatedPosition());
 
@@ -217,7 +213,7 @@ public class Drivetrain extends SubsystemBase{
             DrivetrainConst.kMaxChassisRotsPerSecond, 
             DrivetrainConst.kMaxChassisRotsPerSecondPerSecond
         );
-        return AutoBuilder.pathfindToPose(targetPose, pathConstraints, 0.0);
+        return AutoBuilder.pathfindToPose(targetPose, pathConstraints, 0.1);
     }
 
     /*

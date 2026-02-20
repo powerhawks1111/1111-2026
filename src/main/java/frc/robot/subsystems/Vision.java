@@ -22,7 +22,6 @@ import frc.robot.Constants.CameraConstants;
 
 public class Vision extends SubsystemBase {
     private final PhotonCamera cam1 = new PhotonCamera(CameraConstants.pvCamOne);
-    private final PhotonCamera cam2 = new PhotonCamera(CameraConstants.pvCamTwo);
     public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
     public static Transform3d fieldToCamera = new Transform3d();
         public Vision() {
@@ -30,20 +29,10 @@ public class Vision extends SubsystemBase {
         }
     
         public boolean tagInSight() {
-            return (cam1.getLatestResult().hasTargets() || cam2.getLatestResult().hasTargets());
+            return (cam1.getLatestResult().hasTargets());
         }
-    
-        //temp method until i know what im doing. important thing is that it gives a reference point of where i get data from
-        public List<PhotonPipelineResult> getLatestResult() {
-            if (cam1.getLatestResult().hasTargets()) { //if we have targets
-                return cam1.getAllUnreadResults();
-            } else { //we are assuming that the user has already called tagInSight above, so if #1 has none we resort to this. 
-                return cam2.getAllUnreadResults();
-            } 
-        }
-
         /*
-         * NOTE: This method returns a Pose2d as the distance away from 
+         * NOTE: This method returns a Pose2d as the distance away from  
          */
         public Pose2d getPoseMultiTag() {
             List<PhotonPipelineResult> results = cam1.getAllUnreadResults();

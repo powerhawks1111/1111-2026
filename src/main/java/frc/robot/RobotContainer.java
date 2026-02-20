@@ -29,15 +29,14 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
 
   private final Drivetrain m_drivetrain = new Drivetrain();
+  private final Vision m_vision = new Vision();
   private final AutoFactory autoFactory;
   private final CommandPS4Controller m_driverController = new CommandPS4Controller(0);
-
-  private final PhotonCamera cam1 = new PhotonCamera(CameraConstants.pvCamOne);
-  private final PhotonCamera cam2 = new PhotonCamera(CameraConstants.pvCamTwo);
     
     private final StructSubscriber<Pose2d> poseSub = NetworkTableInstance.getDefault()
       .getStructTopic("Robot/CurrentPose", Pose2d.struct).subscribe(new Pose2d());
@@ -70,21 +69,24 @@ public class RobotContainer {
     );
 
     m_driverController.button(2).onTrue(
-      Commands.runOnce(() -> m_drivetrain.resetPose(new Pose2d()), m_drivetrain)
+      Commands.runOnce(() -> m_drivetrain.resetPose(new Pose2d(3,3, new Rotation2d())), m_drivetrain)
     );
 
     m_driverController.button(3).onTrue(
-      m_drivetrain.pathfind(new Pose2d()) //resets to 0,0,0
+      m_drivetrain.pathfind(new Pose2d(3,3,new Rotation2d())) //resets to 0,0,0 hopefully 
     );
 
     m_driverController.button(4).onTrue(
-      m_drivetrain.simpleAutoMove(new Pose2d(0, 0, new Rotation2d())) //resets to 0,0,0
+      m_drivetrain.simpleAutoMove(new Pose2d(3, 3, new Rotation2d())) //resets to 0,0,0
     );
 
   }
 
   public void test() {
-    m_drivetrain.driveWithChassisSpeeds(new ChassisSpeeds(0,0,1));
+    SmartDashboard.putBoolean("seesTag ", m_vision.tagInSight());
+    SmartDashboard.putNumber("Vision X", m_vision.getPoseMultiTag().getX());
+    SmartDashboard.putNumber("Vision Y", m_vision.getPoseMultiTag().getY());
+    SmartDashboard.putNumber("Vision Rot", m_vision.getPoseMultiTag().getRotation().getDegrees());
   }
 
   public void updateTelemetry() {
