@@ -69,24 +69,26 @@ public class RobotContainer {
     );
 
     m_driverController.button(2).onTrue(
-      Commands.runOnce(() -> m_drivetrain.resetPose(new Pose2d(3,3, new Rotation2d())), m_drivetrain)
+      Commands.runOnce(() -> m_drivetrain.resetPose(new Pose2d(2.5,2.5, new Rotation2d())), m_drivetrain)
     );
 
     m_driverController.button(3).onTrue(
-      m_drivetrain.pathfind(new Pose2d(3,3,new Rotation2d())) //resets to 0,0,0 hopefully 
+      m_drivetrain.pathfind(new Pose2d(2.5,2.5,new Rotation2d())) //resets to 0,0,0 hopefully 
     );
 
-    m_driverController.button(4).onTrue(
-      m_drivetrain.simpleAutoMove(new Pose2d(3, 3, new Rotation2d())) //resets to 0,0,0
-    );
+    // m_driverController.button(4).onTrue(
+    //   m_drivetrain.simpleAutoMove(new Pose2d(3, 3, new Rotation2d())) //resets to 0,0,0
+    // );
 
   }
 
   public void test() {
-    SmartDashboard.putBoolean("seesTag ", m_vision.tagInSight());
-    SmartDashboard.putNumber("Vision X", m_vision.getPoseMultiTag().getX());
-    SmartDashboard.putNumber("Vision Y", m_vision.getPoseMultiTag().getY());
-    SmartDashboard.putNumber("Vision Rot", m_vision.getPoseMultiTag().getRotation().getDegrees());
+    SmartDashboard.putBoolean("seesTag ", m_vision.tagInSight()); 
+    if (m_vision.tagInSight()) {
+    System.out.println("Vision X: " + m_vision.getPoseMultiTag().getX());
+    System.out.println("Vision Y: " + m_vision.getPoseMultiTag().getY());
+    System.out.println("Vision Rot: " + m_vision.getPoseMultiTag().getRotation().getDegrees());
+    }
   }
 
   public void updateTelemetry() {

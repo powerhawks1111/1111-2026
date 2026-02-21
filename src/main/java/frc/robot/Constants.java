@@ -15,9 +15,9 @@ public class Constants {
             public static final int BLTurn = 8;
             public static final double sideLength = .552; //meters from one module center to the other. //.622 previously, one encoder center to another
             public static final double halfSideLength = sideLength/2;
-            public static final double kMaxVelocity = 3; //note that this value must be lower than the max speed for a swerve module, because for a given path a module may need to move further than the drivetrain.
+            public static final double kMaxVelocity = 1.5; //note that this value must be lower than the max speed for a swerve module, because for a given path a module may need to move further than the drivetrain.
             public static final double kMaxAccel = 12;
-            public static final double kMaxChassisRotsPerSecond = 4 * (2 * Math.PI); //front coefficient is how many rots/sec we have. 
+            public static final double kMaxChassisRotsPerSecond = 1 * (2 * Math.PI); //front coefficient is how many rots/sec we have. 
             public static final double kMaxChassisRotsPerSecondPerSecond = 4 * (2 * Math.PI); //Acceleration
     }
     public class ModuleConst {
@@ -92,7 +92,7 @@ public class Constants {
     }
 
     public class CameraConstants {
-        public static final String pvCamOne = "PowerhawksCamera1";
+        public static final String pvCamOne = "OV9281";
         public static final String pvCamTwo = "camera2";
     }
 }

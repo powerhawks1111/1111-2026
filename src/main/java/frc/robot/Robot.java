@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     m_robotContainer.updateTelemetry();
-    //m_robotContainer.test();
+    m_robotContainer.test();
   }
 
   public void autonomousInit() {

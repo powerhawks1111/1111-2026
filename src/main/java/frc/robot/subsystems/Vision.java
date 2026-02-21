@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.util.List;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -22,26 +23,30 @@ import frc.robot.Constants.CameraConstants;
 
 public class Vision extends SubsystemBase {
     private final PhotonCamera cam1 = new PhotonCamera(CameraConstants.pvCamOne);
-    public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-    public static Transform3d fieldToCamera = new Transform3d();
-        public Vision() {
+    private static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
+    private static final Transform3d fieldToCamera = new Transform3d();
+    private final PhotonPoseEstimator m_Estimator = new PhotonPoseEstimator(kTagLayout, fieldToCamera);
+
+    public Vision() {
             
-        }
-    
-        public boolean tagInSight() {
-            return (cam1.getLatestResult().hasTargets());
-        }
-        /*
-         * NOTE: This method returns a Pose2d as the distance away from  
-         */
-        public Pose2d getPoseMultiTag() {
-            List<PhotonPipelineResult> results = cam1.getAllUnreadResults();
-            for (PhotonPipelineResult result : results) {
-                var multiTagResult = result.getMultiTagResult();
-                if (multiTagResult.isPresent()) {
-                    fieldToCamera = multiTagResult.get().estimatedPose.best;
-                }
+    }
+
+    public void EstimatePose() {
+        // var results = cam1.getAllUnreadResults();
+        // for (var result : results) {
+        //     var multitagResult = result.getMultiTagResult();
+        //     if (multitagResult.isPresent()) {
+        //         Transform3d fieldToCamera = multitagResult.get().estimatedPose.best;
+        //     }
+        // }
+
+        var result = cam1.getLatestResult();
+        if (result.hasTargets()) {
+            var estimate = m_Estimator.estimateCoprocMultiTagPose(result);
+            if (estimate.isEmpty()) {
+                estimate = m_Estimator.estimateLowestAmbiguityPose(result);
             }
-            return new Pose2d(fieldToCamera.getX(), fieldToCamera.getY(), Rotation2d.fromDegrees(cam1.getLatestResult().getBestTarget().getYaw()));
         }
+        
+    }
 }
