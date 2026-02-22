@@ -120,15 +120,13 @@ public class Drivetrain extends SubsystemBase{
 
         m_field.setRobotPose(m_PoseEstimator.getEstimatedPosition());
 
-        PathPlannerLogging.setLogCurrentPoseCallback(
-        (pose) -> {
-        m_field.setRobotPose(pose);
-        });
+        // PathPlannerLogging.setLogCurrentPoseCallback(
+        // (pose) -> {
+        // m_field.setRobotPose(pose);
+        // });
         
         SmartDashboard.putData(m_field);
-        SmartDashboard.putNumber("NavX", navx.getRotation2d().getDegrees());
-        SmartDashboard.putNumber("Rotation Estimation", m_PoseEstimator.getEstimatedPosition().getRotation().getDegrees());
-    }
+        }
 
     //drives based on manual input
     public void drive(double x, double y, double rot, boolean fieldRelative) { 

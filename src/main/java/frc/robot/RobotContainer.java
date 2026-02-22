@@ -6,6 +6,9 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Meters;
 
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -68,11 +71,11 @@ public class RobotContainer {
     );
 
     m_driverController.button(2).onTrue(
-      Commands.runOnce(() -> m_drivetrain.resetPose(new Pose2d(2.5,2.5, new Rotation2d())), m_drivetrain)
+      Commands.runOnce(() -> m_drivetrain.resetPose(new Pose2d(.5,.5, new Rotation2d())), m_drivetrain)
     );
 
     m_driverController.button(3).onTrue(
-      m_drivetrain.pathfind(new Pose2d(2.5,2.5,new Rotation2d())) //resets to 0,0,0 hopefully 
+      m_drivetrain.pathfind(new Pose2d(2,.5,new Rotation2d())) //resets to 0,0,0 hopefully 
     );
 
     // m_driverController.button(4).onTrue(
@@ -82,7 +85,14 @@ public class RobotContainer {
   }
 
   public void test() {
-    
+    Optional<EstimatedRobotPose> estimate = m_vision.EstimatePose();
+    if (estimate.isPresent()) {
+      Pose2d m_pose = estimate.get().estimatedPose.toPose2d();
+      SmartDashboard.putNumber("X value", m_pose.getX());
+      SmartDashboard.putNumber("Y value", m_pose.getY());
+      SmartDashboard.putNumber("Rot value", m_pose.getRotation().getDegrees());
+      m_drivetrain.updatePoseWithVision(estimate.get());
+    }
   }
 
   public void updateTelemetry() {

@@ -91,7 +91,7 @@ public class Constants {
         public static final double kDRotC = 0;  
     }
 
-    public class CameraConstants {
+    public class CameraConst {
         public static final String pvCamOne = "OV9281";
         public static final String pvCamTwo = "camera2";
     }

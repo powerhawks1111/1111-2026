@@ -18,15 +18,25 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CameraConst;
+import frc.robot.Constants.DriveConst;
+import frc.robot.Constants.DrivetrainConst;
 
 public class Vision extends SubsystemBase {
     private final PhotonCamera cam1 = new PhotonCamera(CameraConst.pvCamOne);
     private static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
-    private static final Transform3d fieldToCamera = new Transform3d();
+    private static final Transform3d fieldToCamera = new Transform3d(
+        -DrivetrainConst.halfSideLength,
+        -0.156, 
+        0.365, 
+        new Rotation3d(
+        0,0, Math.PI
+        )
+    );
     private final PhotonPoseEstimator m_Estimator = new PhotonPoseEstimator(kTagLayout, fieldToCamera);
 
     public Vision() {
