@@ -30,9 +30,9 @@ public class Robot extends TimedRobot {
   private final RobotContainer m_robotContainer;
   private final StructSubscriber<Pose2d> poseSub = NetworkTableInstance.getDefault()
       .getStructTopic("Robot/CurrentPose", Pose2d.struct).subscribe(new Pose2d());
-    //private final Drivetrain drivetrain = new Drivetrain();
-    private final Timer timer = new Timer();
-    private final Optional<Trajectory<SwerveSample>> trajectory = Choreo.loadTrajectory("SquarePath");
+  //private final Drivetrain drivetrain = new Drivetrain();
+  private final Timer timer = new Timer();
+  private final Optional<Trajectory<SwerveSample>> trajectory = Choreo.loadTrajectory("SquarePath");
 
   public Robot() {
     m_robotContainer = new RobotContainer();

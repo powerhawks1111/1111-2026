@@ -5,7 +5,9 @@
 package frc.robot.subsystems;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -19,10 +21,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.CameraConstants;
+import frc.robot.Constants.CameraConst;
 
 public class Vision extends SubsystemBase {
-    private final PhotonCamera cam1 = new PhotonCamera(CameraConstants.pvCamOne);
+    private final PhotonCamera cam1 = new PhotonCamera(CameraConst.pvCamOne);
     private static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
     private static final Transform3d fieldToCamera = new Transform3d();
     private final PhotonPoseEstimator m_Estimator = new PhotonPoseEstimator(kTagLayout, fieldToCamera);
@@ -31,22 +33,14 @@ public class Vision extends SubsystemBase {
             
     }
 
-    public void EstimatePose() {
-        // var results = cam1.getAllUnreadResults();
-        // for (var result : results) {
-        //     var multitagResult = result.getMultiTagResult();
-        //     if (multitagResult.isPresent()) {
-        //         Transform3d fieldToCamera = multitagResult.get().estimatedPose.best;
-        //     }
-        // }
-
-        var result = cam1.getLatestResult();
-        if (result.hasTargets()) {
-            var estimate = m_Estimator.estimateCoprocMultiTagPose(result);
-            if (estimate.isEmpty()) {
-                estimate = m_Estimator.estimateLowestAmbiguityPose(result);
+    public Optional<EstimatedRobotPose> EstimatePose() {
+        Optional<EstimatedRobotPose> visionEst = Optional.empty();
+        for (var result : cam1.getAllUnreadResults()) {
+            visionEst = m_Estimator.estimateCoprocMultiTagPose(result);
+            if (visionEst.isEmpty()) {
+                visionEst = m_Estimator.estimateLowestAmbiguityPose(result);
             }
         }
-        
+        return visionEst;
     }
 }

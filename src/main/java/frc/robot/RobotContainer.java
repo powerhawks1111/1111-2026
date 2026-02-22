@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
-import frc.robot.Constants.CameraConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 
@@ -83,12 +82,7 @@ public class RobotContainer {
   }
 
   public void test() {
-    SmartDashboard.putBoolean("seesTag ", m_vision.tagInSight()); 
-    if (m_vision.tagInSight()) {
-    System.out.println("Vision X: " + m_vision.getPoseMultiTag().getX());
-    System.out.println("Vision Y: " + m_vision.getPoseMultiTag().getY());
-    System.out.println("Vision Rot: " + m_vision.getPoseMultiTag().getRotation().getDegrees());
-    }
+    
   }
 
   public void updateTelemetry() {

@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
+import org.photonvision.EstimatedRobotPose;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -114,6 +115,7 @@ public class Drivetrain extends SubsystemBase{
             navx.getRotation2d(), 
             m_positions
         );
+
         posePub.set(m_PoseEstimator.getEstimatedPosition());
 
         m_field.setRobotPose(m_PoseEstimator.getEstimatedPosition());
@@ -182,8 +184,8 @@ public class Drivetrain extends SubsystemBase{
         return m_PoseEstimator.getEstimatedPosition();
     }
 
-    public void updatePoseWithVision() {
-        m_PoseEstimator.addVisionMeasurement(null, 0);
+    public void updatePoseWithVision(EstimatedRobotPose pose) {
+        m_PoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
     }
 
     //TODO call whenever we get apriltag data
