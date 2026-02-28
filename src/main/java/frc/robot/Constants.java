@@ -95,4 +95,13 @@ public class Constants {
         public static final String pvCamOne = "OV9281";
         public static final String pvCamTwo = "camera2";
     }
+
+    public class ShootConst {
+        public static final int leftShootID = 0;
+        public static final int rightShootID = 0;
+        public static final int hoodID = 0;
+        public static final int turretID = 0;
+
+        
+    }
 }
