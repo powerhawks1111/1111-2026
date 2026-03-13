@@ -7,10 +7,11 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
 import frc.robot.Constants.SpindexerConst;
 
-public class Spindexer {
+public class Spindexer extends SubsystemBase{
     private SparkMax spindexerMotor;
     private SparkMaxConfig spindexerMotorConfig;
 

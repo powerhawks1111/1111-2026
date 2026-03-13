@@ -99,7 +99,7 @@ public class RobotContainer {
 
   //SPINDEXER
   public Command runSpindexer(double bps) {
-    return Commands.runOnce(m_spindexer.runSpindexer(bps);, m_spindexer);
+    return Commands.runOnce(() -> m_spindexer.runSpindexer(bps), m_spindexer);
   }
 
   //SHOOTER

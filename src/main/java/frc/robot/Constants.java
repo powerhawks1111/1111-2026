@@ -116,5 +116,12 @@ public class Constants {
         public static final double[] RED_CYCLE_NORTH = {1,1};
         public static final double[] RED_CYCLE_SOUTH = {1,1};
     }
-}
 
+    public class TurretConst {
+        //relative to the front of the robot along x axis (which is zero), our turret capabilities in radians
+        public static final double turretMin = 0 * Math.PI; 
+        public static final double turretMax = 0 * Math.PI;
+        
+        public static final double kPRotPP = 0.5;
+    }
+}
