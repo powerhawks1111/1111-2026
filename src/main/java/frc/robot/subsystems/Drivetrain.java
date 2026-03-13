@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CANID;
 import frc.robot.Constants.DriveConst;
 import frc.robot.Constants.DrivetrainConst;
 import frc.robot.Constants.TrajectoryConst;
@@ -42,10 +43,10 @@ public class Drivetrain extends SubsystemBase{
     private final Translation2d m_backLeftLocation = new Translation2d(-DrivetrainConst.halfSideLength,  DrivetrainConst.halfSideLength); 
     private final Translation2d m_backRightLocation = new Translation2d( -DrivetrainConst.halfSideLength, -DrivetrainConst.halfSideLength);
 
-    private final SwerveModule m_frontLeft = new SwerveModule(DrivetrainConst.FLDrive, DrivetrainConst.FLTURN); 
-    private final SwerveModule m_frontRight = new SwerveModule(DrivetrainConst.FRDrive, DrivetrainConst.FRTurn); 
-    private final SwerveModule m_backRight = new SwerveModule(DrivetrainConst.BRDrive, DrivetrainConst.BRTurn); 
-    private final SwerveModule m_backLeft = new SwerveModule(DrivetrainConst.BLDrive, DrivetrainConst.BLTurn); 
+    private final SwerveModule m_frontLeft = new SwerveModule(CANID.FLDrive, CANID.FLTURN); 
+    private final SwerveModule m_frontRight = new SwerveModule(CANID.FRDrive, CANID.FRTurn); 
+    private final SwerveModule m_backRight = new SwerveModule(CANID.BRDrive, CANID.BRTurn); 
+    private final SwerveModule m_backLeft = new SwerveModule(CANID.BLDrive, CANID.BLTurn); 
 
     private final AHRS navx = new AHRS(NavXComType.kMXP_SPI); //ensure "spi" is switched "on" on navx2
     
@@ -54,14 +55,6 @@ public class Drivetrain extends SubsystemBase{
     private SwerveModuleState[] m_robotState = {m_frontLeft.getState(), m_frontRight.getState(), m_backLeft.getState(), m_backRight.getState()}; //needed for pathplanner
     private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
-    //pose controllers for choreo + misc. wpilib tasks. pathplanner uses own controllers, same kP kI kD though. probably.
-    private final PIDController xTranslationController = new PIDController(TrajectoryConst.kPT, TrajectoryConst.kIT, TrajectoryConst.kDT);
-    private final PIDController yTranslationController = new PIDController(TrajectoryConst.kPT, TrajectoryConst.kIT, TrajectoryConst.kDT);
-    private final PIDController rotController = new PIDController(TrajectoryConst.kPRot, TrajectoryConst.kIRot, TrajectoryConst.kDRot);
-   
-    private final PIDController choreoTranslationController = new PIDController(TrajectoryConst.kPTC, TrajectoryConst.kITC, TrajectoryConst.kDTC);
-    private final PIDController choreoRotController = new PIDController(TrajectoryConst.kPRotC, TrajectoryConst.kIRotC, TrajectoryConst.kDRotC); //different from other controller bc continuous input is from -Pi to PI
-    
     private final SwerveDrivePoseEstimator m_PoseEstimator;
     private final StructPublisher<Pose2d> posePub = NetworkTableInstance.getDefault()
         .getStructTopic("Robot/CurrentPose", Pose2d.struct).publish(); //use as template for publishing data to NetworkTables.
@@ -71,13 +64,8 @@ public class Drivetrain extends SubsystemBase{
         m_PoseEstimator = new SwerveDrivePoseEstimator(
             m_kinematics, 
             navx.getRotation2d(), 
-            m_positions, new Pose2d()); //TODO add lookup from SmartDashboard based on starting auto path
-
-        rotController.enableContinuousInput(-Math.PI, Math.PI); //for choreo
-
-        xTranslationController.setTolerance(.4);
-        yTranslationController.setTolerance(.4);
-        rotController.setTolerance(1);
+            m_positions, new Pose2d()
+        ); //TODO add lookup from SmartDashboard based on starting auto path
 
          try {
             AutoBuilder.configure(
@@ -128,20 +116,23 @@ public class Drivetrain extends SubsystemBase{
         SmartDashboard.putData(m_field);
         }
 
-    //drives based on manual input
-    public void drive(double x, double y, double rot, boolean fieldRelative) { 
-        x *= DrivetrainConst.kMaxVelocity;
-        y *= DrivetrainConst.kMaxVelocity;
-        rot *= DrivetrainConst.kMaxChassisRotsPerSecond;
-        if (fieldRelative) {
-            m_swerveModuleStates = m_kinematics.toSwerveModuleStates(
-                ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, navx.getRotation2d())
-            );  
-        } else {
-            m_swerveModuleStates = m_kinematics.toSwerveModuleStates(
-                ChassisSpeeds.fromRobotRelativeSpeeds(x, y, rot, navx.getRotation2d())
-            );  
-        }
+    /**
+     * Method to drive robot in tele mode; can vary speed, esp based on odometry
+     * @param x desired x output (0-1, scaled in method)
+     * @param y desired y output (0-1, scaled in method)
+     * @param rot desired rot output (0-1, scaled in method)
+     * @param maxAllowedVelocity max velocity allowed for this run. this is not max overall velocity, just what we want it to have
+     * @param maxRotsPerSec (input max rots per sec, we multiply by 2 pi in method)
+     */
+    public void drive(double x, double y, double rot, double maxAllowedVelocity, double maxRotsPerSec) { 
+        x *= maxAllowedVelocity;
+        y *= maxAllowedVelocity;
+        rot *= (maxRotsPerSec * Math.PI * 2);
+
+        m_swerveModuleStates = m_kinematics.toSwerveModuleStates(
+            ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, navx.getRotation2d())
+        );  
+
         SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DrivetrainConst.kMaxVelocity);
             m_frontLeft.setDesiredState(m_swerveModuleStates[0]);
             m_frontRight.setDesiredState(m_swerveModuleStates[1]);
@@ -167,16 +158,6 @@ public class Drivetrain extends SubsystemBase{
         return m_kinematics.toChassisSpeeds(m_robotState); //look here if thing break - could be that this is returning desired states and not actual ones.
     }
 
-    //for Choreo specifically
-    public void followTrajectory(SwerveSample sample) {
-        Pose2d pose = m_PoseEstimator.getEstimatedPosition();
-        ChassisSpeeds speeds = new ChassisSpeeds(
-            sample.vx + choreoTranslationController.calculate(pose.getX(), sample.x),
-            sample.vy + choreoTranslationController.calculate(pose.getY(), sample.y),
-            sample.omega + choreoRotController.calculate(pose.getRotation().getRadians(), sample.heading)
-        );
-        driveWithChassisSpeeds(speeds);
-    }
     //TODO if we have time, tune kalman filter
     public Pose2d getEstimatedPose() {
         return m_PoseEstimator.getEstimatedPosition();
@@ -184,11 +165,6 @@ public class Drivetrain extends SubsystemBase{
 
     public void updatePoseWithVision(EstimatedRobotPose pose) {
         m_PoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
-    }
-
-    //TODO call whenever we get apriltag data
-    public void resetPose(Pose2d pose) {
-        m_PoseEstimator.resetPose(pose);
     }
 
     //resets without any recalibration, use this method because it's very fast. 
@@ -204,6 +180,11 @@ public class Drivetrain extends SubsystemBase{
         );
     }
 
+    //TODO call whenever we get apriltag data
+    public void resetPose(Pose2d pose) {
+        m_PoseEstimator.resetPose(pose);
+    }
+
     //TODO fix for field flipping, then fix for concatenating additional paths
     //flipped if on red alliance
     public Command pathfind(Pose2d targetPose) {
@@ -214,24 +195,5 @@ public class Drivetrain extends SubsystemBase{
             DrivetrainConst.kMaxChassisRotsPerSecondPerSecond
         );
         return AutoBuilder.pathfindToPose(targetPose, pathConstraints, 0.1);
-    }
-
-    /*
-     * This is meant for very simple auto alignment. This means that the only thing we need is our "target pose", which is really just 
-     * a measure of how much error we have from where we want to be. This is driven entirely from robot-relative frames, but depending on
-     * where we place our Limelight camera, we may need to flip axes and/or signs. 
-     */
-    public Command simpleAutoMove(Pose2d targetPose) {
-        return Commands.run(
-            () -> driveWithChassisSpeeds(
-                new ChassisSpeeds(
-                    xTranslationController.calculate(getEstimatedPose().getX(), targetPose.getX()),
-                    yTranslationController.calculate(getEstimatedPose().getY(), targetPose.getY()),
-                    rotController.calculate(getEstimatedPose().getRotation().getRadians(), targetPose.getRotation().getRadians()) //NOTE: Drive is CCW positive (or it should be)
-                )
-            ), this //the "this" may not be necessary
-        )
-        .repeatedly() //we repeat command until interrupted
-        .withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf); //we cancel ourself because if another drive command is called, it's because that's the most recent desired output.
     }
 }

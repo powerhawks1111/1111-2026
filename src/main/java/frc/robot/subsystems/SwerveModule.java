@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.*;
@@ -26,6 +27,7 @@ import frc.robot.Constants.DriveConst;
 public class SwerveModule extends SubsystemBase {
         //components for the drive section of the module
         private SparkFlex m_driveMotor;
+        public int motorNumber; 
         private SparkFlexConfig m_driveMotorConfig;
         private RelativeEncoder m_driveEncoder;
         private MAXMotionConfig m_MaxMotionConfig;
@@ -49,6 +51,7 @@ public class SwerveModule extends SubsystemBase {
          * @param turningMotorChannel CAN ID for the turning motor.
          */
         public SwerveModule(int driveMotorChannel, int turningMotorChannel) {
+            motorNumber = driveMotorChannel;
             m_driveMotor = new SparkFlex(driveMotorChannel, SparkLowLevel.MotorType.kBrushless);
             m_driveMotorConfig = new SparkFlexConfig();
             m_driveEncoder = m_driveMotor.getEncoder(); //vortex built in encoder
@@ -75,7 +78,6 @@ public class SwerveModule extends SubsystemBase {
                     .kS(DriveConst.kS)
                     .kV(DriveConst.kV)
                     .kA(DriveConst.kA);
-
 
             m_driveMotor.configure(m_driveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
             m_driveController = m_driveMotor.getClosedLoopController();
@@ -128,43 +130,5 @@ public class SwerveModule extends SubsystemBase {
             m_position.angle = Rotation2d.fromRadians(m_turningEncoder.getPosition());
             m_position.distanceMeters = m_driveEncoder.getPosition();
             return m_position;
-        }
-
-        /*
-         * i am become tank
-         */
-        public void RamMode() {
-            m_DRSConfig.apply(m_driveMotorConfig);
-            m_DRSConfig.smartCurrentLimit(90,20, DriveConst.kRamSpeedRPMLimit); //500 - 1k rpm gives max push at lowest speeds
-            m_driveMotor.configure(m_DRSConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        }
-
-        /*
-         * duh duh duh duh MAX VERSTAPPEN
-         * note: provides good *acceleration*, not velocity. this will get you away from a robot but not for long (in this mode at least). be very careful
-         */
-        public void AccelerationMode() {
-            m_DRSConfig.apply(m_driveMotorConfig);
-            m_DRSConfig.smartCurrentLimit(70,40, 3000);
-            m_DRSConfig.openLoopRampRate(.35); //makes sure we don't slip. this value may need to be tuned.
-            m_driveMotor.configure(m_DRSConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        }
-
-        public void RegularMode() {
-            m_driveMotor.configure(m_driveMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        }
-
-        /*
-         * Makes sure we can run our "turbo modes". Returns true if can run, false if can't.
-         */
-        public boolean tempCheck() {
-            boolean coolDownMode = false;
-            if(m_driveMotor.getMotorTemperature() > 70) {
-                coolDownMode = true; //when we exceed the limit, we want to go into cooldown mode that doesn't change 
-                                     //until we are below 60 degrees (we don't want it to be on at 69.99, off at 70, on at 69.99, etc.)
-            } else if (m_driveMotor.getMotorTemperature() < 60){
-                coolDownMode = false; //we can run our mode again when the motor is back down to 60 degrees. 
-            }
-            return !coolDownMode; //if cooldown mode is on, can't run
         }
 }

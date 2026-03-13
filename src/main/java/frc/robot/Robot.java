@@ -26,14 +26,8 @@ import frc.robot.subsystems.Drivetrain;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private NetworkTables m_NetworkTables = new NetworkTables();
   private final RobotContainer m_robotContainer;
-  private final StructSubscriber<Pose2d> poseSub = NetworkTableInstance.getDefault()
-      .getStructTopic("Robot/CurrentPose", Pose2d.struct).subscribe(new Pose2d());
-  //private final Drivetrain drivetrain = new Drivetrain();
-  private final Timer timer = new Timer();
-  private final Optional<Trajectory<SwerveSample>> trajectory = Choreo.loadTrajectory("SquarePath");
-
+  
   public Robot() {
     m_robotContainer = new RobotContainer();
     FollowPathCommand.warmupCommand().schedule();
@@ -43,8 +37,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    m_robotContainer.updateTelemetry();
-    m_robotContainer.test();
   }
 
   public void autonomousInit() {
