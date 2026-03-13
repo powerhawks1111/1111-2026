@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.IntakeConst;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Vision;
 
@@ -43,6 +44,7 @@ public class RobotContainer {
   private final Vision m_vision = new Vision();
   private final Intake m_intake = new Intake();
   private final Spindexer m_spindexer = new Spindexer();
+  private final Kicker m_kicker = new Kicker();
 
 
   private final SendableChooser<Command> autoChooser;
@@ -77,7 +79,8 @@ public class RobotContainer {
     return autoChooser.getSelected();
   }
   
-  //COMMANDS ALL THE WAY DOWN
+  //TELEOP COMMANDS ALL THE WAY DOWN
+  //flip to Command.run() instead of .runOnce() ?
 
   //INTAKE
   public Command deployIntake() {
@@ -102,6 +105,12 @@ public class RobotContainer {
     return Commands.runOnce(() -> m_spindexer.runSpindexer(bps), m_spindexer);
   }
 
+  //KICKER
+  public Command runKicker(double speed) {
+    return Commands.runOnce(() -> m_kicker.setSameSpeed(speed), m_kicker);
+  }
   //SHOOTER
-  
+  public Command positionTurret(double position) {
+    return null;
+  }
 }

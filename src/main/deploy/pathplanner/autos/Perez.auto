@@ -21,6 +21,12 @@
           "data": {
             "pathName": "HP to Climb"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
         }
       ]
     }

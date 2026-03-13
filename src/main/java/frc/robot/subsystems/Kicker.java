@@ -1,7 +1,46 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CANID;
+import frc.robot.Constants.IntakeConst;
 
 public class Kicker extends SubsystemBase{
-    
+    private SparkMax backMotor;
+    private SparkMaxConfig backMotorConfig;
+
+    private SparkFlex frontMotor;
+    private SparkFlexConfig frontMotorConfig;
+
+    public Kicker() {
+        backMotor = new SparkMax(CANID.BackK, MotorType.kBrushless);
+        frontMotor = new SparkFlex(CANID.FrontK, MotorType.kBrushless);
+
+        backMotorConfig = new SparkMaxConfig();
+        frontMotorConfig = new SparkFlexConfig();
+
+        frontMotorConfig.inverted(true);
+
+        backMotorConfig.closedLoop
+            .pid(0, 0, 0);
+        frontMotorConfig.closedLoop
+            .pid(0, 0, 0);
+
+        backMotor.configure(backMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        frontMotor.configure(frontMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
+    }
+
+    public void setSameSpeed(double speed) {
+        backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+    }
+
 }
