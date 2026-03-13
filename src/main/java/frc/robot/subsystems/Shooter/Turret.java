@@ -26,11 +26,11 @@ public class Turret extends SubsystemBase{
 
         turretMotorConfig.encoder.positionConversionFactor(TurretConst.positionConversionFactor);
         turretMotorConfig.closedLoop
-            .pid(0, 0, 0);
-        
+            .pid(TurretConst.kP, TurretConst.kI, TurretConst.kD);
+
         turretMotor.configure(turretMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
-    public void runSpindexer(double position) {
+    public void adjustTurret(double position) {
         turretMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
     }
 }

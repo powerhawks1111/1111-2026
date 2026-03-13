@@ -7,11 +7,12 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
 import frc.robot.Constants.HoodConst;
 import frc.robot.Constants.SpindexerConst;
 
-public class Hood {
+public class Hood extends SubsystemBase{
     private SparkMax hoodMotor;
     private SparkMaxConfig hoodMotorConfig;
 
@@ -21,11 +22,11 @@ public class Hood {
 
         hoodMotorConfig.encoder.positionConversionFactor(HoodConst.positionConversionFactor);
         hoodMotorConfig.closedLoop
-            .pid(0, 0, 0);
-        
+            .pid(HoodConst.kP, HoodConst.kI, HoodConst.kD);
         hoodMotor.configure(hoodMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
-    public void runSpindexer(double position) {
+
+    public void adjustHood(double position) {
         hoodMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
     }
 }

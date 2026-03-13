@@ -17,39 +17,37 @@ import frc.robot.Constants.FlywheelConst;
 public class Flywheel extends SubsystemBase{
     private final SparkFlex leftShoot;
     private final SparkFlex rightShoot; 
-    private final SparkMax hoodMotor; //adjusts hood angle
-    private final SparkMax turretMotor; //spins the shooter
 
     private final SparkFlexConfig leftShootConfig;
     private final SparkFlexConfig rightShootConfig;
-    private final SparkMaxConfig hoodConfig;
-    private final SparkMaxConfig turretConfig;
 
     public Flywheel() {
         leftShootConfig = new SparkFlexConfig();
         rightShootConfig = new SparkFlexConfig();
-        hoodConfig = new SparkMaxConfig();
-        turretConfig = new SparkMaxConfig();
 
         leftShootConfig.idleMode(IdleMode.kBrake);
+        rightShootConfig.idleMode(IdleMode.kBrake);
 
         leftShoot = new SparkFlex(CANID.LeftS, MotorType.kBrushless);
         rightShoot = new SparkFlex(CANID.RightS, MotorType.kBrushless);
-        hoodMotor = new SparkMax(CANID.Hood, MotorType.kBrushless);
-        turretMotor = new SparkMax(CANID.Turret, MotorType.kBrushless);
 
         leftShootConfig.voltageCompensation(12);
         rightShootConfig.voltageCompensation(12);
 
         rightShootConfig.closedLoopRampRate(FlywheelConst.closedLoopRampRate);
-        rightShootConfig.closedLoop.pid(0, 0, 0);
-        
-        leftShootConfig.follow(CANID.LeftS);
+        rightShootConfig.closedLoop.pid(FlywheelConst.kP, FlywheelConst.kI, FlywheelConst.kD);
+        rightShootConfig.closedLoop.feedForward
+            .kV(FlywheelConst.kV)
+            .kS(FlywheelConst.kS);
+
+        leftShootConfig.follow(CANID.RightS);
         leftShootConfig.inverted(true);
 
         leftShoot.configure(leftShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         rightShoot.configure(leftShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        hoodMotor.configure(leftShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        turretMotor.configure(leftShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+
+    public void runFlywheel(double rpm) {
+        rightShoot.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
     }
 }

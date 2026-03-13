@@ -37,6 +37,10 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Shooter.Controller;
+import frc.robot.subsystems.Shooter.Flywheel;
+import frc.robot.subsystems.Shooter.Hood;
+import frc.robot.subsystems.Shooter.Turret;
 
 public class RobotContainer {
 
@@ -45,6 +49,10 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Spindexer m_spindexer = new Spindexer();
   private final Kicker m_kicker = new Kicker();
+  private final Turret m_turret = new Turret();
+  private final Hood m_hood = new Hood();
+  private final Flywheel m_flywheel = new Flywheel();
+  private final Controller m_controller = new Controller();
 
 
   private final SendableChooser<Command> autoChooser;
@@ -111,6 +119,20 @@ public class RobotContainer {
   }
   //SHOOTER
   public Command positionTurret(double position) {
-    return null;
+    return Commands.runOnce(() -> m_turret.adjustTurret(position), m_turret);
   }
+  public Command positonHood(double position) {
+    return Commands.runOnce(() -> m_hood.adjustHood(position), m_hood);
+  }
+  public Command runFlywheel(double speed) {
+    return Commands.runOnce(() -> m_flywheel.runFlywheel(speed), m_flywheel);
+  }
+  
+  public Command shootFromBaseOfHub() {
+    return Commands.parallel(
+      positionTurret(0), positonHood(0), runFlywheel(0)
+    );
+  }
+
+  
 }

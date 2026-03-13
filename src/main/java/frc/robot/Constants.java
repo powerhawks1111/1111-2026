@@ -6,14 +6,22 @@ public class Constants {
 
     public class IntakeConst {
         //as of right now, both the intake and the rollers have a 1:1 conversion factor. 
-        public static final double positionConversionFactor = 1; //for kicker position
+        public static final double positionConversionFactor = 1; //for flipper position
         public static final double velocityConversionFactor = 1; //for roller velocity
+        
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
         
         public static final int rollerSpeed = 5000; //rpm for rollers - can determine empirically with time
     }
 
     public class SpindexerConst {
         public static final double bpsConversionFactor = 5; //assuming no skips, 1 rot/sec = 5 balls 
+        
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
 
     }
 
@@ -26,6 +34,7 @@ public class Constants {
             public static final double kMaxChassisRotsPerSecond = 1 * (2 * Math.PI); //front coefficient is how many rots/sec we have. 
             public static final double kMaxChassisRotsPerSecondPerSecond = 4 * (2 * Math.PI); //Acceleration
     }
+    
     public class DriveConst {
             //TODO update module-specific constants when new modules ordered (gear ratio, max speed, etc.)
             public static final double kWheelDiameter = .1016; // 0.1016 M wheel diameter (4")
@@ -48,11 +57,6 @@ public class Constants {
             public static final double kVelocityTolerance = 0.01; // m/s  , 0.01
             public static final double kClosedLoopRampRate = 0.07;
             public static final int kMaxDriveAmps = 40;
-
-            public static final double kMaxRamSpeed = .5; //meters per second. there's a trade-off where lower speed means we push better, but if it's too low it's not gonna matter.
-            public static final int kRamSpeedRPMLimit = (int) ((kMaxRamSpeed/rotationsToMetersScaler)*60); //converts desired speed to max RPM. see upper comment about lower=better
-            public static final double SpeedLimiter = .7; //SDS Mk4I standard gear ratio from motor to wheel, divide by 60 to go from secs to mins
-
     }   
     public class TrajectoryConst {
         public static final double kMaxSpeed = DrivetrainConst.kMaxVelocity;
@@ -123,15 +127,27 @@ public class Constants {
         public static final double turretMax = 0 * Math.PI;
 
         public static final double positionConversionFactor = 0;
+        
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
     }
     
     public class HoodConst {
-        public static final double positionConversionFactor = 0;
+        public static final double positionConversionFactor = 0.04762;
         
+        public static final double kP = 2.5;
+        public static final double kI = 0;
+        public static final double kD = 0;
     }
 
     public class FlywheelConst {
         public static final double closedLoopRampRate = 1;
 
+        public static final double kP = 0.00016;
+        public static final double kI = 0;
+        public static final double kD = .003;
+        public static final double kS = 0;
+        public static final double kV = .00183;
     }
 }
