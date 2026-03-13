@@ -121,7 +121,17 @@ public class Constants {
         //relative to the front of the robot along x axis (which is zero), our turret capabilities in radians
         public static final double turretMin = 0 * Math.PI; 
         public static final double turretMax = 0 * Math.PI;
+
+        public static final double positionConversionFactor = 0;
+    }
+    
+    public class HoodConst {
+        public static final double positionConversionFactor = 0;
         
-        public static final double kPRotPP = 0.5;
+    }
+
+    public class FlywheelConst {
+        public static final double closedLoopRampRate = 1;
+
     }
 }

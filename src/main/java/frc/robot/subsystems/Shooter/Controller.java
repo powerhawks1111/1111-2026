@@ -2,9 +2,10 @@ package frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConst;
 
-public class Controller {
+public class Controller extends SubsystemBase {
 
     //vars for static shot
     private static double shooterPureSpeed = 0;
@@ -50,7 +51,7 @@ public class Controller {
      * @param currentPose from odometry
      * @param turretPosition see const file but in radians it's the offset from the x axis
      * @param target translation 2d of target
-     * @return Turret angle in radians. Negative one if we cannot hit the angle. 
+     * @return Turret angle in radians. 0.00001 if we cannot hit the angle. 
      */
     public double calculateTurret(Pose2d currentPose, double turretPosition, Translation2d target) {
         //creates a range of values that our turret can be in, field relative
@@ -59,20 +60,14 @@ public class Controller {
         double turretMaxAdj = turretPositionAdjusted + TurretConst.turretMax;
         
         //calculate position of robot to hub, need to add on robot rotation bc this is only based on raw odometry
-        double xDist = target.getX() -  currentPose.getX();
-        double yDist = target.getY() -  currentPose.getY();
-        double robotRawToHub = Math.atan(yDist/xDist); 
-        double robotRelativeToHub = robotRawToHub + currentPose.getRotation().getRadians();
+        //double xDist = target.getX() -  currentPose.getX();
+        //double yDist = target.getY() -  currentPose.getY();
+        double robotRawToHub = Math.atan((target.getY() -  currentPose.getY())/(target.getX() -  currentPose.getX())); 
 
         if((turretMinAdj < robotRawToHub) && (robotRawToHub < turretMaxAdj)) {
-            //convert back to turret range.
-            //make the field centric turret equal to robotRawToHub
-
-            double turretAngleReadjusted = (currentPose.getRotation().getRadians() - robotRawToHub); //angle from front of robot to hub
-            //robotRelativeToHub 
-            return turretAngleReadjusted;
+            return (currentPose.getRotation().getRadians() - robotRawToHub); //angle from front of robot to hub
         } else {
-            return 0.00001; //honestly what are the odds we get this anyway. we'll make an if statement for this value. this returns true if outside of range
+            return 10; //ten is way outside the range of 6.28 radians (hopefully)
         }
     }
 }

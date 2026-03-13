@@ -64,7 +64,7 @@ public class SwerveModule extends SubsystemBase {
                 .positionConversionFactor(DriveConst.rotationsToMetersScaler)
                 .velocityConversionFactor(DriveConst.rpmToVelocityScaler);
             m_MaxMotionConfig = new MAXMotionConfig();
-            m_MaxMotionConfig
+            m_MaxMotionConfig 
                 .maxAcceleration(DriveConst.kMaxModuleAccel)
                 .cruiseVelocity(DriveConst.kMaxModuleSpeed)
                 .allowedProfileError(DriveConst.kVelocityTolerance);
