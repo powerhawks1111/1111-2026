@@ -3,25 +3,28 @@ package frc.robot;
 import com.pathplanner.lib.config.RobotConfig;
 
 public class Constants {
+
+    public class IntakeConst {
+        //as of right now, both the intake and the rollers have a 1:1 conversion factor. 
+        public static final double positionConversionFactor = 1; //for kicker position
+        public static final double velocityConversionFactor = 1; //for roller velocity
+        
+        public static final int rollerSpeed = 5000; //rpm for rollers - can determine empirically with time
+    }
+
+    public class SpindexerConst {
+        public static final double bpsConversionFactor = 5; //assuming no skips, 1 rot/sec = 5 balls 
+
+    }
+
     public class DrivetrainConst {
         //CAN IDs for all our drivesystem
-            public static final int FLDrive = 1;
-            public static final int FLTURN = 2;
-            public static final int FRDrive = 3;
-            public static final int FRTurn = 4;
-            public static final int BRDrive = 5;
-            public static final int BRTurn = 6;
-            public static final int BLDrive = 7;
-            public static final int BLTurn = 8;
             public static final double sideLength = .552; //meters from one module center to the other. //.622 previously, one encoder center to another
             public static final double halfSideLength = sideLength/2;
             public static final double kMaxVelocity = 1.5; //note that this value must be lower than the max speed for a swerve module, because for a given path a module may need to move further than the drivetrain.
             public static final double kMaxAccel = 12;
             public static final double kMaxChassisRotsPerSecond = 1 * (2 * Math.PI); //front coefficient is how many rots/sec we have. 
             public static final double kMaxChassisRotsPerSecondPerSecond = 4 * (2 * Math.PI); //Acceleration
-    }
-    public class ModuleConst {
-
     }
     public class DriveConst {
             //TODO update module-specific constants when new modules ordered (gear ratio, max speed, etc.)
@@ -46,7 +49,7 @@ public class Constants {
             public static final double kClosedLoopRampRate = 0.07;
             public static final int kMaxDriveAmps = 40;
 
-            public static final double kMaxRamSpeed = 4; //meters per second. there's a trade-off where lower speed means we push better, but if it's too low it's not gonna matter.
+            public static final double kMaxRamSpeed = .5; //meters per second. there's a trade-off where lower speed means we push better, but if it's too low it's not gonna matter.
             public static final int kRamSpeedRPMLimit = (int) ((kMaxRamSpeed/rotationsToMetersScaler)*60); //converts desired speed to max RPM. see upper comment about lower=better
             public static final double SpeedLimiter = .7; //SDS Mk4I standard gear ratio from motor to wheel, divide by 60 to go from secs to mins
 
@@ -54,18 +57,6 @@ public class Constants {
     public class TrajectoryConst {
         public static final double kMaxSpeed = DrivetrainConst.kMaxVelocity;
         public static final double kMaxAcceleration = DrivetrainConst.kMaxAccel;
-        
-        //REGULAR SELF-ALIGN 
-        //translation section of our pid loops for auto alignment
-        public static final double kPT = 3.3;
-        public static final double kIT = 0;
-        public static final double kDT = 0.8;
-        
-        //rotation section of our pid loops for auto alignment.
-        public static final double kPRot = 1; //4
-        public static final double kIRot = 0.2;
-        public static final double kDRot = 0.8;   //.5
-
         
         //PP STANDS FOR PATHPLANNER
         //translation section
@@ -78,17 +69,6 @@ public class Constants {
         public static final double kIRotPP = 0;
         public static final double kDRotPP = 0;   
 
-
-        //C STANDS FOR CHOREO
-        //translation section of our pid loops for auto alignment
-        public static final double kPTC = 1;
-        public static final double kITC = 0;
-        public static final double kDTC = 0;
-        
-        //rotation section of our pid loops for auto alignment.
-        public static final double kPRotC = 1;
-        public static final double kIRotC = 0;
-        public static final double kDRotC = 0;  
     }
 
     public class CameraConst {
@@ -96,12 +76,45 @@ public class Constants {
         public static final String pvCamTwo = "camera2";
     }
 
-    public class ShootConst {
-        public static final int leftShootID = 0;
-        public static final int rightShootID = 0;
-        public static final int hoodID = 0;
-        public static final int turretID = 0;
+    public class CANID {
+        //Should replace based on wiring so a break is immediately able to be determined.
+        //drivetrain
+        public static final int FLDrive = 1;
+        public static final int FLTURN = 2;
+        public static final int FRDrive = 3;
+        public static final int FRTurn = 4;
+        public static final int BRDrive = 5;
+        public static final int BRTurn = 6;
+        public static final int BLDrive = 7;
+        public static final int BLTurn = 8;
 
+        //shooter
+        public static final int LeftS = 11;
+        public static final int RightS = 12;
+        public static final int Hood = 13;
+        public static final int Turret = 14;
+
+        //kicker
+        public static final int FrontK = 17;
+        public static final int BackK = 16;
+
+        //spindexer
+        public static final int Spindexer = 15;
+
+        //intake
+        public static final int Rollers = 10;
+        public static final int Flipper = 9;
+    }
+
+    public class FIELD_CONST {
+        //all units in meters, based on offsets from blue origin
+        public static final double[] BLUE_HUB = {4.62, 4.025};
+        public static final double[] RED_HUB = {11.92, 4.025};
         
+        public static final double[] BLUE_CYCLE_NORTH = {1,1};
+        public static final double[] BLUE_CYCLE_SOUTH = {1,1};
+        public static final double[] RED_CYCLE_NORTH = {1,1};
+        public static final double[] RED_CYCLE_SOUTH = {1,1};
     }
 }
+
