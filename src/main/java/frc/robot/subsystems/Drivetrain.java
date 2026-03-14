@@ -105,6 +105,7 @@ public class Drivetrain extends SubsystemBase{
         );
 
         posePub.set(m_PoseEstimator.getEstimatedPosition());
+        
 
         m_field.setRobotPose(m_PoseEstimator.getEstimatedPosition());
 
@@ -143,7 +144,7 @@ public class Drivetrain extends SubsystemBase{
     //simplest method for driving, used for auto
     public void driveWithChassisSpeeds(ChassisSpeeds chassisSpeeds) {
         m_swerveModuleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds);
-        //SwerveDriveKinematics.desaturateWheelSpeeds(m_swerveModuleStates, DrivetrainConst.kMaxVelocity);
+        //SwerveDriveKinematics.desaturateWheelSpeed(m_swerveModuleStates, DrivetrainConst.kMaxVelocity);
         m_frontLeft.setDesiredState(m_swerveModuleStates[0]);
         m_frontRight.setDesiredState(m_swerveModuleStates[1]);
         m_backLeft.setDesiredState(m_swerveModuleStates[2]);
@@ -156,6 +157,20 @@ public class Drivetrain extends SubsystemBase{
         m_robotState[2] = m_backLeft.getState();
         m_robotState[3] = m_backRight.getState();
         return m_kinematics.toChassisSpeeds(m_robotState); //look here if thing break - could be that this is returning desired states and not actual ones.
+    }
+
+    public ChassisSpeeds getFieldRelativeSpeeds() {
+        double navxHeading = (navx.getRotation2d().getRadians());
+        m_robotState[0] = m_frontLeft.getState();
+        m_robotState[1] = m_frontRight.getState();
+        m_robotState[2] = m_backLeft.getState();
+        m_robotState[3] = m_backRight.getState();
+        ChassisSpeeds robotRelative = m_kinematics.toChassisSpeeds(m_robotState); //look here if thing break - could be that this is returning desired states and not actual ones.
+        return new ChassisSpeeds(
+            robotRelative.vxMetersPerSecond * Math.cos(navxHeading),
+            robotRelative.vyMetersPerSecond * Math.sin(navxHeading),
+            0 //wont calculate for now 
+        );
     }
 
     //TODO if we have time, tune kalman filter

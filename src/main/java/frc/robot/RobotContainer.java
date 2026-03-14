@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.FIELD_CONST;
 import frc.robot.Constants.IntakeConst;
 import frc.robot.subsystems.Drivetrain;
@@ -54,11 +55,11 @@ public class RobotContainer {
   private final Turret m_turret = new Turret();
   private final Hood m_hood = new Hood();
   private final Flywheel m_flywheel = new Flywheel();
-  private final Controller m_controller = new Controller();
+  private final CommandXboxController m_driver = new CommandXboxController(0);
+  private final CommandXboxController m_operator = new CommandXboxController(1);
 
 
   private final SendableChooser<Command> autoChooser;
-  private final CommandPS4Controller m_driverController = new CommandPS4Controller(0);
     
     private final StructSubscriber<Pose2d> poseSub = NetworkTableInstance.getDefault()
       .getStructTopic("Robot/CurrentPose", Pose2d.struct).subscribe(new Pose2d());
@@ -71,7 +72,14 @@ public class RobotContainer {
     }
   
     private void configureBindings() {
-
+      m_driver.button(0).onTrue(resetNavX());
+      
+      m_driver.button(1).onTrue(getAutonomousCommand());
+      
+      
+      m_driver.button(2).onTrue(getAutonomousCommand());
+      
+      m_driver.button(3).onTrue(getAutonomousCommand());
     }
 
   public void updateVision() {
@@ -91,6 +99,14 @@ public class RobotContainer {
   
   //TELEOP COMMANDS ALL THE WAY DOWN
   //flip to Command.run() instead of .runOnce() ?
+  //DRIVETRAIN
+  public Command resetOdometry(Pose2d pose) {
+    return Commands.run(() -> m_drivetrain.resetPose(pose), m_drivetrain);
+  }
+
+  public Command resetNavX() {
+    return Commands.run(() -> m_drivetrain.resetNavx(), m_drivetrain);
+  }
 
   //INTAKE
   public Command deployIntake() {
@@ -150,9 +166,42 @@ public class RobotContainer {
     double[] shotData = Controller.calculateShooterStatic( //double distance, double heightDifference, double impactAngle
       distance, 
       FIELD_CONST.HUB_SHOOTER_DIFFERENCE, 
+      55
+      );
+
+
+    double turretPosition = Controller.calculateTurret(m_pose, hub); //have to replace hub w/ virt target
+    
+    return Commands.parallel(
+      positonHood(shotData[0]),
+      runFlywheel(shotData[1]), 
+      positionTurret(turretPosition)
+    ); 
+
+  }
+
+
+  public Command shootOnTheMoveIntoHub(boolean blueAlliance) {
+    Pose2d m_pose = poseSub.get();
+    double distance = 0;
+    Translation2d hub = new Translation2d();
+    if(blueAlliance) {
+      distance = Controller.hypotenuseCalculator(FIELD_CONST.BLUE_HUB, m_pose.getTranslation());
+      hub = FIELD_CONST.BLUE_HUB;
+    } else {
+      distance = Controller.hypotenuseCalculator(FIELD_CONST.RED_HUB, m_pose.getTranslation());
+      hub=FIELD_CONST.RED_HUB;
+    }
+    double[] shotData = Controller.calculateShooterStatic( //double distance, double heightDifference, double impactAngle
+      distance, 
+      FIELD_CONST.HUB_SHOOTER_DIFFERENCE, 
       65
       );
-    double turretPosition = Controller.calculateTurret(m_pose, hub);
+
+    Translation2d virtTarget = new Translation2d(
+      hub.getX() + (m_drivetrain.getFieldRelativeSpeeds().vxMetersPerSecond * shotData[2]), (m_drivetrain.getFieldRelativeSpeeds().vyMetersPerSecond * shotData[2])
+    );
+    double turretPosition = Controller.calculateTurret(m_pose, hub); //have to replace hub w/ virt target
     
     return Commands.parallel(
       positonHood(shotData[0]),

@@ -11,15 +11,19 @@ public class Constants {
         public static final double positionConversionFactor = 1; //for flipper position
         public static final double velocityConversionFactor = 1; //for roller velocity
         
-        public static final double kP = 0;
-        public static final double kI = 0;
-        public static final double kD = 0;
+        public static final double kPFlip = 0;
+        public static final double kIFlip = 0;
+        public static final double kDFlip = 0;
+        
+        public static final double kPRoller = 0;
+        public static final double kIRoller = 0;
+        public static final double kDRoller = 0;
         
         public static final int rollerSpeed = 5000; //rpm for rollers - can determine empirically with time
     }
 
     public class SpindexerConst {
-        public static final double bpsConversionFactor = 5; //assuming no skips, 1 rot/sec = 5 balls 
+        public static final double bpsConversionFactor = 5 / 3; //assuming no skips, 1 rot/sec = 5 balls but we have 3:1 gear ratio on this
         
         public static final double kP = 0;
         public static final double kI = 0;
@@ -85,31 +89,31 @@ public class Constants {
     public class CANID {
         //Should replace based on wiring so a break is immediately able to be determined.
         //drivetrain
-        public static final int FLDrive = 1;
-        public static final int FLTURN = 2;
-        public static final int FRDrive = 3;
-        public static final int FRTurn = 4;
-        public static final int BRDrive = 5;
-        public static final int BRTurn = 6;
-        public static final int BLDrive = 7;
-        public static final int BLTurn = 8;
+        public static final int FLDrive = 5;
+        public static final int FLTURN = 6;
+        public static final int FRDrive = 7;
+        public static final int FRTurn = 8;
+        public static final int BRDrive = 1;
+        public static final int BRTurn = 2;
+        public static final int BLDrive = 3;
+        public static final int BLTurn = 4;
 
         //shooter
-        public static final int LeftS = 11;
-        public static final int RightS = 12;
+        public static final int LeftS = 14;
+        public static final int RightS = 15;
         public static final int Hood = 13;
-        public static final int Turret = 14;
+        public static final int Turret = 12;
 
         //kicker
-        public static final int FrontK = 17;
-        public static final int BackK = 16;
+        public static final int FrontK = 11;
+        public static final int BackK = 12;
 
         //spindexer
-        public static final int Spindexer = 15;
+        public static final int Spindexer = 9;
 
         //intake
-        public static final int Rollers = 10;
-        public static final int Flipper = 9;
+        public static final int Rollers = 16;
+        public static final int Flipper = 17;
     }
 
     public class FIELD_CONST {
@@ -132,8 +136,7 @@ public class Constants {
         public static final double turretMin = 0 * Math.PI; 
         public static final double turretMax = 0 * Math.PI;
 
-        public static final double positionConversionFactor = 0;
-        
+        public static final double positionConversionFactor = 120/69; //69 driver 120 driven        
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;

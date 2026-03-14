@@ -50,4 +50,15 @@ public class Flywheel extends SubsystemBase{
     public void runFlywheel(double rpm) {
         rightShoot.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
     }
+
+    public boolean atRPM() {
+        return rightShoot.getClosedLoopController().isAtSetpoint();
+    }
+
+    public void kinematicsToRealWorld(double[] matchData) {
+        double realAngle = 0; //y = mx+b unless better equation 
+        double realRPM = 0; // y=mx+b unless better equation
+    }
+
+    
 }
