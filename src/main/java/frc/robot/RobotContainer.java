@@ -73,9 +73,9 @@ public class RobotContainer {
     }
   
     private void configureBindings() {
-      m_driver.button(0).onTrue(resetNavX());
+      m_driver.button(1).onTrue(resetNavX());
 
-      m_driver.button(1).onTrue(resetOdometry(new Pose2d()));
+      m_driver.button(2).onTrue(resetOdometry(new Pose2d()));
       
       m_drivetrain.setDefaultCommand(
       Commands.run(
@@ -83,7 +83,7 @@ public class RobotContainer {
           -m_driver.getRawAxis(1), 
           -m_driver.getRawAxis(0), 
           -m_driver.getRawAxis(4), 
-          2.5, 1), 
+          4, 1), 
         m_drivetrain)
     );
       //m_driver.button(1).onTrue();
@@ -113,11 +113,11 @@ public class RobotContainer {
   // //DRIVETRAIN
 
   public Command resetOdometry(Pose2d pose) {
-    return Commands.run(() -> m_drivetrain.resetPose(pose), m_drivetrain);
+    return Commands.runOnce(() -> m_drivetrain.resetPose(pose), m_drivetrain);
   }
 
   public Command resetNavX() {
-    return Commands.run(() -> m_drivetrain.resetNavx(), m_drivetrain);
+    return Commands.runOnce(() -> m_drivetrain.resetNavx(), m_drivetrain);
   }
 
   // //INTAKE

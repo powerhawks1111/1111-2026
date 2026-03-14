@@ -103,7 +103,7 @@ public class Drivetrain extends SubsystemBase{
             navx.getRotation2d(), 
             m_positions
         );
-
+        SmartDashboard.putNumber("navx value: ", navx.getRotation2d().getDegrees());
         posePub.set(m_PoseEstimator.getEstimatedPosition());
         
 
