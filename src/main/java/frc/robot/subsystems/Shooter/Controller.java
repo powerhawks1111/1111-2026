@@ -52,7 +52,7 @@ public class Controller extends SubsystemBase {
      * @param target translation 2d of target
      * @return Turret angle in radians. 10 if we cannot hit the angle. 
      */
-    public static double calculateTurret(Pose2d currentPose, double turretPosition, Translation2d target) {
+    public static double calculateTurret(Pose2d currentPose, Translation2d target) {
         //creates a range of values that our turret can be in, field relative
         double turretPositionAdjusted = currentPose.getRotation().getRadians(); //gets centerline of turret range of motion
         double turretMinAdj = turretPositionAdjusted - TurretConst.turretMin;
@@ -86,6 +86,8 @@ public class Controller extends SubsystemBase {
         }
         return previousShot;
     }
+    public static double hypotenuseCalculator(Translation2d target, Translation2d position) {
+        return (Math.sqrt((target.getX() - position.getX()) + (target.getY() - position.getY()))); 
+    }
 
-    
 }

@@ -18,6 +18,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import frc.robot.Constants.FIELD_CONST;
 import frc.robot.Constants.IntakeConst;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -72,7 +74,7 @@ public class RobotContainer {
 
     }
 
-  public void test() {
+  public void updateVision() {
     Optional<EstimatedRobotPose> estimate = m_vision.EstimatePose();
     if (estimate.isPresent()) {
       Pose2d m_pose = estimate.get().estimatedPose.toPose2d();
@@ -134,5 +136,30 @@ public class RobotContainer {
     );
   }
 
-  
+  public Command shootStaticIntoHub(boolean blueAlliance) {
+    Pose2d m_pose = poseSub.get();
+    double distance = 0;
+    Translation2d hub = new Translation2d();
+    if(blueAlliance) {
+      distance = Controller.hypotenuseCalculator(FIELD_CONST.BLUE_HUB, m_pose.getTranslation());
+      hub = FIELD_CONST.BLUE_HUB;
+    } else {
+      distance = Controller.hypotenuseCalculator(FIELD_CONST.RED_HUB, m_pose.getTranslation());
+      hub=FIELD_CONST.RED_HUB;
+    }
+    double[] shotData = Controller.calculateShooterStatic( //double distance, double heightDifference, double impactAngle
+      distance, 
+      FIELD_CONST.HUB_SHOOTER_DIFFERENCE, 
+      65
+      );
+    double turretPosition = Controller.calculateTurret(m_pose, hub);
+    
+    return Commands.parallel(
+      positonHood(shotData[0]),
+      runFlywheel(shotData[1]), 
+      positionTurret(turretPosition)
+    );
+
+  }
+
 }

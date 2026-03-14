@@ -2,6 +2,8 @@ package frc.robot;
 
 import com.pathplanner.lib.config.RobotConfig;
 
+import edu.wpi.first.math.geometry.Translation2d;
+
 public class Constants {
 
     public class IntakeConst {
@@ -34,7 +36,7 @@ public class Constants {
             public static final double kMaxChassisRotsPerSecond = 1 * (2 * Math.PI); //front coefficient is how many rots/sec we have. 
             public static final double kMaxChassisRotsPerSecondPerSecond = 4 * (2 * Math.PI); //Acceleration
     }
-    
+
     public class DriveConst {
             //TODO update module-specific constants when new modules ordered (gear ratio, max speed, etc.)
             public static final double kWheelDiameter = .1016; // 0.1016 M wheel diameter (4")
@@ -112,8 +114,12 @@ public class Constants {
 
     public class FIELD_CONST {
         //all units in meters, based on offsets from blue origin
-        public static final double[] BLUE_HUB = {4.62, 4.025};
-        public static final double[] RED_HUB = {11.92, 4.025};
+        public static final Translation2d BLUE_HUB = new Translation2d(4.62, 4.025);
+        public static final Translation2d RED_HUB = new Translation2d(11.92, 4.025);
+        public static final double SHOOTER_HEIGHT = 0.4572;
+        public static final double HUB_HEIGHT = 1.8288;
+        public static final double HUB_SHOOTER_DIFFERENCE = HUB_HEIGHT - SHOOTER_HEIGHT;
+        
         
         public static final double[] BLUE_CYCLE_NORTH = {1,1};
         public static final double[] BLUE_CYCLE_SOUTH = {1,1};
