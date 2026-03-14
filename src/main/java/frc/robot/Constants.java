@@ -89,14 +89,14 @@ public class Constants {
     public class CANID {
         //Should replace based on wiring so a break is immediately able to be determined.
         //drivetrain
-        public static final int FLDrive = 5;
-        public static final int FLTURN = 6;
-        public static final int FRDrive = 7;
-        public static final int FRTurn = 8;
-        public static final int BRDrive = 1;
-        public static final int BRTurn = 2;
-        public static final int BLDrive = 3;
-        public static final int BLTurn = 4;
+        public static final int FLDrive = 1;
+        public static final int FLTURN = 2;
+        public static final int FRDrive = 3;
+        public static final int FRTurn = 4;
+        public static final int BRDrive = 5;
+        public static final int BRTurn = 6;
+        public static final int BLDrive = 7;
+        public static final int BLTurn = 8;
 
         //shooter
         public static final int LeftS = 14;
@@ -133,8 +133,8 @@ public class Constants {
 
     public class TurretConst {
         //relative to the front of the robot along x axis (which is zero), our turret capabilities in radians
-        public static final double turretMin = 0 * Math.PI; 
-        public static final double turretMax = 0 * Math.PI;
+        public static final double turretMin = - 0 * Math.PI; //cw from 0
+        public static final double turretMax = 0 * Math.PI; //ccw from 0
 
         public static final double positionConversionFactor = 120/69; //69 driver 120 driven        
         public static final double kP = 0;
