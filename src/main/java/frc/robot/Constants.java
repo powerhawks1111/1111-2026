@@ -23,7 +23,7 @@ public class Constants {
     }
 
     public class SpindexerConst {
-        public static final double bpsConversionFactor = 5 / 3; //assuming no skips, 1 rot/sec = 5 balls but we have 3:1 gear ratio on this
+        public static final double bpsConversionFactor = 5; //assuming no skips, 1 rot/sec = 5 balls
         
         public static final double kP = 0;
         public static final double kI = 0;
@@ -46,13 +46,13 @@ public class Constants {
             public static final double kWheelDiameter = .1016; // 0.1016 M wheel diameter (4")
             public static final double kWheelCircumference = Math.PI * kWheelDiameter;
             public static final double turningWheelGearRatio = 150/7; //standard steering gear ratio on MK4i 
-            public static final double drivingWheelGearRatio = 8.14; //L3 gear ratio for driving
+            public static final double drivingWheelGearRatio = 8.14; //L1 gear ratio for driving
 
             public static final double turnEncoderScaler = 2* Math.PI;
             public static final double rotationsToMetersScaler = (kWheelCircumference/drivingWheelGearRatio);
             public static final double rpmToVelocityScaler = (kWheelCircumference)/(60*drivingWheelGearRatio); //SDS Mk4I standard gear ratio from motor to wheel, divide by 60 to go from secs to mins
 
-            public static final double kMaxModuleSpeed = DrivetrainConst.kMaxVelocity; // 5.88 meters per second or 19.3 ft/s (max speed of SDS Mk4i with Vortex motor)
+            public static final double kMaxModuleSpeed = DrivetrainConst.kMaxVelocity; // 14.5 ft/s (max speed of SDS Mk4i with Vortex motor)
             public static final double kMaxModuleAccel = DrivetrainConst.kMaxAccel;
             public static final double kP = 0.05;//0.228;
             public static final double kI = 0.0; //.1
@@ -109,12 +109,12 @@ public class Constants {
         //shooter
         public static final int LeftS = 14;
         public static final int RightS = 15;
-        public static final int Hood = 13;
-        public static final int Turret = 12;
+        public static final int Hood = 16;
+        public static final int Turret = 30;
 
         //kicker
-        public static final int FrontK = 11;
-        public static final int BackK = 12;
+        public static final int FrontK = 10;
+        public static final int BackK = 17;
 
         //spindexer
         public static final int Spindexer = 9;

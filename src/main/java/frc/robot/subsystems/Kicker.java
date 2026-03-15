@@ -39,8 +39,10 @@ public class Kicker extends SubsystemBase{
     }
 
     public void setSameSpeed(double speed) {
-        backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
-        frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        //backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        //frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        frontMotor.set(.5);
+        backMotor.set(.7);
     }
 
 }

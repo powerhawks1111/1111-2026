@@ -40,15 +40,18 @@ public class Flywheel extends SubsystemBase{
             .kV(FlywheelConst.kV)
             .kS(FlywheelConst.kS);
 
-        leftShootConfig.follow(CANID.RightS);
-        leftShootConfig.inverted(true);
+        // leftShootConfig.follow(CANID.RightS);
+        // leftShootConfig.inverted(true);
 
         leftShoot.configure(leftShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         rightShoot.configure(leftShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
-    public void runFlywheel(double rpm) {
-        rightShoot.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
+    public void runFlywheel(double set) {
+        //rightShoot.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
+        rightShoot.set(1);
+        leftShoot.set(-1);
+        
     }
 
     public boolean atRPM() {
