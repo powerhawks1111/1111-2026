@@ -31,8 +31,8 @@ public class Flywheel extends SubsystemBase{
         leftShoot = new SparkFlex(CANID.LeftS, MotorType.kBrushless);
         rightShoot = new SparkFlex(CANID.RightS, MotorType.kBrushless);
 
-        leftShootConfig.voltageCompensation(12);
-        rightShootConfig.voltageCompensation(12);
+        // leftShootConfig.voltageCompensation(12);
+        // rightShootConfig.voltageCompensation(12);
 
         rightShootConfig.closedLoopRampRate(FlywheelConst.closedLoopRampRate);
         rightShootConfig.closedLoop.pid(FlywheelConst.kP, FlywheelConst.kI, FlywheelConst.kD);
@@ -47,11 +47,9 @@ public class Flywheel extends SubsystemBase{
         rightShoot.configure(leftShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
-    public void runFlywheel(double set) {
-        //rightShoot.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
-        rightShoot.set(1);
-        leftShoot.set(-1);
-        
+    public void runFlywheel(double rpm) {
+        rightShoot.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
+    
     }
 
     public boolean atRPM() {

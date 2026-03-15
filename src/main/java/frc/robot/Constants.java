@@ -23,9 +23,9 @@ public class Constants {
     }
 
     public class SpindexerConst {
-        public static final double bpsConversionFactor = 5; //assuming no skips, 1 rot/sec = 5 balls
+        public static final double bpsConversionFactor = 1; //assuming no skips, 1 rot/sec = 5 balls
         
-        public static final double kP = 0;
+        public static final double kP = 0.003;
         public static final double kI = 0;
         public static final double kD = 0;
 

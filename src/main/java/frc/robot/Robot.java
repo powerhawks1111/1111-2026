@@ -36,7 +36,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    //CommandScheduler.getInstance().run();
+    CommandScheduler.getInstance().run();
+    
     //m_robotContainer.updateVision();
   }
 
@@ -53,6 +54,5 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    m_robotContainer.hood(0.25);
   }
 }

@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
 import frc.robot.Constants.SpindexerConst;
@@ -19,14 +20,15 @@ public class Spindexer extends SubsystemBase{
         spindexerMotor = new SparkMax(CANID.Spindexer, MotorType.kBrushless);
         spindexerMotorConfig = new SparkMaxConfig();
 
-        spindexerMotorConfig.encoder.positionConversionFactor(SpindexerConst.bpsConversionFactor);
+        spindexerMotorConfig.encoder.velocityConversionFactor(SpindexerConst.bpsConversionFactor);
         spindexerMotorConfig.closedLoop
-            .pid(0, 0, 0);
-        
+            .pid(SpindexerConst.kP, SpindexerConst.kI, SpindexerConst.kD);
+        spindexerMotorConfig.inverted(true);
         spindexerMotor.configure(spindexerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
-    public void runSpindexer(double bps) {
-        spindexerMotor.set(-.15);
+
+    public void runSpindexer(double speed) {
+        spindexerMotor.set(speed);
         //spindexerMotor.getClosedLoopController().setSetpoint(bps, ControlType.kVelocity);
     }
 }

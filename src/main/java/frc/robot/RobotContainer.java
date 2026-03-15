@@ -49,14 +49,14 @@ public class RobotContainer {
 
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final Vision m_vision = new Vision();
-  // private final Intake m_intake = new Intake();
+  private final Intake m_intake = new Intake();
   private final Spindexer m_spindexer = new Spindexer();
   private final Kicker m_kicker = new Kicker();
   // private final Turret m_turret = new Turret();
   private final Hood m_hood = new Hood();
   private final Flywheel m_flywheel = new Flywheel();
   private final CommandXboxController m_driver = new CommandXboxController(0);
-  //private final CommandXboxController m_operator = new CommandXboxController(1);
+  private final CommandXboxController m_operator = new CommandXboxController(1);
 
 
 
@@ -70,6 +70,11 @@ public class RobotContainer {
       SmartDashboard.putData("Auto Chooser", autoChooser);
 
       configureBindings();
+    }
+
+    public void test() {
+      m_intake.setRollerSpeed(1);
+      m_intake.setFlip(1);i
     }
   
     private void configureBindings() {
@@ -86,6 +91,11 @@ public class RobotContainer {
           4, 1.5), 
         m_drivetrain)
     );
+      m_operator.button(1).toggleOnFalse(runFlywheel(0));
+      m_operator.button(1).toggleOnTrue(runFlywheel(4000));
+      m_operator.button(2).whileFalse(runKicker()).whileTrue(runKicker());
+      m_operator.button(2).whileFalse(runSpindexer(0)).whileTrue(runSpindexer(.8));
+      //positonHood(0);
 
     //m_operator.button(1).whileTrue(runKicker(.5).alongWith(runSpindexer(4))).whileFalse(runKicker(0).alongWith(runSpindexer(0)));
     //m_operator.button(2).whileTrue(runFlywheel(SmartDashboard.getNumber("RPM", 0))); 
@@ -108,6 +118,8 @@ public class RobotContainer {
     }
   }
 
+  
+
   // public Command getAutonomousCommand() {
   //   return autoChooser.getSelected();
   // }
@@ -124,20 +136,20 @@ public class RobotContainer {
     return Commands.runOnce(() -> m_drivetrain.resetNavx(), m_drivetrain);
   }
 
-  public void shoot() {
-    m_flywheel.runFlywheel(3000);
-  }
+  // public void shoot() {
+  //   m_flywheel.runFlywheel(3000);
+  // }
 
-  public void spindex() {
-    m_spindexer.runSpindexer(3);
-  }
-  public void kick() {
-    m_kicker.setSameSpeed(20);
-  }
+  // public void spindex() {
+  //   m_spindexer.runSpindexer(3);
+  // }
+  // public void kick() {
+  //   m_kicker.setSameSpeed(20);
+  // }
 
-  public void hood(double setpoint) {
-    m_hood.adjustHood(setpoint);
-  }
+  // public void hood(double setpoint) {
+  //   m_hood.adjustHood(setpoint);
+  // }
   // //INTAKE
   // public Command deployIntake() {
   //   return Commands.runOnce(() -> m_intake.setFlip(0), m_intake);
@@ -157,24 +169,24 @@ public class RobotContainer {
   // }
 
   // // //SPINDEXER
-  // public Command runSpindexer(double bps) {
-  //   return Commands.runOnce(() -> m_spindexer.runSpindexer(bps), m_spindexer);
-  // }
+  public Command runSpindexer(double speed) {
+    return Commands.runOnce(() -> m_spindexer.runSpindexer(speed), m_spindexer);
+  }
 
   // // //KICKER
-  // public Command runKicker(double speed) {
-  //   return Commands.runOnce(() -> m_kicker.setSameSpeed(speed), m_kicker);
-  // }
+  public Command runKicker() {
+    return Commands.runOnce(() -> m_kicker.setSameSpeed(), m_kicker);
+  }
   // // //SHOOTER
   // // public Command positionTurret(double position) {
   // //   return Commands.runOnce(() -> m_turret.adjustTurret(position), m_turret);
   // // }
-  // public Command positonHood(double position) {
-  //   return Commands.runOnce(() -> m_hood.adjustHood(position), m_hood);
-  // }
-  // public Command runFlywheel(double speed) {
-  //   return Commands.runOnce(() -> m_flywheel.runFlywheel(speed), m_flywheel);
-  // }
+  public Command positonHood(double position) {
+    return Commands.runOnce(() -> m_hood.adjustHood(position), m_hood);
+  }
+  public Command runFlywheel(double speed) {
+    return Commands.runOnce(() -> m_flywheel.runFlywheel(speed), m_flywheel);
+  }
   
   // public Command shootFromBaseOfHub(double hood, double rpm) {
   //   return Commands.parallel(
