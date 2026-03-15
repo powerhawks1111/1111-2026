@@ -78,7 +78,7 @@ public class Controller extends SubsystemBase {
     public double[] shootOnTheMove(Translation3d target, Pose2d currentPose, Translation2d currentVelocities, double impactAngle) {
         double distance = Math.sqrt((target.getY() -  currentPose.getY()) + (target.getX() -  currentPose.getX()));
         double[] previousShot = Controller.calculateShooterStatic(distance, target.getZ(), impactAngle); //initial
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 10; i++) {
             previousShot = Controller.calculateShooterStatic(
                 Math.sqrt((target.getY() -  currentPose.getY() + (currentVelocities.getY() * previousShot[2])) + (target.getX() -  currentPose.getX() + (currentVelocities.getX() * previousShot[2]))), 
                 target.getZ(), 
@@ -86,6 +86,7 @@ public class Controller extends SubsystemBase {
         }
         return previousShot;
     }
+    
     public static double hypotenuseCalculator(Translation2d target, Translation2d position) {
         return (Math.sqrt((target.getX() - position.getX()) + (target.getY() - position.getY()))); 
     }
