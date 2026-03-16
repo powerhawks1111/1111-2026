@@ -74,7 +74,7 @@ public class RobotContainer {
 
     public void test() {
       m_intake.setRollerSpeed(1);
-      m_intake.setFlip(1);i
+      m_intake.setFlip(1);
     }
   
     private void configureBindings() {
