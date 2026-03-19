@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import frc.robot.Constants.DrivetrainConst;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 
@@ -113,4 +114,15 @@ public class RobotContainer {
     //return autoFactory.trajectoryCmd("SquarePath");
   }
 
+  public Command autoLockCommand() {
+    return Commands.run(
+      () -> m_drivetrain.drive(
+        m_driverController.getRawAxis(0), 
+        m_driverController.getRawAxis(0), 
+        m_drivetrain.robotRotLock(
+          m_driverController.getRawAxis(0), 
+          m_driverController.getRawAxis(0)
+          ), false), m_drivetrain
+          );
+  }
 }

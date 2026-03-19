@@ -23,6 +23,12 @@ public class Constants {
     public class ModuleConst {
 
     }
+
+    public class AutoLockConst {
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+    }
     public class DriveConst {
             //TODO update module-specific constants when new modules ordered (gear ratio, max speed, etc.)
             public static final double kWheelDiameter = .1016; // 0.1016 M wheel diameter (4")
