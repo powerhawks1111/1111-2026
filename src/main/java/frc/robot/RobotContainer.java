@@ -104,13 +104,25 @@ public class RobotContainer {
    public Command getAutonomousCommand() {
     try{
         PathPlannerPath path = PathPlannerPath.fromPathFile("jack");
-        return AutoBuilder.followPath(path);
+       // return AutoBuilder.followPath(path);
+       return Commands.run(
+      () -> m_drivetrain.drive(
+        m_driverController.getRawAxis(0),
+        m_driverController.getRawAxis(0),
+        m_drivetrain.robRotLock(
+          m_driverController.getRawAxis(0),
+          m_driverController.getRawAxis(0)
+        ), false), m_drivetrain
+        );
     } catch (Exception e) {
         DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
         return Commands.none();
     }
 
     //return autoFactory.trajectoryCmd("SquarePath");
+
+     
+    }
   }
 
-}
+

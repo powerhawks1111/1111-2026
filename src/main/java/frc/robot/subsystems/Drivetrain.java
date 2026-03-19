@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AutoLockConst;
 import frc.robot.Constants.DriveConst;
 import frc.robot.Constants.DrivetrainConst;
 import frc.robot.Constants.TrajectoryConst;
@@ -62,6 +63,8 @@ public class Drivetrain extends SubsystemBase{
     private final PIDController choreoTranslationController = new PIDController(TrajectoryConst.kPTC, TrajectoryConst.kITC, TrajectoryConst.kDTC);
     private final PIDController choreoRotController = new PIDController(TrajectoryConst.kPRotC, TrajectoryConst.kIRotC, TrajectoryConst.kDRotC); //different from other controller bc continuous input is from -Pi to PI
     
+    private final PIDController intakController = new PIDController(AutoLockConst.kP, AutoLockConst.kI, AutoLockConst.kD);
+
     private final SwerveDrivePoseEstimator m_PoseEstimator;
     private final StructPublisher<Pose2d> posePub = NetworkTableInstance.getDefault()
         .getStructTopic("Robot/CurrentPose", Pose2d.struct).publish(); //use as template for publishing data to NetworkTables.
@@ -232,6 +235,13 @@ public class Drivetrain extends SubsystemBase{
             ), this //the "this" may not be necessary
         )
         .repeatedly() //we repeat command until interrupted
-        .withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf); //we cancel ourself because if another drive command is called, it's because that's the most recent desired output.
+        .withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf); 
+        //we cancel ourself because if another drive command is called, it's because that's the most recent desired output.
     }
-}
+    
+        public double robRotLock(double joyX, double joyY){
+            double thela = Math.toDegrees(Math.atan(joyY/joyX));
+            return intakController.calculate(navx.getRotation2d().getDegrees(), thela);
+        }
+    
+    }
