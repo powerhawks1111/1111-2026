@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     m_robotContainer.updateVision();
     CommandScheduler.getInstance().run();
+    m_robotContainer.resetOdom();
   }
 
   public void autonomousInit() {

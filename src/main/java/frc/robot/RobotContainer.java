@@ -77,18 +77,18 @@ public class RobotContainer {
             -m_driverController.getRawAxis(1), 
             -m_driverController.getRawAxis(0), 
             -m_driverController.getRawAxis(4), 
-            3.5, 1), 
+            2.5, 2), 
           m_drivetrain)
       );
       m_driverController.axisGreaterThan(3, .5).whileTrue( //right trigger find it
         Commands.run(
           () -> m_drivetrain.drive(
-            m_driverController.getRawAxis(1), 
-            m_driverController.getRawAxis(0), 
+            0, //.getRawAxis(1), 
+            0, //m_driverController.getRawAxis(0), 
             m_drivetrain.rotLock(
               m_driverController.getRawAxis(4), 
               -m_driverController.getRawAxis(5)), 
-          3.5, 10), m_drivetrain)
+          0, 0), m_drivetrain)
       );
     }
 
@@ -100,6 +100,12 @@ public class RobotContainer {
       SmartDashboard.putNumber("Y value", m_pose.getY());
       SmartDashboard.putNumber("Rot value", m_pose.getRotation().getDegrees());
       m_drivetrain.updatePoseWithVision(estimate.get());
+    }
+  }
+
+  public void resetOdom() {
+    if (m_driverController.button(1).getAsBoolean()) {
+      m_drivetrain.resetPose(new Pose2d(12.947, 0.571, new Rotation2d(Math.PI)));
     }
   }
 
