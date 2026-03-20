@@ -48,12 +48,12 @@ public class RobotContainer {
 
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final Vision m_vision = new Vision();
-  private final Intake m_intake = new Intake();
-  private final Spindexer m_spindexer = new Spindexer();
-  private final Kicker m_kicker = new Kicker();
-  private final Turret m_turret = new Turret();
-  private final Hood m_hood = new Hood();
-  private final Flywheel m_flywheel = new Flywheel();
+  //private final Intake m_intake = new Intake();
+  //private final Spindexer m_spindexer = new Spindexer();
+  //private final Kicker m_kicker = new Kicker();
+  //private final Turret m_turret = new Turret();
+  //private final Hood m_hood = new Hood();
+  //private final Flywheel m_flywheel = new Flywheel();
   private final Controller m_controller = new Controller();
 
 
@@ -74,20 +74,20 @@ public class RobotContainer {
       m_drivetrain.setDefaultCommand(
         Commands.run(
           () -> m_drivetrain.drive(
-            m_driverController.getRawAxis(0), 
-            m_driverController.getRawAxis(0), 
-            m_driverController.getRawAxis(0), 
+            -m_driverController.getRawAxis(1), 
+            -m_driverController.getRawAxis(0), 
+            -m_driverController.getRawAxis(4), 
             3.5, 1), 
           m_drivetrain)
       );
-      m_driverController.axisGreaterThan(0, .5).whileTrue( //right trigger find it
+      m_driverController.axisGreaterThan(3, .5).whileTrue( //right trigger find it
         Commands.run(
           () -> m_drivetrain.drive(
-            m_driverController.getRawAxis(0), 
+            m_driverController.getRawAxis(1), 
             m_driverController.getRawAxis(0), 
             m_drivetrain.rotLock(
-              m_driverController.getRawAxis(0), 
-              m_driverController.getRawAxis(0)), 
+              m_driverController.getRawAxis(4), 
+              -m_driverController.getRawAxis(5)), 
           3.5, 10), m_drivetrain)
       );
     }
@@ -110,74 +110,74 @@ public class RobotContainer {
   //TELEOP COMMANDS ALL THE WAY DOWN
   //flip to Command.run() instead of .runOnce() ?
 
-  //INTAKE
-  public Command deployIntake() {
-    return Commands.runOnce(() -> m_intake.setFlip(0), m_intake);
-  }
-  public Command retractIntake() {
-    return Commands.runOnce(() -> m_intake.setFlip(0), m_intake);
-  }
-  public Command runRollers(boolean reversed) {
-    if(reversed) {
-    return Commands.runOnce(() -> m_intake.setRollerSpeed(IntakeConst.rollerSpeed), m_intake);
-    } else {
-    return Commands.runOnce(() -> m_intake.setRollerSpeed(-IntakeConst.rollerSpeed), m_intake);
-    }
-  }
-  public Command stopRollers() {
-    return Commands.runOnce(() -> m_intake.setRollerSpeed(0), m_intake);
-  }
+  // //INTAKE
+  // public Command deployIntake() {
+  //   return Commands.runOnce(() -> m_intake.setFlip(0), m_intake);
+  // }
+  // public Command retractIntake() {
+  //   return Commands.runOnce(() -> m_intake.setFlip(0), m_intake);
+  // }
+  // public Command runRollers(boolean reversed) {
+  //   if(reversed) {
+  //   return Commands.runOnce(() -> m_intake.setRollerSpeed(IntakeConst.rollerSpeed), m_intake);
+  //   } else {
+  //   return Commands.runOnce(() -> m_intake.setRollerSpeed(-IntakeConst.rollerSpeed), m_intake);
+  //   }
+  // }
+  // public Command stopRollers() {
+  //   return Commands.runOnce(() -> m_intake.setRollerSpeed(0), m_intake);
+  // }
 
-  //SPINDEXER
-  public Command runSpindexer(double bps) {
-    return Commands.runOnce(() -> m_spindexer.runSpindexer(bps), m_spindexer);
-  }
+  // //SPINDEXER
+  // public Command runSpindexer(double bps) {
+  //   return Commands.runOnce(() -> m_spindexer.runSpindexer(bps), m_spindexer);
+  // }
 
-  //KICKER
-  public Command runKicker(double speed) {
-    return Commands.runOnce(() -> m_kicker.setSameSpeed(speed), m_kicker);
-  }
-  //SHOOTER
-  public Command positionTurret(double position) {
-    return Commands.runOnce(() -> m_turret.adjustTurret(position), m_turret);
-  }
-  public Command positonHood(double position) {
-    return Commands.runOnce(() -> m_hood.adjustHood(position), m_hood);
-  }
-  public Command runFlywheel(double speed) {
-    return Commands.runOnce(() -> m_flywheel.runFlywheel(speed), m_flywheel);
-  }
+  // //KICKER
+  // public Command runKicker(double speed) {
+  //   return Commands.runOnce(() -> m_kicker.setSameSpeed(speed), m_kicker);
+  // }
+  // //SHOOTER
+  // public Command positionTurret(double position) {
+  //   return Commands.runOnce(() -> m_turret.adjustTurret(position), m_turret);
+  // }
+  // public Command positonHood(double position) {
+  //   return Commands.runOnce(() -> m_hood.adjustHood(position), m_hood);
+  // }
+  // public Command runFlywheel(double speed) {
+  //   return Commands.runOnce(() -> m_flywheel.runFlywheel(speed), m_flywheel);
+  // }
   
-  public Command shootFromBaseOfHub() {
-    return Commands.parallel(
-      positionTurret(0), positonHood(0), runFlywheel(0)
-    );
-  }
+  // public Command shootFromBaseOfHub() {
+  //   return Commands.parallel(
+  //     positionTurret(0), positonHood(0), runFlywheel(0)
+  //   );
+  // }
 
-  public Command shootStaticIntoHub(boolean blueAlliance) {
-    Pose2d m_pose = poseSub.get();
-    double distance = 0;
-    Translation2d hub = new Translation2d();
-    if(blueAlliance) {
-      distance = Controller.hypotenuseCalculator(FIELD_CONST.BLUE_HUB, m_pose.getTranslation());
-      hub = FIELD_CONST.BLUE_HUB;
-    } else {
-      distance = Controller.hypotenuseCalculator(FIELD_CONST.RED_HUB, m_pose.getTranslation());
-      hub=FIELD_CONST.RED_HUB;
-    }
-    double[] shotData = Controller.calculateShooterStatic( //double distance, double heightDifference, double impactAngle
-      distance, 
-      FIELD_CONST.HUB_SHOOTER_DIFFERENCE, 
-      65
-      );
-    double turretPosition = Controller.calculateTurret(m_pose, hub);
+  // public Command shootStaticIntoHub(boolean blueAlliance) {
+  //   Pose2d m_pose = poseSub.get();
+  //   double distance = 0;
+  //   Translation2d hub = new Translation2d();
+  //   if(blueAlliance) {
+  //     distance = Controller.hypotenuseCalculator(FIELD_CONST.BLUE_HUB, m_pose.getTranslation());
+  //     hub = FIELD_CONST.BLUE_HUB;
+  //   } else {
+  //     distance = Controller.hypotenuseCalculator(FIELD_CONST.RED_HUB, m_pose.getTranslation());
+  //     hub=FIELD_CONST.RED_HUB;
+  //   }
+  //   double[] shotData = Controller.calculateShooterStatic( //double distance, double heightDifference, double impactAngle
+  //     distance, 
+  //     FIELD_CONST.HUB_SHOOTER_DIFFERENCE, 
+  //     65
+  //     );
+  //   double turretPosition = Controller.calculateTurret(m_pose, hub);
     
-    return Commands.parallel(
-      positonHood(shotData[0]),
-      runFlywheel(shotData[1]), 
-      positionTurret(turretPosition)
-    );
+  //   return Commands.parallel(
+  //     positonHood(shotData[0]),
+  //     runFlywheel(shotData[1]), 
+  //     positionTurret(turretPosition)
+  //   );
 
-  }
+  // }
 
 }
