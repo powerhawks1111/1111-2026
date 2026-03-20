@@ -100,21 +100,21 @@ public class Constants {
         public static final int BLTurn = 8;
 
         //shooter
-        public static final int LeftS = 11;
-        public static final int RightS = 12;
+        public static final int LeftS = 14;
+        public static final int RightS = 15;
         public static final int Hood = 13;
-        public static final int Turret = 14;
+        public static final int Turret = 12;
 
         //kicker
-        public static final int FrontK = 17;
-        public static final int BackK = 16;
+        public static final int FrontK = 10;
+        public static final int BackK = 11;
 
         //spindexer
-        public static final int Spindexer = 15;
+        public static final int Spindexer = 9;
 
         //intake
-        public static final int Rollers = 10;
-        public static final int Flipper = 9;
+        public static final int Rollers = 16;
+        public static final int Flipper = 17;
     }
 
     public class FIELD_CONST {
