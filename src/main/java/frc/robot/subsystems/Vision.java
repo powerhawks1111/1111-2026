@@ -29,7 +29,7 @@ import frc.robot.Constants.DrivetrainConst;
 public class Vision extends SubsystemBase {
     private final PhotonCamera cam1 = new PhotonCamera(CameraConst.pvCamOne);
     private static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
-    private static final Transform3d fieldToCamera = new Transform3d(
+    private static final Transform3d robotToCamera = new Transform3d(
         -DrivetrainConst.halfSideLength,
         -0.156, 
         0.365, 
@@ -37,7 +37,7 @@ public class Vision extends SubsystemBase {
         0,0, Math.PI
         )
     );
-    private final PhotonPoseEstimator m_Estimator = new PhotonPoseEstimator(kTagLayout, fieldToCamera);
+    private final PhotonPoseEstimator m_Estimator = new PhotonPoseEstimator(kTagLayout, robotToCamera);
 
     public Vision() {
             

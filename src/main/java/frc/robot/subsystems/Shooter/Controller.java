@@ -48,23 +48,21 @@ public class Controller extends SubsystemBase {
     /**
      * Calculates if we can hit the target, and if so, what angle it has to be at. 
      * @param currentPose from odometry
-     * @param turretPosition see const file but in radians it's the offset from the x axis
      * @param target translation 2d of target
      * @return Turret angle in radians. 10 if we cannot hit the angle. 
      */
     public static double calculateTurret(Pose2d currentPose, Translation2d target) {
         //creates a range of values that our turret can be in, field relative
         double turretPositionAdjusted = currentPose.getRotation().getRadians(); //gets centerline of turret range of motion
+        //0 is the front of robot, with ccw positive
         double turretMinAdj = turretPositionAdjusted - TurretConst.turretMin;
         double turretMaxAdj = turretPositionAdjusted + TurretConst.turretMax;
         
         //calculate position of robot to hub, need to add on robot rotation bc this is only based on raw odometry
-        //double xDist = target.getX() -  currentPose.getX();
-        //double yDist = target.getY() -  currentPose.getY();
         double robotRawToHub = Math.atan((target.getY() -  currentPose.getY())/(target.getX() -  currentPose.getX())); 
 
-        if((turretMinAdj < robotRawToHub) && (robotRawToHub < turretMaxAdj)) {
-            return (currentPose.getRotation().getRadians() - robotRawToHub); //angle from front of robot to hub
+        if((turretMinAdj < robotRawToHub) && (robotRawToHub < turretMaxAdj)) { //if within capabilities
+            return (robotRawToHub - currentPose.getRotation().getRadians()); //used to be: currentPose.getRotation().getRadians() - robotRawToHub 
         } else {
             return 10; //ten is way outside the range of 6.28 radians (hopefully)
         }

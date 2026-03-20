@@ -59,6 +59,11 @@ public class Constants {
             public static final double kVelocityTolerance = 0.01; // m/s  , 0.01
             public static final double kClosedLoopRampRate = 0.07;
             public static final int kMaxDriveAmps = 40;
+
+            public static final double autoLockP = 0;
+            public static final double autoLockI = 0;
+            public static final double autoLockD = 0;
+            
     }   
     public class TrajectoryConst {
         public static final double kMaxSpeed = DrivetrainConst.kMaxVelocity;

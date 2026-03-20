@@ -71,7 +71,25 @@ public class RobotContainer {
     }
   
     private void configureBindings() {
-
+      m_drivetrain.setDefaultCommand(
+        Commands.run(
+          () -> m_drivetrain.drive(
+            m_driverController.getRawAxis(0), 
+            m_driverController.getRawAxis(0), 
+            m_driverController.getRawAxis(0), 
+            3.5, 1), 
+          m_drivetrain)
+      );
+      m_driverController.axisGreaterThan(0, .5).whileTrue( //right trigger find it
+        Commands.run(
+          () -> m_drivetrain.drive(
+            m_driverController.getRawAxis(0), 
+            m_driverController.getRawAxis(0), 
+            m_drivetrain.rotLock(
+              m_driverController.getRawAxis(0), 
+              m_driverController.getRawAxis(0)), 
+          3.5, 10), m_drivetrain)
+      );
     }
 
   public void updateVision() {
