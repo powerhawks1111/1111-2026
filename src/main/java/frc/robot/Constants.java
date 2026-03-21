@@ -11,6 +11,11 @@ public class Constants {
         public static final double positionConversionFactor = 1; //for flipper position
         public static final double velocityConversionFactor = 1; //for roller velocity
         
+        public static final double runspeed = 0;
+        public static final double testspeed = 0;
+        public static final double runpos = 0;
+        public static final double testpos = 0;
+       
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
@@ -20,6 +25,8 @@ public class Constants {
 
     public class SpindexerConst {
         public static final double bpsConversionFactor = 5; //assuming no skips, 1 rot/sec = 5 balls 
+        public static final double testspeed = 0;
+        public static final double runspeed = 0;
         
         public static final double kP = 0;
         public static final double kI = 0;

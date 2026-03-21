@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.FIELD_CONST;
 import frc.robot.Constants.IntakeConst;
 import frc.robot.subsystems.Drivetrain;
@@ -43,6 +43,7 @@ import frc.robot.subsystems.Shooter.Controller;
 import frc.robot.subsystems.Shooter.Flywheel;
 import frc.robot.subsystems.Shooter.Hood;
 import frc.robot.subsystems.Shooter.Turret;
+
 
 public class RobotContainer {
 
@@ -58,7 +59,7 @@ public class RobotContainer {
 
 
   private final SendableChooser<Command> autoChooser;
-  private final CommandPS4Controller m_driverController = new CommandPS4Controller(0);
+  private final CommandXboxController  m_driverController = new CommandXboxController(0);
     
     private final StructSubscriber<Pose2d> poseSub = NetworkTableInstance.getDefault()
       .getStructTopic("Robot/CurrentPose", Pose2d.struct).subscribe(new Pose2d());
@@ -72,6 +73,11 @@ public class RobotContainer {
   
     private void configureBindings() {
 
+    }
+
+    public void configuretestBindings() {
+      m_driverController.b().whileTrue(m_spindexer.testSpindexerCommmand());
+      m_driverController.a().whileTrue(m_intake.testIntakeCommand() m_intake.testIntakeposCommand);
     }
 
   public void updateVision() {

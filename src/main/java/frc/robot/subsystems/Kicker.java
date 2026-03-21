@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
 import frc.robot.Constants.IntakeConst;
@@ -41,6 +42,12 @@ public class Kicker extends SubsystemBase{
     public void setSameSpeed(double speed) {
         backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
         frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+    }
+    
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("fmotor Speed", frontMotor.getEncoder().getVelocity());
+        SmartDashboard.putNumber("bmotor Speed", frontMotor.getEncoder().getVelocity());
     }
 
 }

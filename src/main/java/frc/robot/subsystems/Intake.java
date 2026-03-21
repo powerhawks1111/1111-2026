@@ -10,7 +10,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkBase.*;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
 import frc.robot.Constants.IntakeConst;
@@ -46,5 +48,26 @@ public class Intake extends SubsystemBase{
 
     public void setFlip(double position) {
         flipDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
+    }
+
+       public void testIntake() {
+    flipDownMotor.set(SmartDashboard.getNumber("intake pos", IntakeConst.testpos));
+    rollerMotor.set(SmartDashboard.getNumber("intake Speed", IntakeConst.testspeed));
+    }
+
+    public Command testIntakeposCommand(){
+        return new StartEndCommand(() -> this.testIntake(), ()-> this.flipDownMotor.set(0), this);
+        
+        
+    }
+    public Command testIntakeCommand(){
+        return new StartEndCommand(()-> this.testIntake(), ()-> this.rollerMotor.set(0), this);
+        //note-to-self remember to ask if this is neccesairy(was showing unreachable error before)
+    }
+   
+   @Override
+    public void periodic(){
+        SmartDashboard.putNumber("intake speed", rollerMotor.getEncoder().getVelocity());
+        SmartDashboard.putNumber("intake is down" , flipDownMotor.getEncoder().getPosition());
     }
 }
