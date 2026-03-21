@@ -31,6 +31,12 @@ public class Constants {
 
     }
 
+    public class ClimbConst {
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+    }
+
     public class DrivetrainConst {
         //CAN IDs for all our drivesystem
             public static final double sideLength = .552; //meters from one module center to the other. //.622 previously, one encoder center to another
