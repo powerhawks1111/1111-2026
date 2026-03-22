@@ -31,8 +31,8 @@ public class Flywheel extends SubsystemBase{
         leftShoot = new SparkFlex(CANID.LeftS, MotorType.kBrushless);
         rightShoot = new SparkFlex(CANID.RightS, MotorType.kBrushless);
 
-        leftShootConfig.voltageCompensation(12);
-        rightShootConfig.voltageCompensation(12);
+        // leftShootConfig.voltageCompensation(12);
+        // rightShootConfig.voltageCompensation(12);
 
         rightShootConfig.closedLoopRampRate(FlywheelConst.closedLoopRampRate);
         rightShootConfig.closedLoop.pid(FlywheelConst.kP, FlywheelConst.kI, FlywheelConst.kD);
@@ -40,8 +40,8 @@ public class Flywheel extends SubsystemBase{
             .kV(FlywheelConst.kV)
             .kS(FlywheelConst.kS);
 
-        leftShootConfig.follow(CANID.RightS);
-        leftShootConfig.inverted(true);
+        // leftShootConfig.follow(CANID.RightS);
+        // leftShootConfig.inverted(true);
 
         leftShoot.configure(leftShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         rightShoot.configure(leftShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -49,5 +49,17 @@ public class Flywheel extends SubsystemBase{
 
     public void runFlywheel(double rpm) {
         rightShoot.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
+    
     }
+
+    public boolean atRPM() {
+        return rightShoot.getClosedLoopController().isAtSetpoint();
+    }
+
+    public void kinematicsToRealWorld(double[] matchData) {
+        double realAngle = 0; //y = mx+b unless better equation 
+        double realRPM = 0; // y=mx+b unless better equation
+    }
+
+    
 }

@@ -16,9 +16,13 @@ public class Constants {
         public static final double runpos = 0;
         public static final double testpos = 0;
        
-        public static final double kP = 0;
-        public static final double kI = 0;
-        public static final double kD = 0;
+        public static final double kPFlip = 0;
+        public static final double kIFlip = 0;
+        public static final double kDFlip = 0;
+        
+        public static final double kPRoller = 0;
+        public static final double kIRoller = 0;
+        public static final double kDRoller = 0;
         
         public static final int rollerSpeed = 5000; //rpm for rollers - can determine empirically with time
     }
@@ -28,7 +32,7 @@ public class Constants {
         public static final double testspeed = 0;
         public static final double runspeed = 0;
         
-        public static final double kP = 0;
+        public static final double kP = 0.003;
         public static final double kI = 0;
         public static final double kD = 0;
 
@@ -38,8 +42,8 @@ public class Constants {
         //CAN IDs for all our drivesystem
             public static final double sideLength = .552; //meters from one module center to the other. //.622 previously, one encoder center to another
             public static final double halfSideLength = sideLength/2;
-            public static final double kMaxVelocity = 1.5; //note that this value must be lower than the max speed for a swerve module, because for a given path a module may need to move further than the drivetrain.
-            public static final double kMaxAccel = 12;
+            public static final double kMaxVelocity = 4; //note that this value must be lower than the max speed for a swerve module, because for a given path a module may need to move further than the drivetrain.
+            public static final double kMaxAccel = 8;
             public static final double kMaxChassisRotsPerSecond = 1 * (2 * Math.PI); //front coefficient is how many rots/sec we have. 
             public static final double kMaxChassisRotsPerSecondPerSecond = 4 * (2 * Math.PI); //Acceleration
     }
@@ -49,13 +53,13 @@ public class Constants {
             public static final double kWheelDiameter = .1016; // 0.1016 M wheel diameter (4")
             public static final double kWheelCircumference = Math.PI * kWheelDiameter;
             public static final double turningWheelGearRatio = 150/7; //standard steering gear ratio on MK4i 
-            public static final double drivingWheelGearRatio = 8.14; //L3 gear ratio for driving
+            public static final double drivingWheelGearRatio = 8.14; //L1 gear ratio for driving
 
             public static final double turnEncoderScaler = 2* Math.PI;
             public static final double rotationsToMetersScaler = (kWheelCircumference/drivingWheelGearRatio);
             public static final double rpmToVelocityScaler = (kWheelCircumference)/(60*drivingWheelGearRatio); //SDS Mk4I standard gear ratio from motor to wheel, divide by 60 to go from secs to mins
 
-            public static final double kMaxModuleSpeed = DrivetrainConst.kMaxVelocity; // 5.88 meters per second or 19.3 ft/s (max speed of SDS Mk4i with Vortex motor)
+            public static final double kMaxModuleSpeed = DrivetrainConst.kMaxVelocity; // 14.5 ft/s (max speed of SDS Mk4i with Vortex motor)
             public static final double kMaxModuleAccel = DrivetrainConst.kMaxAccel;
             public static final double kP = 0.05;//0.228;
             public static final double kI = 0.0; //.1
@@ -87,6 +91,14 @@ public class Constants {
     public class CameraConst {
         public static final String pvCamOne = "OV9281";
         public static final String pvCamTwo = "camera2";
+        
+        public static final double camX = 0; 
+        public static final double camZ = 0; 
+        public static final double camY = 0; 
+        
+        // public static final double camX = 0; 
+        // public static final double camZ = 0; 
+        // public static final double camY = 0; 
     }
 
     public class CANID {
@@ -102,21 +114,21 @@ public class Constants {
         public static final int BLTurn = 8;
 
         //shooter
-        public static final int LeftS = 11;
-        public static final int RightS = 12;
-        public static final int Hood = 13;
-        public static final int Turret = 14;
+        public static final int LeftS = 14;
+        public static final int RightS = 15;
+        public static final int Hood = 16;
+        public static final int Turret = 30;
 
         //kicker
-        public static final int FrontK = 17;
-        public static final int BackK = 16;
+        public static final int FrontK = 10;
+        public static final int BackK = 17;
 
         //spindexer
-        public static final int Spindexer = 15;
+        public static final int Spindexer = 9;
 
         //intake
-        public static final int Rollers = 10;
-        public static final int Flipper = 9;
+        public static final int Rollers = 16;
+        public static final int Flipper = 17;
     }
 
     public class FIELD_CONST {
@@ -136,11 +148,10 @@ public class Constants {
 
     public class TurretConst {
         //relative to the front of the robot along x axis (which is zero), our turret capabilities in radians
-        public static final double turretMin = 0 * Math.PI; 
-        public static final double turretMax = 0 * Math.PI;
+        public static final double turretMin = - 0 * Math.PI; //cw from 0
+        public static final double turretMax = 0 * Math.PI; //ccw from 0
 
-        public static final double positionConversionFactor = 0;
-        
+        public static final double positionConversionFactor = 120/69; //69 driver 120 driven        
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;

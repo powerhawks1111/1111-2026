@@ -28,7 +28,7 @@ public class Kicker extends SubsystemBase{
         backMotorConfig = new SparkMaxConfig();
         frontMotorConfig = new SparkFlexConfig();
 
-        frontMotorConfig.inverted(true);
+        backMotorConfig.inverted(true);
 
         backMotorConfig.closedLoop
             .pid(0, 0, 0);
@@ -39,9 +39,11 @@ public class Kicker extends SubsystemBase{
         frontMotor.configure(frontMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
     }
 
-    public void setSameSpeed(double speed) {
-        backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
-        frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+    public void setSameSpeed() {
+        //backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        //frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        frontMotor.set(.5);
+        backMotor.set(.7);
     }
     
     @Override

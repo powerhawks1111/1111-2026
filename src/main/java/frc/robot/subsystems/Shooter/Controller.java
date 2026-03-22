@@ -69,6 +69,10 @@ public class Controller extends SubsystemBase {
             return 10; //ten is way outside the range of 6.28 radians (hopefully)
         }
     }
+
+    //public static double  //WHAT WAS I GOING TO PUT HERE WHAT DID I FORGET
+
+    
     /**
      * 
      * @param target target on the field to hit. make sure to subtract shooter height

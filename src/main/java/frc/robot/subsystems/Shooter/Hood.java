@@ -4,6 +4,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -15,7 +16,7 @@ import frc.robot.Constants.SpindexerConst;
 public class Hood extends SubsystemBase{
     private SparkMax hoodMotor;
     private SparkMaxConfig hoodMotorConfig;
-
+    private SparkClosedLoopController m_Controller;
     public Hood() {
         hoodMotor = new SparkMax(CANID.Hood, MotorType.kBrushless);
         hoodMotorConfig = new SparkMaxConfig();
@@ -23,10 +24,12 @@ public class Hood extends SubsystemBase{
         hoodMotorConfig.encoder.positionConversionFactor(HoodConst.positionConversionFactor);
         hoodMotorConfig.closedLoop
             .pid(HoodConst.kP, HoodConst.kI, HoodConst.kD);
+        hoodMotorConfig.inverted(true);
         hoodMotor.configure(hoodMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_Controller = hoodMotor.getClosedLoopController();
     }
 
     public void adjustHood(double position) {
-        hoodMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
+        m_Controller.setSetpoint(position, ControlType.kPosition);
     }
 }

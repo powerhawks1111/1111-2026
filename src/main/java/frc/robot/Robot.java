@@ -37,17 +37,22 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    m_robotContainer.updateVision();
+    
+    //m_robotContainer.updateVision();
   }
 
   public void autonomousInit() {
-    m_robotContainer.getAutonomousCommand().schedule();
-    }
+  //  m_robotContainer.getAutonomousCommand().schedule();
+  }
 
   @Override
   public void teleopInit() {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+  }
+
+  @Override
+  public void teleopPeriodic() {
   }
 }
