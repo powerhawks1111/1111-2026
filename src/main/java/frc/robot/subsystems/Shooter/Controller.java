@@ -82,7 +82,11 @@ public class Controller extends SubsystemBase {
                 target.getZ(), 
                 impactAngle);
         }
-        return previousShot;
+        return previousShot; 
+    }
+
+    public static double[] improvedSOTM() {
+        return null;
     }
     
     public static double hypotenuseCalculator(Translation2d target, Translation2d position) {

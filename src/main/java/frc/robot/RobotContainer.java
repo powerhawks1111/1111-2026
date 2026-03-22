@@ -24,6 +24,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -50,10 +51,10 @@ public class RobotContainer {
   private final Vision m_vision = new Vision();
   //private final Intake m_intake = new Intake();
   //private final Spindexer m_spindexer = new Spindexer();
-  //private final Kicker m_kicker = new Kicker();
+  private final Kicker m_kicker = new Kicker();
   //private final Turret m_turret = new Turret();
-  //private final Hood m_hood = new Hood();
-  //private final Flywheel m_flywheel = new Flywheel();
+  private final Hood m_hood = new Hood();
+  private final Flywheel m_flywheel = new Flywheel();
   private final Controller m_controller = new Controller();
 
 
@@ -67,6 +68,9 @@ public class RobotContainer {
       autoChooser = AutoBuilder.buildAutoChooser();
       SmartDashboard.putData("Auto Chooser", autoChooser);
 
+      SmartDashboard.putNumber("KickerSpeed", 0);
+      SmartDashboard.putNumber("Hood", 0);
+      SmartDashboard.putNumber("RPM", 0);
       configureBindings();
     }
   
@@ -111,6 +115,19 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
+  }
+
+  public void runShooterTesting() {
+    m_kicker.setSameSpeed(
+      SmartDashboard.getNumber("KickerSpeed", 0)
+    );
+    m_hood.adjustHood(
+      SmartDashboard.getNumber("Hood", 0)
+    );
+    m_flywheel.runFlywheel(
+      SmartDashboard.getNumber("RPM", 0)
+    );
+    SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
   }
   
   //TELEOP COMMANDS ALL THE WAY DOWN

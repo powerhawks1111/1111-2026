@@ -37,8 +37,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     m_robotContainer.updateVision();
-    CommandScheduler.getInstance().run();
-    m_robotContainer.resetOdom();
+    m_robotContainer.runShooterTesting();
+    //CommandScheduler.getInstance().run();
+    //m_robotContainer.resetOdom();
   }
 
   public void autonomousInit() {
