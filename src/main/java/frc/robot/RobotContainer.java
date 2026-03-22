@@ -110,12 +110,7 @@ public class RobotContainer {
 
     public void configuretestBindings() {
       m_driverController.b().whileTrue(m_spindexer.testSpindexerCommmand());
-      m_driverController.a().whileTrue(m_intake.testIntakeCommand() m_intake.testIntakeposCommand);
-    }
-
-    public void configuretestBindings() {
-      m_driverController.b().whileTrue(m_spindexer.testSpindexerCommmand());
-      m_driverController.a().whileTrue(m_intake.testIntakeCommand() m_intake.testIntakeposCommand);
+      m_driverController.a().whileTrue(m_intake.testIntakeposCommand());
     }
 
   public void updateVision() {
