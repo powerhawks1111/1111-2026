@@ -25,7 +25,8 @@ public class Spindexer extends SubsystemBase{
         
         spindexerMotor.configure(spindexerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
-    public void runSpindexer(double bps) {
-        spindexerMotor.getClosedLoopController().setSetpoint(bps, ControlType.kVelocity);
+    public void runSpindexer(double setpoint) {
+        //spindexerMotor.getClosedLoopController().setSetpoint(bps, ControlType.kVelocity);
+        spindexerMotor.set(setpoint); 
     }
 }

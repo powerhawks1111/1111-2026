@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
@@ -26,8 +27,13 @@ public class Kicker extends SubsystemBase{
 
         backMotorConfig = new SparkMaxConfig();
         frontMotorConfig = new SparkFlexConfig();
+        frontMotorConfig.idleMode(IdleMode.kCoast);
+        backMotorConfig.idleMode(IdleMode.kCoast);
 
-        frontMotorConfig.inverted(true);
+        backMotorConfig.inverted(true);
+
+//        backMotorConfig.voltageCompensation(11);
+//        frontMotorConfig.voltageCompensation(11);
 
         backMotorConfig.closedLoop
             .pid(0, 0, 0);
@@ -39,8 +45,10 @@ public class Kicker extends SubsystemBase{
     }
 
     public void setSameSpeed(double speed) {
-        backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
-        frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        // backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        // frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        backMotor.set(speed);
+        frontMotor.set(speed);
     }
 
 }

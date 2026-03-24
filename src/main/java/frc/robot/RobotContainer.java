@@ -47,26 +47,26 @@ import frc.robot.subsystems.Shooter.Turret;
 
 public class RobotContainer {
 
-  private final Drivetrain m_drivetrain = new Drivetrain();
-  private final Vision m_vision = new Vision();
+  //private final Drivetrain m_drivetrain = new Drivetrain();
+  //private final Vision m_vision = new Vision();
   //private final Intake m_intake = new Intake();
-  //private final Spindexer m_spindexer = new Spindexer();
+  private final Spindexer m_spindexer = new Spindexer();
   private final Kicker m_kicker = new Kicker();
   //private final Turret m_turret = new Turret();
   private final Hood m_hood = new Hood();
   private final Flywheel m_flywheel = new Flywheel();
-  private final Controller m_controller = new Controller();
+  //private final Controller m_controller = new Controller();
 
 
-  private final SendableChooser<Command> autoChooser;
+  //private final SendableChooser<Command> autoChooser;
   private final CommandPS4Controller m_driverController = new CommandPS4Controller(0);
     
     private final StructSubscriber<Pose2d> poseSub = NetworkTableInstance.getDefault()
       .getStructTopic("Robot/CurrentPose", Pose2d.struct).subscribe(new Pose2d());
   
     public RobotContainer() {
-      autoChooser = AutoBuilder.buildAutoChooser();
-      SmartDashboard.putData("Auto Chooser", autoChooser);
+      //autoChooser = AutoBuilder.buildAutoChooser();
+      //SmartDashboard.putData("Auto Chooser", autoChooser);
 
       SmartDashboard.putNumber("KickerSpeed", 0);
       SmartDashboard.putNumber("Hood", 0);
@@ -75,46 +75,47 @@ public class RobotContainer {
     }
   
     private void configureBindings() {
-      m_drivetrain.setDefaultCommand(
-        Commands.run(
-          () -> m_drivetrain.drive(
-            -m_driverController.getRawAxis(1), 
-            -m_driverController.getRawAxis(0), 
-            -m_driverController.getRawAxis(4), 
-            2.5, 2), 
-          m_drivetrain)
-      );
-      m_driverController.axisGreaterThan(3, .5).whileTrue( //right trigger find it
-        Commands.run(
-          () -> m_drivetrain.drive(
-            0, //.getRawAxis(1), 
-            0, //m_driverController.getRawAxis(0), 
-            m_drivetrain.rotLock(
-              m_driverController.getRawAxis(4), 
-              -m_driverController.getRawAxis(5)), 
-          0, 0), m_drivetrain)
-      );
+      // m_drivetrain.setDefaultCommand(
+      //   Commands.run(
+      //     () -> m_drivetrain.drive(
+      //       -m_driverController.getRawAxis(1), 
+      //       -m_driverController.getRawAxis(0), 
+      //       -m_driverController.getRawAxis(4), 
+      //       2.5, 2), 
+      //     m_drivetrain)
+      // );
+      // m_driverController.axisGreaterThan(3, .5).whileTrue( //right trigger find it
+      //   Commands.run(
+      //     () -> m_drivetrain.drive(
+      //       0, //.getRawAxis(1), 
+      //       0, //m_driverController.getRawAxis(0), 
+      //       m_drivetrain.rotLock(
+      //         m_driverController.getRawAxis(4), 
+      //         -m_driverController.getRawAxis(5)), 
+      //     0, 0), m_drivetrain)
+      // );
     }
 
   public void updateVision() {
-    Optional<EstimatedRobotPose> estimate = m_vision.EstimatePose();
-    if (estimate.isPresent()) {
-      Pose2d m_pose = estimate.get().estimatedPose.toPose2d();
-      SmartDashboard.putNumber("X value", m_pose.getX());
-      SmartDashboard.putNumber("Y value", m_pose.getY());
-      SmartDashboard.putNumber("Rot value", m_pose.getRotation().getDegrees());
-      m_drivetrain.updatePoseWithVision(estimate.get());
-    }
+    // Optional<EstimatedRobotPose> estimate = m_vision.EstimatePose();
+    // if (estimate.isPresent()) {
+    //   Pose2d m_pose = estimate.get().estimatedPose.toPose2d();
+    //   SmartDashboard.putNumber("X value", m_pose.getX());
+    //   SmartDashboard.putNumber("Y value", m_pose.getY());
+    //   SmartDashboard.putNumber("Rot value", m_pose.getRotation().getDegrees());
+    //   m_drivetrain.updatePoseWithVision(estimate.get());
+    // }
   }
 
   public void resetOdom() {
-    if (m_driverController.button(1).getAsBoolean()) {
-      m_drivetrain.resetPose(new Pose2d(12.947, 0.571, new Rotation2d(Math.PI)));
-    }
+    // if (m_driverController.button(1).getAsBoolean()) {
+    //   m_drivetrain.resetPose(new Pose2d(12.947, 0.571, new Rotation2d(Math.PI)));
+    // }
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    //return autoChooser.getSelected();
+    return null;
   }
 
   public void runShooterTesting() {
@@ -127,7 +128,9 @@ public class RobotContainer {
     m_flywheel.runFlywheel(
       SmartDashboard.getNumber("RPM", 0)
     );
-    SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
+    m_flywheel.data();
+
+    m_spindexer.runSpindexer(0.5);
   }
   
   //TELEOP COMMANDS ALL THE WAY DOWN
