@@ -7,6 +7,7 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.config.*;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
 import frc.robot.Constants.SpindexerConst;
@@ -33,4 +34,8 @@ public class Turret extends SubsystemBase{
     public void adjustTurret(double position) {
         turretMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
     }
+    public Command positionTurret(double position) {
+        return this.runOnce(() -> adjustTurret(position));
+    }
+
 }

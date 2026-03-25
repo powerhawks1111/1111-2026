@@ -49,12 +49,31 @@ public class Intake extends SubsystemBase{
         rollerMotor.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
     }
 
+    //TODO: Might need to use feed forward to overcome gravity the first 90 degrees and fight against it the last 90 degrees of rotation
     public void setFlip(double position) {
         flipDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
     }
 
-    public void testIntake() {
+    @Override
+    public void periodic() {
         rollerMotor.set(SmartDashboard.getNumber("Intake Roller Percent", 0));
         flipDownMotor.set(SmartDashboard.getNumber("Intake Flip Percent", 0));
     }
+    
+  public Command deployIntake() { 
+    return this.runOnce(() -> setFlip(0));  //TODO: need to find position. 
+  }
+  public Command retractIntake() {
+    return this.runOnce(() -> setFlip(0)); // TODO: will we want this?
+  }
+  public Command runRollers(boolean reversed) {
+    if(reversed) {
+    return this.runOnce(() -> setRollerSpeed(IntakeConst.rollerSpeed));
+    } else {
+    return this.runOnce(() -> setRollerSpeed(-IntakeConst.rollerSpeed));
+    }
+  }
+  public Command stopRollers() {
+    return this.runOnce(() -> setRollerSpeed(0)); // TODO: change this to setvoltage to 0
+  }
 }

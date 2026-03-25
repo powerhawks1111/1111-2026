@@ -37,15 +37,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    //m_robotContainer.updateVision();
-    //CommandScheduler.getInstance().run();
-    //m_robotContainer.resetOdom();
-    m_robotContainer.runShooterTesting();
-    //m_robotContainer.runIntakeTest();
+    CommandScheduler.getInstance().run();  //This needs to stay in robotPeriodic in order for the periodic methods of the Subsystem classes to run
+    m_robotContainer.updateVision();
   }
 
   public void autonomousInit() {
-  //  m_robotContainer.getAutonomousCommand().schedule();
+    m_robotContainer.getAutonomousCommand().schedule();
   }
 
   @Override

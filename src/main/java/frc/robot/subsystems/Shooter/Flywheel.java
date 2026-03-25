@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkBase.*;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
 import frc.robot.Constants.FlywheelConst;
@@ -54,13 +55,22 @@ public class Flywheel extends SubsystemBase{
         
         SmartDashboard.putNumber("Velocity", rightShoot.getEncoder().getVelocity());
         SmartDashboard.putNumber("Current", rightShoot.getOutputCurrent());
+      SmartDashboard.putNumber("RPM", 0);
     }
 
-    public void runFlywheel(double rpm) {
+    public void setSpeed(double rpm) {
         m_controller.setSetpoint(rpm, ControlType.kVelocity);
     }
 
-    public void data() {
+    public Command runFlywheel(double speed) {
+        return this.runOnce(() -> setSpeed(speed));
+    }
+
+    @Override
+    public void periodic() {
+        setSpeed(
+          SmartDashboard.getNumber("RPM", 0)
+        );
         SmartDashboard.putNumber("Velocity", rightShoot.getEncoder().getVelocity());
         SmartDashboard.putNumber("Current", rightShoot.getOutputCurrent());
     }
