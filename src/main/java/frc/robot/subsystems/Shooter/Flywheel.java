@@ -62,6 +62,7 @@ public class Flywheel extends SubsystemBase{
         m_controller.setSetpoint(rpm, ControlType.kVelocity);
     }
 
+    //TODO: Test if this should be runOnce or run
     public Command runFlywheel(double speed) {
         return this.runOnce(() -> setSpeed(speed));
     }
