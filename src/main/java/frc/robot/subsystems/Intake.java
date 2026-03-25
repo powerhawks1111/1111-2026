@@ -10,6 +10,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkBase.*;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
@@ -28,6 +29,7 @@ public class Intake extends SubsystemBase{
 
         flipDownMotorConfig = new SparkMaxConfig();
         rollerMotorConfig = new SparkFlexConfig();
+        rollerMotorConfig.inverted(true);
 
         flipDownMotorConfig.encoder.positionConversionFactor(IntakeConst.positionConversionFactor);
         flipDownMotorConfig.closedLoop
@@ -38,6 +40,9 @@ public class Intake extends SubsystemBase{
 
         flipDownMotor.configure(flipDownMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         rollerMotor.configure(rollerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
+
+        SmartDashboard.putNumber("Intake Roller Percent", 0);
+        SmartDashboard.putNumber("Intake Flip Percent", 0);
     }
 
     public void setRollerSpeed(int rpm) {
@@ -46,5 +51,10 @@ public class Intake extends SubsystemBase{
 
     public void setFlip(double position) {
         flipDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
+    }
+
+    public void testIntake() {
+        rollerMotor.set(SmartDashboard.getNumber("Intake Roller Percent", 0));
+        flipDownMotor.set(SmartDashboard.getNumber("Intake Flip Percent", 0));
     }
 }

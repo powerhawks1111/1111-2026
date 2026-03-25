@@ -36,8 +36,8 @@ public class Constants {
             public static final double sideLength = .552; //meters from one module center to the other. //.622 previously, one encoder center to another
             public static final double halfSideLength = sideLength/2;
             public static final double kMaxVelocity = 4; //note that this value must be lower than the max speed for a swerve module, because for a given path a module may need to move further than the drivetrain.
-            public static final double kMaxAccel = 8;
-            public static final double kMaxChassisRotsPerSecond = 1 * (2 * Math.PI); //front coefficient is how many rots/sec we have. 
+            public static final double kMaxAccel = 12;
+            public static final double kMaxChassisRotsPerSecond = 3 * (2 * Math.PI); //front coefficient is how many rots/sec we have. 
             public static final double kMaxChassisRotsPerSecondPerSecond = 4 * (2 * Math.PI); //Acceleration
     }
 
@@ -63,6 +63,11 @@ public class Constants {
             public static final double kVelocityTolerance = 0.01; // m/s  , 0.01
             public static final double kClosedLoopRampRate = 0.07;
             public static final int kMaxDriveAmps = 40;
+
+            public static final double autoLockP = 0;
+            public static final double autoLockI = 0;
+            public static final double autoLockD = 0;
+            
     }   
     public class TrajectoryConst {
         public static final double kMaxSpeed = DrivetrainConst.kMaxVelocity;
@@ -107,14 +112,14 @@ public class Constants {
         public static final int BLTurn = 8;
 
         //shooter
-        public static final int LeftS = 14;
-        public static final int RightS = 15;
-        public static final int Hood = 16;
-        public static final int Turret = 30;
+        public static final int LeftS = 11;
+        public static final int RightS = 12;
+        public static final int Hood = 13;
+        public static final int Turret = 14;
 
         //kicker
-        public static final int FrontK = 10;
-        public static final int BackK = 17;
+        public static final int FrontK = 17;
+        public static final int BackK = 16;
 
         //spindexer
         public static final int Spindexer = 9;

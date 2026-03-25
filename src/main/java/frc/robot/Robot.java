@@ -32,13 +32,16 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     FollowPathCommand.warmupCommand().schedule();
     PathfindingCommand.warmupCommand().schedule();
+    
   }
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
-    
     //m_robotContainer.updateVision();
+    //CommandScheduler.getInstance().run();
+    //m_robotContainer.resetOdom();
+    m_robotContainer.runShooterTesting();
+    //m_robotContainer.runIntakeTest();
   }
 
   public void autonomousInit() {

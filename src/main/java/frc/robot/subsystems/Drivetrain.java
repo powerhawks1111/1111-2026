@@ -59,8 +59,13 @@ public class Drivetrain extends SubsystemBase{
     private final StructPublisher<Pose2d> posePub = NetworkTableInstance.getDefault()
         .getStructTopic("Robot/CurrentPose", Pose2d.struct).publish(); //use as template for publishing data to NetworkTables.
     private final Field2d m_field = new Field2d();
+    private final PIDController m_rotLockController;
 
     public Drivetrain() {
+        m_rotLockController = new PIDController(DriveConst.autoLockP, DriveConst.autoLockP, DriveConst.autoLockP);
+        m_rotLockController.enableContinuousInput(0, 2 * Math.PI);
+        m_rotLockController.setTolerance(0.0872665); //five degrees 
+
         m_PoseEstimator = new SwerveDrivePoseEstimator(
             m_kinematics, 
             navx.getRotation2d(), 
@@ -210,5 +215,19 @@ public class Drivetrain extends SubsystemBase{
             DrivetrainConst.kMaxChassisRotsPerSecondPerSecond
         );
         return AutoBuilder.pathfindToPose(targetPose, pathConstraints, 0.1);
+    }
+
+    public double rotLock(double xStick, double yStick) {
+
+        //need to prevent NaN as result by taking atan of x/0 
+
+        double a = m_rotLockController.calculate(
+            navx.getRotation2d().getRadians() + Math.PI, Math.atan( //intake is 180 degrees or pi radians offset from intake side
+                yStick/xStick
+            )
+        );
+
+        SmartDashboard.putNumber("controller output", a);
+        return a;
     }
 }

@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
 import frc.robot.Constants.HoodConst;
@@ -20,16 +21,20 @@ public class Hood extends SubsystemBase{
     public Hood() {
         hoodMotor = new SparkMax(CANID.Hood, MotorType.kBrushless);
         hoodMotorConfig = new SparkMaxConfig();
+        hoodMotorConfig.inverted(true);
+        
+        hoodMotorConfig.encoder
+            .positionConversionFactor(HoodConst.positionConversionFactor);
 
-        hoodMotorConfig.encoder.positionConversionFactor(HoodConst.positionConversionFactor);
         hoodMotorConfig.closedLoop
             .pid(HoodConst.kP, HoodConst.kI, HoodConst.kD);
-        hoodMotorConfig.inverted(true);
+        hoodMotor.getEncoder().setPosition(0);
         hoodMotor.configure(hoodMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_Controller = hoodMotor.getClosedLoopController();
     }
 
     public void adjustHood(double position) {
-        m_Controller.setSetpoint(position, ControlType.kPosition);
+        SmartDashboard.putNumber("HoodPositionOutput", hoodMotor.getEncoder().getPosition());
+        hoodMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
     }
 }
