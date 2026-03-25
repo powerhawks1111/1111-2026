@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
     //CommandScheduler.getInstance().run();
     //m_robotContainer.resetOdom();
     m_robotContainer.runShooterTesting();
+    //m_robotContainer.runIntakeTest();
   }
 
   public void autonomousInit() {

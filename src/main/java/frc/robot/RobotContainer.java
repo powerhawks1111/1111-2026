@@ -49,7 +49,7 @@ public class RobotContainer {
 
   //private final Drivetrain m_drivetrain = new Drivetrain();
   //private final Vision m_vision = new Vision();
-  //private final Intake m_intake = new Intake();
+  private final Intake m_intake = new Intake();
   private final Spindexer m_spindexer = new Spindexer();
   private final Kicker m_kicker = new Kicker();
   //private final Turret m_turret = new Turret();
@@ -71,6 +71,7 @@ public class RobotContainer {
       SmartDashboard.putNumber("KickerSpeed", 0);
       SmartDashboard.putNumber("Hood", 0);
       SmartDashboard.putNumber("RPM", 0);
+      SmartDashboard.putNumber("Spindexer", 0);
       configureBindings();
     }
   
@@ -130,7 +131,13 @@ public class RobotContainer {
     );
     m_flywheel.data();
 
-    m_spindexer.runSpindexer(0.5);
+    m_spindexer.runSpindexer(
+      SmartDashboard.getNumber("Spindexer", 0)
+    );
+  }
+
+  public void runIntakeTest() {
+    m_intake.testIntake();
   }
   
   //TELEOP COMMANDS ALL THE WAY DOWN
