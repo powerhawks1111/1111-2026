@@ -24,7 +24,7 @@ public class Spindexer extends SubsystemBase{
         spindexerMotorConfig.encoder.velocityConversionFactor(SpindexerConst.bpsConversionFactor);
         spindexerMotorConfig.closedLoop
             .pid(SpindexerConst.kP, SpindexerConst.kI, SpindexerConst.kD);
-        spindexerMotorConfig.inverted(false);
+        spindexerMotorConfig.inverted(true);
         spindexerMotor.configure(spindexerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
       SmartDashboard.putNumber("Spindexer", 0);

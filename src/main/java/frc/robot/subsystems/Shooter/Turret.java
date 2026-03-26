@@ -38,4 +38,9 @@ public class Turret extends SubsystemBase{
         return this.runOnce(() -> adjustTurret(position));
     }
 
+    @Override
+    public void periodic() {
+        turretMotor.set(.3);
+    }
+
 }
