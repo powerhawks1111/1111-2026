@@ -25,6 +25,7 @@ public class Turret extends SubsystemBase{
         turretMotor = new SparkMax(CANID.Turret, MotorType.kBrushless);
         turretMotorConfig = new SparkMaxConfig();
 
+        turretMotorConfig.idleMode(IdleMode.kBrake);
         turretMotorConfig.encoder.positionConversionFactor(TurretConst.positionConversionFactor);
         turretMotorConfig.closedLoop
             .pid(TurretConst.kP, TurretConst.kI, TurretConst.kD);
@@ -37,5 +38,7 @@ public class Turret extends SubsystemBase{
     public Command positionTurret(double position) {
         return this.runOnce(() -> adjustTurret(position));
     }
-
+    
 }
+    
+        
