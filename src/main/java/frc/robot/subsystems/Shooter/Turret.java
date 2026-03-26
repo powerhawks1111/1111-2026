@@ -40,7 +40,6 @@ public class Turret extends SubsystemBase{
 
     @Override
     public void periodic() {
-        turretMotor.set(.3);
     }
 
 }
