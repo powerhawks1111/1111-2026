@@ -95,6 +95,7 @@ public class RobotContainer {
       m_operator.button(1).toggleOnTrue(runFlywheel(4000));
       m_operator.button(2).whileFalse(runKicker()).whileTrue(runKicker());
       m_operator.button(2).whileFalse(runSpindexer(0)).whileTrue(runSpindexer(.8));
+      m_operator.button(3).whileTrue(m_hood.zeroHood()); 
       //positonHood(0);
 
     //m_operator.button(1).whileTrue(runKicker(.5).alongWith(runSpindexer(4))).whileFalse(runKicker(0).alongWith(runSpindexer(0)));
