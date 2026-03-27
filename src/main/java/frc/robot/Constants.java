@@ -23,12 +23,12 @@ public class Constants {
     }
 
     public class SpindexerConst {
-        public static final double bpsConversionFactor = 1; //assuming no skips, 1 rot/sec = 5 balls
+        public static final double motorRotsToFuel = .2; //assuming no skips, 1 rot = 5 fuel
+        public static final double motorRotsToFuelPerSec = .2 * 60; //assuming no skips, 1 rot = 5 fuel
         
         public static final double kP = 0.003;
         public static final double kI = 0;
         public static final double kD = 0;
-
     }
 
     public class DrivetrainConst {
@@ -146,8 +146,8 @@ public class Constants {
 
     public class TurretConst {
         //relative to the front of the robot along x axis (which is zero), our turret capabilities in radians
-        public static final double turretMin = - 0 * Math.PI; //cw from 0
-        public static final double turretMax = 0 * Math.PI; //ccw from 0
+        public static final double turretMin = - 1 * Math.PI; //cw from 0
+        public static final double turretMax = 1 * Math.PI; //ccw from 0
 
         public static final double positionConversionFactor = 120/69; //69 driver 120 driven        
         public static final double kP = 0;

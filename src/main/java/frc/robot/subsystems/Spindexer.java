@@ -21,13 +21,15 @@ public class Spindexer extends SubsystemBase{
         spindexerMotor = new SparkMax(CANID.Spindexer, MotorType.kBrushless);
         spindexerMotorConfig = new SparkMaxConfig();
 
-        spindexerMotorConfig.encoder.velocityConversionFactor(SpindexerConst.bpsConversionFactor);
+        SmartDashboard.putNumber("Spindexer", 0);
+        spindexerMotorConfig.encoder
+          .positionConversionFactor(SpindexerConst.motorRotsToFuel)
+          .velocityConversionFactor(SpindexerConst.motorRotsToFuelPerSec);
         spindexerMotorConfig.closedLoop
             .pid(SpindexerConst.kP, SpindexerConst.kI, SpindexerConst.kD);
         spindexerMotorConfig.inverted(true);
         spindexerMotor.configure(spindexerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-      SmartDashboard.putNumber("Spindexer", 0);
     }
 
     public void setSpeed(double bps) {
@@ -40,8 +42,11 @@ public class Spindexer extends SubsystemBase{
 
     @Override
     public void periodic() {
-       spindexerMotor.set(
-          SmartDashboard.getNumber("Spindexer", 0)
-        );
+      //  setSpeed(
+      //     SmartDashboard.getNumber("Spindexer", 0)
+      //   );
+      spindexerMotor.set(SmartDashboard.getNumber("Spindexer", 0));
+      SmartDashboard.putNumber("Encoder Reading", spindexerMotor.getEncoder().getPosition());
+
     }
 }

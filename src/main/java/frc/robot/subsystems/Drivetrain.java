@@ -48,7 +48,7 @@ public class Drivetrain extends SubsystemBase{
     private final SwerveModule m_backRight = new SwerveModule(CANID.BRDrive, CANID.BRTurn); 
     private final SwerveModule m_backLeft = new SwerveModule(CANID.BLDrive, CANID.BLTurn); 
 
-    private final AHRS navx = new AHRS(NavXComType.kMXP_SPI); //ensure "spi" is switched "on" on navx2
+    private final AHRS navx = new AHRS(NavXComType.kUSB1); //ensure "spi" is switched "on" on navx2
     
     private SwerveModulePosition[] m_positions = {m_frontLeft.getPosition(), m_frontRight.getPosition(), m_backLeft.getPosition(), m_backRight.getPosition()};
     private SwerveModuleState[] m_swerveModuleStates;
