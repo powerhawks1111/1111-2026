@@ -85,7 +85,7 @@ public class Controller extends SubsystemBase {
         //creates a range of values that our turret can be in, field relative
         double turretPositionAdjusted = currentPose.getRotation().getRadians(); //gets centerline of turret range of motion
         //0 is the front of robot, with ccw positive
-        double turretMinAdj = turretPositionAdjusted - TurretConst.turretMin;
+        double turretMinAdj = turretPositionAdjusted + TurretConst.turretMin;
         double turretMaxAdj = turretPositionAdjusted + TurretConst.turretMax;
         
         //calculate position of robot to hub, need to add on robot rotation bc this is only based on raw odometry
