@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Optional;
@@ -25,6 +26,7 @@ import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -34,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.CameraConst;
 import frc.robot.Constants.FIELD_CONST;
 import frc.robot.Constants.IntakeConst;
 import frc.robot.subsystems.Drivetrain;
@@ -49,7 +52,10 @@ import frc.robot.subsystems.Shooter.Turret;
 public class RobotContainer {
 
   private final Drivetrain m_drivetrain = new Drivetrain();
-  private final Vision m_vision = new Vision();
+
+  private final Vision camLeft = new Vision(CameraConst.pvCamOne);
+  private final Vision camRight = new Vision(CameraConst.pvCamTwo);
+
   private final Intake m_intake = new Intake();
   private final Spindexer m_spindexer = new Spindexer();
   private final Kicker m_kicker = new Kicker();
@@ -60,7 +66,7 @@ public class RobotContainer {
   private final CommandXboxController m_driver = new CommandXboxController(0);
   private final CommandXboxController m_operator = new CommandXboxController(1);
 
-
+  private final Translation2d our_hub;
 
   private final SendableChooser<Command> autoChooser;
     
@@ -70,6 +76,18 @@ public class RobotContainer {
     public RobotContainer() {
       autoChooser = AutoBuilder.buildAutoChooser();
       SmartDashboard.putData("Auto Chooser", autoChooser);
+      var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+          boolean isBlueAlliance = alliance.get() == DriverStation.Alliance.Blue;
+          if (isBlueAlliance) {
+            our_hub = FIELD_CONST.BLUE_HUB;
+          } else {
+            our_hub = FIELD_CONST.RED_HUB;
+          }
+        } else {
+          our_hub = FIELD_CONST.BLUE_HUB;
+        }
+      
 
       SmartDashboard.putNumber("X", 0);
       SmartDashboard.putNumber("Y", 0);
@@ -120,6 +138,17 @@ public class RobotContainer {
       // m_driver.button(3).onTrue();
   }
 
+  public void shootIntegrated() {
+    double[] input = Controller.getShooterSimple(
+      Feet.convertFrom(
+        Controller.hypotenuseCalculator(
+          our_hub, 
+          m_drivetrain.getEstimatedPose().getTranslation()), 
+          Meters)
+    );
+    
+  }
+
   public void test() {
     double[] input = m_controller.getShooterSimple(7.75);
     SmartDashboard.putNumber("RPM", input[0]);
@@ -137,14 +166,34 @@ public class RobotContainer {
   }
 
   public void updateVision() {
-    Optional<EstimatedRobotPose> estimate = m_vision.EstimatePose();
-    if (estimate.isPresent()) {
-      Pose2d m_pose = estimate.get().estimatedPose.toPose2d();
-      SmartDashboard.putNumber("X value", m_pose.getX());
-      SmartDashboard.putNumber("Y value", m_pose.getY());
-      SmartDashboard.putNumber("Rot value", m_pose.getRotation().getDegrees());
-      m_drivetrain.updatePoseWithVision(estimate.get());
+    // Optional<EstimatedRobotPose> estimate = m_vision.EstimatePose();
+    // if (estimate.isPresent()) {
+    //   Pose2d m_pose = estimate.get().estimatedPose.toPose2d();
+    //   SmartDashboard.putNumber("X value", m_pose.getX());
+    //   SmartDashboard.putNumber("Y value", m_pose.getY());
+    //   SmartDashboard.putNumber("Rot value", m_pose.getRotation().getDegrees());
+    //   m_drivetrain.updatePoseWithVision(estimate.get());
+    // }
+
+    Optional<EstimatedRobotPose> estimateLeft = camLeft.EstimatePose();
+    if (estimateLeft.isPresent()) {
+      Pose2d m_pose = estimateLeft.get().estimatedPose.toPose2d();
+      SmartDashboard.putNumber("X value LEFT", m_pose.getX());
+      SmartDashboard.putNumber("Y value LEFT", m_pose.getY());
+      SmartDashboard.putNumber("Rot value LEFT", m_pose.getRotation().getDegrees());
+      m_drivetrain.updatePoseWithVision(estimateLeft.get());
     }
+
+    Optional<EstimatedRobotPose> estimateRight = camRight.EstimatePose();
+    if (estimateRight.isPresent()) {
+      Pose2d m_pose = estimateRight.get().estimatedPose.toPose2d();
+      SmartDashboard.putNumber("X value RIGHT", m_pose.getX());
+      SmartDashboard.putNumber("Y value RIGHT", m_pose.getY());
+      SmartDashboard.putNumber("Rot value RIGHT", m_pose.getRotation().getDegrees());
+      m_drivetrain.updatePoseWithVision(estimateRight.get());
+    }
+
+    
   }
 
   public Command getAutonomousCommand() {

@@ -27,7 +27,6 @@ import frc.robot.Constants.DriveConst;
 import frc.robot.Constants.DrivetrainConst;
 
 public class Vision extends SubsystemBase {
-    private final PhotonCamera cam1 = new PhotonCamera(CameraConst.pvCamOne);
     private static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
     private static final Transform3d robotToCamera = new Transform3d(
         0.3683,
@@ -38,14 +37,15 @@ public class Vision extends SubsystemBase {
         )
     );
     private final PhotonPoseEstimator m_Estimator = new PhotonPoseEstimator(kTagLayout, robotToCamera);
+    private final PhotonCamera camera;
 
-    public Vision() {
-            
+    public Vision(String cameraName) {
+        camera = new PhotonCamera(cameraName);
     }
 
     public Optional<EstimatedRobotPose> EstimatePose() {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
-        for (var result : cam1.getAllUnreadResults()) {
+        for (var result : camera.getAllUnreadResults()) {
             visionEst = m_Estimator.estimateCoprocMultiTagPose(result);
             if (visionEst.isEmpty()) {
                 visionEst = m_Estimator.estimateLowestAmbiguityPose(result);
