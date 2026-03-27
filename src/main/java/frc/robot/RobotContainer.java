@@ -56,6 +56,7 @@ public class RobotContainer {
   private final Turret m_turret = new Turret();
   private final Hood m_hood = new Hood();
   private final Flywheel m_flywheel = new Flywheel();
+  private final Controller m_controller = new Controller();
   private final CommandXboxController m_driver = new CommandXboxController(0);
   private final CommandXboxController m_operator = new CommandXboxController(1);
 
@@ -113,6 +114,16 @@ public class RobotContainer {
       // m_driver.button(2).onTrue();
       
       // m_driver.button(3).onTrue();
+  }
+
+  public void test() {
+    double[] input = m_controller.getShooterSimple(7.75);
+    SmartDashboard.putNumber("RPM", input[0]);
+    SmartDashboard.putNumber("Hood", input[1]);
+
+    SmartDashboard.putNumber("Turret Angle Degrees", 
+      Math.toDegrees(m_controller.calculateTurret(new Pose2d(), new Translation2d(1,1)))
+    );
   }
 
   public void updateVision() {

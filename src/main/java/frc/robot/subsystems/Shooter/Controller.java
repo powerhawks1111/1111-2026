@@ -3,6 +3,9 @@ package frc.robot.subsystems.Shooter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConst;
 
@@ -12,9 +15,36 @@ public class Controller extends SubsystemBase {
     private static double shooterPureAngle = 0;
     private static double timeOfFlight = 0;
     private static double[] staticShot = {0,0,0};
+
+    private static InterpolatingDoubleTreeMap rpmMap;
+    private static InterpolatingDoubleTreeMap hoodMap;
         
     public Controller() {
-                
+        rpmMap = new InterpolatingDoubleTreeMap();
+        hoodMap = new InterpolatingDoubleTreeMap();
+
+        rpmMap.put(3.0 + 1.75, 3500.0);
+        rpmMap.put(6.0 + 1.75, 4000.0);
+        rpmMap.put(9.0 + 1.75, 4500.0);
+        rpmMap.put(12.0  + 1.75, 4700.0);
+
+        hoodMap.put(3.0 + 1.75, 0.20);
+        hoodMap.put(6.0 + 1.75, 0.25);
+        hoodMap.put(9.0 + 1.75, 0.3);
+        hoodMap.put(12.0 + 1.75, .4);
+    }
+
+    /**
+     * 
+     * @param distance the raw distance to the hub. NOTE, it's in FEET
+     * @return double[] -> {RPM, angle}
+     */
+    public static double[] getShooterSimple(double distance) {
+        double[] data = {
+            rpmMap.get(distance),
+            hoodMap.get(distance)
+        };
+        return data;
     }
 
     /**
@@ -60,7 +90,8 @@ public class Controller extends SubsystemBase {
         
         //calculate position of robot to hub, need to add on robot rotation bc this is only based on raw odometry
         double robotRawToHub = Math.atan((target.getY() -  currentPose.getY())/(target.getX() -  currentPose.getX())); 
-
+        SmartDashboard.putNumber("robotRawToHub", robotRawToHub);
+        
         if((turretMinAdj < robotRawToHub) && (robotRawToHub < turretMaxAdj)) { //if within capabilities
             return (robotRawToHub - currentPose.getRotation().getRadians()); //used to be: currentPose.getRotation().getRadians() - robotRawToHub 
         } else {
@@ -69,20 +100,19 @@ public class Controller extends SubsystemBase {
     }
 
     //public static double  //WHAT WAS I GOING TO PUT HERE WHAT DID I FORGET
-
     
     /**
      * 
      * @param target target on the field to hit. make sure to subtract shooter height
      * @param currentPosition odometry position on the field
-     * @param currentVelocities x, y velocities of the robot. technically not supposed to use this but see if i care
+     * @param currentVelocities x, y velocities of the robot. 
      */
-    public double[] shootOnTheMove(Translation3d target, Pose2d currentPose, Translation2d currentVelocities, double impactAngle) {
+    public double[] shootOnTheMove(Translation3d target, Pose2d currentPose, ChassisSpeeds currentVelocities, double impactAngle) {
         double distance = Math.sqrt((target.getY() -  currentPose.getY()) + (target.getX() -  currentPose.getX()));
         double[] previousShot = Controller.calculateShooterStatic(distance, target.getZ(), impactAngle); //initial
         for (int i = 0; i < 10; i++) {
             previousShot = Controller.calculateShooterStatic(
-                Math.sqrt((target.getY() -  currentPose.getY() + (currentVelocities.getY() * previousShot[2])) + (target.getX() -  currentPose.getX() + (currentVelocities.getX() * previousShot[2]))), 
+                Math.sqrt((target.getY() -  currentPose.getY() + (currentVelocities.vyMetersPerSecond * previousShot[2])) + (target.getX() -  currentPose.getX() + (currentVelocities.vxMetersPerSecond * previousShot[2]))), 
                 target.getZ(), 
                 impactAngle);
         }
