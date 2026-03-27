@@ -71,6 +71,10 @@ public class RobotContainer {
       autoChooser = AutoBuilder.buildAutoChooser();
       SmartDashboard.putData("Auto Chooser", autoChooser);
 
+      SmartDashboard.putNumber("X", 0);
+      SmartDashboard.putNumber("Y", 0);
+      SmartDashboard.putNumber("ROT", 0);
+
       configureBindings();
     }
   
@@ -122,8 +126,14 @@ public class RobotContainer {
     SmartDashboard.putNumber("Hood", input[1]);
 
     SmartDashboard.putNumber("Turret Angle Degrees", 
-      Math.toDegrees(m_controller.calculateTurret(new Pose2d(), new Translation2d(1,1)))
-    );
+      Math.toDegrees(Controller.calculateTurret(new Pose2d(new Translation2d(
+        SmartDashboard.getNumber("X", 0),
+        SmartDashboard.getNumber("Y", 0)), 
+        new Rotation2d(
+          SmartDashboard.getNumber("ROT", 0)
+        ))
+        , FIELD_CONST.BLUE_HUB)
+    ));
   }
 
   public void updateVision() {
