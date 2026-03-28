@@ -124,7 +124,7 @@ public class Controller extends SubsystemBase {
     }
     
     public static double hypotenuseCalculator(Translation2d target, Translation2d position) {
-        return (Math.sqrt((target.getX() - position.getX()) + (target.getY() - position.getY()))); 
+        return (Math.sqrt(Math.pow((target.getX() - position.getX()), 2) + Math.pow((target.getY() - position.getY()), 2))); 
     }
 
 }

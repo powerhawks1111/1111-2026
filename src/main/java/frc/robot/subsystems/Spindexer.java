@@ -38,7 +38,7 @@ public class Spindexer extends SubsystemBase{
     }
 
     public Command runSpindexer() {
-      return this.run(() -> setSpeed(0.35));
+      return this.run(() -> setSpeed(0.28));
     }
 
     public Command stopSpindexer() {

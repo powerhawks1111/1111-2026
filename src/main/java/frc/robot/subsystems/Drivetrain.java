@@ -218,7 +218,9 @@ public class Drivetrain extends SubsystemBase{
     public double rotLock(double xStick, double yStick) {
 
         //need to prevent NaN as result by taking atan of x/0 
-
+        if (xStick == 0) {
+            xStick = 0.001;
+        }
         double a = m_rotLockController.calculate(
             navx.getRotation2d().getRadians() + Math.PI, Math.atan( //intake is 180 degrees or pi radians offset from intake side
                 yStick/xStick
@@ -228,4 +230,6 @@ public class Drivetrain extends SubsystemBase{
         SmartDashboard.putNumber("controller output", a);
         return a;
     }
+
+
 }

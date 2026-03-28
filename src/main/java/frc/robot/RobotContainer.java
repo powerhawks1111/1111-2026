@@ -18,6 +18,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import choreo.auto.AutoFactory;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -84,9 +85,6 @@ public class RobotContainer {
       autoChooser = AutoBuilder.buildAutoChooser();
       SmartDashboard.putData("Auto Chooser", autoChooser);
 
-      SmartDashboard.putNumber("rpmreal", 0);
-      SmartDashboard.putNumber("hoodreal", 0);
-
       alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
           boolean isBlueAlliance = alliance.get() == DriverStation.Alliance.Blue;
@@ -115,19 +113,19 @@ public class RobotContainer {
 
       m_operator.a().onTrue(m_spindexer.reverseSpindexer());
 
-      m_operator.axisGreaterThan(3, 0.25).onTrue(m_intake.setVoltageManual(2).withTimeout(0.45).andThen(m_intake.stopIntakeFlipCommand()));
-      m_operator.axisGreaterThan(2, 0.25).onTrue(m_intake.setVoltageManual(-3).withTimeout(0.5).andThen(m_intake.stopIntakeFlipCommand()));
+      m_operator.axisGreaterThan(3, 0.25).onTrue(m_intake.setVoltageManual(2).withTimeout(0.7).andThen(m_intake.stopIntakeFlipCommand()));
+      m_operator.axisGreaterThan(2, 0.25).onTrue(m_intake.setVoltageManual(-3).withTimeout(0.42).andThen(m_intake.stopIntakeFlipCommand()));
       
-      // m_operator.b().onTrue(new ShootWithRange(m_flywheel, m_hood, m_spindexer, m_kicker, 
-      //   Controller.getShooterSimple(/[.]
-      //     Feet.convertFrom(
-      //     Controller.hypotenuseCalculator(
-      //       our_hub, 
-      //       m_drivetrain.getEstimatedPose().getTranslation()), 
-      //       Meters)
-      //     )
-      //   )
-      // );
+      m_operator.b().onTrue(new ShootWithRange(m_flywheel, m_hood, m_spindexer, m_kicker, 
+        Controller.getShooterSimple(
+          Feet.convertFrom(
+          Controller.hypotenuseCalculator(
+            our_hub, 
+            m_drivetrain.getEstimatedPose().getTranslation()), 
+            Meters)
+          ) 
+        )
+      );
 
       //m_operator.rightBumper().onFalse(stopShooter());
       m_drivetrain.setDefaultCommand(
@@ -139,7 +137,7 @@ public class RobotContainer {
             4, 2), 
           m_drivetrain)
       );
-/*    TODO: Need to decide whether to use this or not 
+    /*TODO: Need to decide whether to use this or not 
         m_driverController.axisGreaterThan(3, .5).whileTrue( //right trigger find it
         Commands.run(
           () -> m_drivetrain.drive(
@@ -150,20 +148,7 @@ public class RobotContainer {
               -m_driverController.getRawAxis(5)), 
           0, 0), m_drivetrain)
       );
- */    
-  }
-
-  public void shootMinProduct() {
-
-    m_flywheel.setSpeed(
-      SmartDashboard.getNumber("rpmreal", 0)
-    );
-    m_hood.adjustHood(
-      SmartDashboard.getNumber("hoodreal", 0)
-    );
-    m_spindexer.setSpeed(SmartDashboard.getNumber("Spindexer", 0));
-    m_kicker.setSameSpeed(SmartDashboard.getNumber("KickerSpeed", 0));
-
+    */    
   }
 
   public void stop() {
@@ -200,7 +185,7 @@ public class RobotContainer {
     }
   }
   public void test() {
-    double[] input = m_controller.getShooterSimple(7.75);
+    double[] input = Controller.getShooterSimple(7.75);
     SmartDashboard.putNumber("RPM", input[0]);
     SmartDashboard.putNumber("Hood", input[1]);
 
@@ -229,8 +214,6 @@ public class RobotContainer {
     if (estimateLeft.isPresent()) {
       m_drivetrain.updatePoseWithVision(estimateLeft.get());
       Pose2d m_pose = estimateLeft.get().estimatedPose.toPose2d();
-      SmartDashboard.putNumber("LeftCam X", m_pose.getX());
-      SmartDashboard.putNumber("LeftCam Y", m_pose.getY());
     }
 
     // Optional<EstimatedRobotPose> estimateRight = camRight.EstimatePose();
@@ -250,6 +233,8 @@ public class RobotContainer {
   public Command resetNavX() {
     return Commands.runOnce(() -> m_drivetrain.resetNavx(), m_drivetrain);
   }
+
+
 
   // public Command shootFromBaseOfHub() {
   //   return Commands.parallel(
@@ -302,7 +287,6 @@ public class RobotContainer {
   //     hub.getX() + (m_drivetrain.getFieldRelativeSpeeds().vxMetersPerSecond * shotData[2]), (m_drivetrain.getFieldRelativeSpeeds().vyMetersPerSecond * shotData[2])
   //   );
   //   double turretPosition = Controller.calculateTurret(m_pose, hub); //have to replace hub w/ virt target
-    
   // }
 
 }
