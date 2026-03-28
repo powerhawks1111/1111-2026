@@ -43,6 +43,7 @@ import frc.robot.Constants.CameraConst;
 import frc.robot.Constants.FIELD_CONST;
 import frc.robot.Constants.IntakeConst;
 import frc.robot.commands.Shoot;
+import frc.robot.commands.ShootWithRange;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
@@ -98,7 +99,6 @@ public class RobotContainer {
           our_hub = FIELD_CONST.BLUE_HUB;
         }
       SmartDashboard.putString("Alliance Manual", alliance.toString());
-
       configureBindings();
     }
   
@@ -106,7 +106,7 @@ public class RobotContainer {
       m_driver.button(1).onTrue(resetNavX());
 
       m_driver.button(2).onTrue(resetOdometry(new Pose2d()));
-      
+
       m_operator.leftBumper().toggleOnFalse(m_intake.stopRollers());
       m_operator.leftBumper().toggleOnTrue(m_intake.runRollers(false));
 
@@ -115,6 +115,17 @@ public class RobotContainer {
 
       m_operator.a().onTrue(m_spindexer.reverseSpindexer());
       
+      // m_operator.b().onTrue(new ShootWithRange(m_flywheel, m_hood, m_spindexer, m_kicker, 
+      //   Controller.getShooterSimple(
+      //     Feet.convertFrom(
+      //     Controller.hypotenuseCalculator(
+      //       our_hub, 
+      //       m_drivetrain.getEstimatedPose().getTranslation()), 
+      //       Meters)
+      //     )
+      //   )
+      // );
+
       //m_operator.rightBumper().onFalse(stopShooter());
       m_drivetrain.setDefaultCommand(
         Commands.run(
@@ -223,8 +234,6 @@ public class RobotContainer {
     // if (estimateRight.isPresent()) {
     //   m_drivetrain.updatePoseWithVision(estimateRight.get());
     // }
-
-    
   }
 
   public Command getAutonomousCommand() {

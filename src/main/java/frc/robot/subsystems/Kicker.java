@@ -59,6 +59,10 @@ public class Kicker extends SubsystemBase{
     public Command runKicker() {
         return this.run(() -> setSameSpeed(SmartDashboard.getNumber("KickerSpeed", .8)));
     }
+    
+    public Command stopKicker() {
+        return this.run(() -> setSameSpeed(0));
+    }
 
     // @Override
     // public void periodic() {

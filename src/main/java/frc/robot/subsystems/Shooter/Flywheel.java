@@ -65,6 +65,10 @@ public class Flywheel extends SubsystemBase{
         return this.run(() -> setSpeed(SmartDashboard.getNumber("RPM", 3500)));
     }
 
+    public Command runFlyWheelWithInput(double speed) {
+        return this.run(() -> setSpeed(speed));
+    }
+
     @Override
     public void periodic() {
         setSpeed(

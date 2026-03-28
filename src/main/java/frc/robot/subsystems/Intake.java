@@ -53,6 +53,7 @@ public class Intake extends SubsystemBase{
 
     //TODO: Might need to use feed forward to overcome gravity the first 90 degrees and fight against it the last 90 degrees of rotation
     public void setFlip(double position) {
+      //0 -> 12.03
         //flipDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
         flipDownMotor.set(
           SmartDashboard.getNumber("Intake Flip Percent", 0)
