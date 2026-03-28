@@ -45,6 +45,7 @@ import frc.robot.Constants.FIELD_CONST;
 import frc.robot.Constants.IntakeConst;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.ShootWithRange;
+import frc.robot.commands.StopShootCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
@@ -108,13 +109,17 @@ public class RobotContainer {
       m_operator.leftBumper().toggleOnFalse(m_intake.stopRollers());
       m_operator.leftBumper().toggleOnTrue(m_intake.runRollers(false));
 
-      m_operator.rightBumper().whileTrue(new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker));
+      m_operator.rightBumper().whileTrue(new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker).alongWith(
+        Commands.run(() -> m_drivetrain.drive(0, 0, 0, 0, 0), m_drivetrain)
+      ));
       m_operator.rightBumper().whileFalse(stopShooter());
 
       m_operator.a().onTrue(m_spindexer.reverseSpindexer());
+      m_operator.x().whileTrue(m_intake.setVoltageManual(-1.5));
+      //m_operator.x().onFalse(m_intake.stopIntakeFlipCommand()));
 
-      m_operator.axisGreaterThan(3, 0.25).onTrue(m_intake.setVoltageManual(2).withTimeout(0.7).andThen(m_intake.stopIntakeFlipCommand()));
-      m_operator.axisGreaterThan(2, 0.25).onTrue(m_intake.setVoltageManual(-3).withTimeout(0.42).andThen(m_intake.stopIntakeFlipCommand()));
+      m_operator.axisGreaterThan(3, 0.25).onTrue(m_intake.setVoltageManual(2).withTimeout(0.85).andThen(m_intake.stopIntakeFlipCommand()));
+      m_operator.axisGreaterThan(2, 0.25).onTrue(m_intake.setVoltageManual(-3).withTimeout(0.55).andThen(m_intake.stopIntakeFlipCommand()));
       
       m_operator.b().onTrue(new ShootWithRange(m_flywheel, m_hood, m_spindexer, m_kicker, 
         Controller.getShooterSimple(
@@ -124,14 +129,24 @@ public class RobotContainer {
             m_drivetrain.getEstimatedPose().getTranslation()), 
             Meters)
           ) 
+        ).alongWith(
+          Commands.run(() -> m_drivetrain.drive(0, 0, 0, 0, 0), m_drivetrain)
         )
+      ).onFalse(
+        new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker)
       );
 
+      SmartDashboard.putNumber("ROBOTDISTANCEFROMHUB", Feet.convertFrom(
+          Controller.hypotenuseCalculator(
+            our_hub, 
+            m_drivetrain.getEstimatedPose().getTranslation()), 
+            Meters));
       //m_operator.rightBumper().onFalse(stopShooter());
       m_drivetrain.setDefaultCommand(
         Commands.run(
           () -> m_drivetrain.drive(
             -m_driver.getRawAxis(1), 
+            MathUtil.applyDeadband(0, 0)
             -m_driver.getRawAxis(0), 
             -m_driver.getRawAxis(4), 
             4, 2), 
@@ -216,10 +231,10 @@ public class RobotContainer {
       Pose2d m_pose = estimateLeft.get().estimatedPose.toPose2d();
     }
 
-    // Optional<EstimatedRobotPose> estimateRight = camRight.EstimatePose();
-    // if (estimateRight.isPresent()) {
-    //   m_drivetrain.updatePoseWithVision(estimateRight.get());
-    // }
+    Optional<EstimatedRobotPose> estimateRight = camRight.EstimatePose();
+    if (estimateRight.isPresent()) {
+      m_drivetrain.updatePoseWithVision(estimateRight.get());
+    }
   }
 
   public Command getAutonomousCommand() {

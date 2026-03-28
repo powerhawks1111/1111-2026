@@ -38,7 +38,7 @@ public class Spindexer extends SubsystemBase{
     }
 
     public Command runSpindexer() {
-      return this.run(() -> setSpeed(0.28));
+      return this.run(() -> setSpeed(0.25));
     }
 
     public Command stopSpindexer() {
@@ -56,6 +56,5 @@ public class Spindexer extends SubsystemBase{
     //   //   );
     //   spindexerMotor.set(SmartDashboard.getNumber("Spindexer", 0));
     //   SmartDashboard.putNumber("Encoder Reading", spindexerMotor.getEncoder().getPosition());
-
     // }
 }

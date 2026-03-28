@@ -15,7 +15,7 @@ import frc.robot.subsystems.Shooter.Hood;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class StopShootCommand extends ParallelCommandGroup {
   /** Creates a new StopShootCommand. */
-  public StopShootCommand(Flywheel flywheel, Hood hood, Spindexer spindexer, Kicker kicker, double[] inputs) {
+  public StopShootCommand(Flywheel flywheel, Hood hood, Spindexer spindexer, Kicker kicker) {
     addCommands(flywheel.runFlyWheelWithInput(1000), hood.positionHoodWithInput(0), spindexer.stopSpindexer(), kicker.stopKicker());
   }
 }

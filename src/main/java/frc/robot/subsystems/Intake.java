@@ -30,7 +30,7 @@ public class Intake extends SubsystemBase{
 
         flipDownMotorConfig = new SparkFlexConfig();
         rollerMotorConfig = new SparkFlexConfig();
-        flipDownMotorConfig.idleMode(IdleMode.kBrake);
+        flipDownMotorConfig.idleMode(IdleMode.kCoast);
         flipDownMotorConfig.inverted(true);
 
         flipDownMotorConfig.encoder.positionConversionFactor(IntakeConst.positionConversionFactor);
@@ -72,10 +72,10 @@ public class Intake extends SubsystemBase{
   }
   public Command runRollers(boolean reversed) {
     if(reversed) {
-    return this.run(() -> setRollerSpeed(.6
+    return this.run(() -> setRollerSpeed(.8
     ));
     } else {
-    return this.run(() -> setRollerSpeed(-.6));
+    return this.run(() -> setRollerSpeed(-.8));
     }
   }
 
