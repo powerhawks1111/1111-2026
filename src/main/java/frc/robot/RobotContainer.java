@@ -111,6 +111,10 @@ public class RobotContainer {
             4, 2), 
           m_drivetrain)
       );
+
+      m_operator.button(6).toggleOnFalse(m_intake.stopRollers());
+      m_operator.button(6).toggleOnTrue(m_intake.runRollers(false));
+
 /*    TODO: Need to decide whether to use this or not 
         m_driverController.axisGreaterThan(3, .5).whileTrue( //right trigger find it
         Commands.run(
