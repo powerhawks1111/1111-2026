@@ -41,6 +41,10 @@ public class Spindexer extends SubsystemBase{
       return this.run(() -> setSpeed(SmartDashboard.getNumber("Spindexer", .2)));
     }
 
+    public Command reverseSpindexer() {
+      return this.run(() -> setSpeed(-.2));
+    }
+
     // @Override
     // public void periodic() {
     //   //  setSpeed(

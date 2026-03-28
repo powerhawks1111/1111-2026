@@ -13,6 +13,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -78,6 +79,7 @@ public class RobotContainer {
       .getStructTopic("Robot/CurrentPose", Pose2d.struct).subscribe(new Pose2d());
   
     public RobotContainer() {
+      NamedCommands.registerCommand("Shoot", new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker));
       autoChooser = AutoBuilder.buildAutoChooser();
       SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -110,6 +112,8 @@ public class RobotContainer {
 
       m_operator.rightBumper().toggleOnTrue(new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker));
       m_operator.rightBumper().toggleOnFalse(stopShooter());
+
+      m_operator.a().onTrue(m_spindexer.reverseSpindexer());
       
       //m_operator.rightBumper().onFalse(stopShooter());
       m_drivetrain.setDefaultCommand(

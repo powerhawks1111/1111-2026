@@ -45,7 +45,7 @@ public class Kicker extends SubsystemBase{
         backMotor.configure(backMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         frontMotor.configure(frontMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
 
-      SmartDashboard.putNumber("KickerSpeed", 0);
+      SmartDashboard.putNumber("KickerSpeed", 0.8);
     }
 
     public void setSameSpeed(double speed) {

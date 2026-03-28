@@ -25,6 +25,7 @@ public class Flywheel extends SubsystemBase{
 
     private final SparkClosedLoopController m_controller;
     public Flywheel() {
+        SmartDashboard.putNumber("RPM", 0);
         leftShootConfig = new SparkFlexConfig();
         rightShootConfig = new SparkFlexConfig();
 
