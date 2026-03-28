@@ -34,12 +34,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.CameraConst;
 import frc.robot.Constants.FIELD_CONST;
 import frc.robot.Constants.IntakeConst;
+import frc.robot.commands.Shoot;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
@@ -54,8 +56,8 @@ public class RobotContainer {
 
   private final Drivetrain m_drivetrain = new Drivetrain();
 
-  private final Vision camLeft = new Vision(CameraConst.pvCamOne, new Transform3d());
-  private final Vision camRight = new Vision(CameraConst.pvCamTwo, new Transform3d());
+  private final Vision camLeft = new Vision(CameraConst.pvCamOne, CameraConst.leftCamTransform);
+  private final Vision camRight = new Vision(CameraConst.pvCamTwo, CameraConst.rightCamTransform);
 
   private final Intake m_intake = new Intake();
   private final Spindexer m_spindexer = new Spindexer();
@@ -66,6 +68,7 @@ public class RobotContainer {
   private final Controller m_controller = new Controller();
   private final CommandXboxController m_driver = new CommandXboxController(0);
   private final CommandXboxController m_operator = new CommandXboxController(1);
+  private final Optional<DriverStation.Alliance> alliance;
 
   private final Translation2d our_hub;
 
@@ -77,7 +80,11 @@ public class RobotContainer {
     public RobotContainer() {
       autoChooser = AutoBuilder.buildAutoChooser();
       SmartDashboard.putData("Auto Chooser", autoChooser);
-      var alliance = DriverStation.getAlliance();
+
+      SmartDashboard.putNumber("rpmreal", 0);
+      SmartDashboard.putNumber("hoodreal", 0);
+
+      alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
           boolean isBlueAlliance = alliance.get() == DriverStation.Alliance.Blue;
           if (isBlueAlliance) {
@@ -88,11 +95,7 @@ public class RobotContainer {
         } else {
           our_hub = FIELD_CONST.BLUE_HUB;
         }
-      
-
-      SmartDashboard.putNumber("X", 0);
-      SmartDashboard.putNumber("Y", 0);
-      SmartDashboard.putNumber("ROT", 0);
+      SmartDashboard.putString("Alliance Manual", alliance.toString());
 
       configureBindings();
     }
@@ -102,6 +105,13 @@ public class RobotContainer {
 
       m_driver.button(2).onTrue(resetOdometry(new Pose2d()));
       
+      m_operator.leftBumper().toggleOnFalse(m_intake.stopRollers());
+      m_operator.leftBumper().toggleOnTrue(m_intake.runRollers(false));
+
+      m_operator.rightBumper().toggleOnTrue(new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker));
+      m_operator.rightBumper().toggleOnFalse(stopShooter());
+      
+      //m_operator.rightBumper().onFalse(stopShooter());
       m_drivetrain.setDefaultCommand(
         Commands.run(
           () -> m_drivetrain.drive(
@@ -123,20 +133,31 @@ public class RobotContainer {
           0, 0), m_drivetrain)
       );
  */    
+  }
 
-      //m_operator.button(1).toggleOnFalse(runFlywheel(0));
-      //m_operator.button(1).toggleOnTrue(runFlywheel(4000));
-      //m_operator.button(2).whileFalse(runKicker()).whileTrue(runKicker());
-      //m_operator.button(2).whileFalse(runSpindexer(0)).whileTrue(runSpindexer(.8));
-      //positonHood(0);
+  public void shootMinProduct() {
 
-    //m_operator.button(1).whileTrue(runKicker(.5).alongWith(runSpindexer(4))).whileFalse(runKicker(0).alongWith(runSpindexer(0)));
-    //m_operator.button(2).whileTrue(runFlywheel(SmartDashboard.getNumber("RPM", 0))); 
-      //m_driver.button(1).onTrue();  
-      
-      // m_driver.button(2).onTrue();
-      
-      // m_driver.button(3).onTrue();
+    m_flywheel.setSpeed(
+      SmartDashboard.getNumber("rpmreal", 0)
+    );
+    m_hood.adjustHood(
+      SmartDashboard.getNumber("hoodreal", 0)
+    );
+    m_spindexer.setSpeed(SmartDashboard.getNumber("Spindexer", 0));
+    m_kicker.setSameSpeed(SmartDashboard.getNumber("KickerSpeed", 0));
+
+  }
+
+  public void stop() {
+    m_flywheel.setSpeed(0);
+    m_spindexer.setSpeed(0);
+    m_kicker.setSameSpeed(0);
+  }
+
+  public Command stopShooter() {
+    return new InstantCommand(() -> 
+      stop()
+    );
   }
 
   public void shootIntegrated() {
@@ -155,7 +176,11 @@ public class RobotContainer {
     m_hood.adjustHood(input[1]);
 
   }
+  public void autoStartOdometryReset() {
+    if(alliance.get() == Alliance.Blue) {
 
+    }
+  }
   public void test() {
     double[] input = m_controller.getShooterSimple(7.75);
     SmartDashboard.putNumber("RPM", input[0]);
@@ -184,21 +209,16 @@ public class RobotContainer {
 
     Optional<EstimatedRobotPose> estimateLeft = camLeft.EstimatePose();
     if (estimateLeft.isPresent()) {
-      Pose2d m_pose = estimateLeft.get().estimatedPose.toPose2d();
-      SmartDashboard.putNumber("X value LEFT", m_pose.getX());
-      SmartDashboard.putNumber("Y value LEFT", m_pose.getY());
-      SmartDashboard.putNumber("Rot value LEFT", m_pose.getRotation().getDegrees());
       m_drivetrain.updatePoseWithVision(estimateLeft.get());
+      Pose2d m_pose = estimateLeft.get().estimatedPose.toPose2d();
+      SmartDashboard.putNumber("LeftCam X", m_pose.getX());
+      SmartDashboard.putNumber("LeftCam Y", m_pose.getY());
     }
 
-    Optional<EstimatedRobotPose> estimateRight = camRight.EstimatePose();
-    if (estimateRight.isPresent()) {
-      Pose2d m_pose = estimateRight.get().estimatedPose.toPose2d();
-      SmartDashboard.putNumber("X value RIGHT", m_pose.getX());
-      SmartDashboard.putNumber("Y value RIGHT", m_pose.getY());
-      SmartDashboard.putNumber("Rot value RIGHT", m_pose.getRotation().getDegrees());
-      m_drivetrain.updatePoseWithVision(estimateRight.get());
-    }
+    // Optional<EstimatedRobotPose> estimateRight = camRight.EstimatePose();
+    // if (estimateRight.isPresent()) {
+    //   m_drivetrain.updatePoseWithVision(estimateRight.get());
+    // }
 
     
   }

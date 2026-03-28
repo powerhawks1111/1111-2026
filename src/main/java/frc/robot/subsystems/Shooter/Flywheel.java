@@ -60,8 +60,8 @@ public class Flywheel extends SubsystemBase{
     }
 
     //TODO: Test if this should be runOnce or run
-    public Command runFlywheel(double speed) {
-        return this.runOnce(() -> setSpeed(speed));
+    public Command runFlywheel() {
+        return this.run(() -> setSpeed(SmartDashboard.getNumber("RPM", 3500)));
     }
 
     @Override

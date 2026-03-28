@@ -28,14 +28,6 @@ import frc.robot.Constants.DrivetrainConst;
 
 public class Vision extends SubsystemBase {
     private static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
-    private static final Transform3d robotToCamera = new Transform3d(
-        0.3683,
-        .0381, 
-        .1524, 
-        new Rotation3d(
-        Math.PI,-.489, 0 //our camera is flipped, and our camera is tilted 
-        )
-    );
     private final PhotonPoseEstimator m_Estimator;
     private final PhotonCamera camera;
 

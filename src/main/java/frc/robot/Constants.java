@@ -2,7 +2,10 @@ package frc.robot;
 
 import com.pathplanner.lib.config.RobotConfig;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 
 public class Constants {
 
@@ -90,10 +93,38 @@ public class Constants {
         public static final String pvCamOne = "CAMRIGHT";
         public static final String pvCamTwo = "CAMLEFT";
         
-        public static final double camX = 0; 
-        public static final double camZ = 0; 
-        public static final double camY = 0; 
+        public static final double LeftCamX = 0.0127; 
+        public static final double LeftCamY = 0.320675; 
+        public static final double LeftCamZ = 0.1524;
+        public static final double LeftCamRoll = 0; 
+        public static final double LeftCamPitch = 0.489;    
+        public static final double LeftCamYaw = Math.PI / 2;
         
+
+        public static final double RightCamX = 0.07366; 
+        public static final double RightCamY = -0.320675; 
+        public static final double RightCamZ = 0.1524; 
+        public static final double RightCamRoll = 0; 
+        public static final double RightCamPitch = 0.489; 
+        public static final double RightCamYaw = -Math.PI / 2;
+        
+        public static final Transform3d rightCamTransform = new Transform3d(
+            new Translation3d(
+                RightCamX, RightCamY, RightCamZ
+            ), 
+            new Rotation3d(
+                RightCamRoll, RightCamPitch, RightCamYaw
+            )
+        );
+
+        public static final Transform3d leftCamTransform = new Transform3d(
+            new Translation3d(
+                LeftCamX, LeftCamY, LeftCamZ
+            ), 
+            new Rotation3d(
+                LeftCamRoll, LeftCamPitch, LeftCamYaw
+            )
+        );
         // public static final double camX = 0; 
         // public static final double camZ = 0; 
         // public static final double camY = 0; 

@@ -33,20 +33,21 @@ public class Spindexer extends SubsystemBase{
     }
 
     public void setSpeed(double bps) {
-        spindexerMotor.getClosedLoopController().setSetpoint(bps, ControlType.kVelocity);
+        //spindexerMotor.getClosedLoopController().setSetpoint(bps, ControlType.kVelocity);
+        spindexerMotor.set(bps);
     }
 
-    public Command runSpindexer(double bps) {
-      return this.runOnce(() -> setSpeed(bps));
+    public Command runSpindexer() {
+      return this.run(() -> setSpeed(SmartDashboard.getNumber("Spindexer", .2)));
     }
 
-    @Override
-    public void periodic() {
-      //  setSpeed(
-      //     SmartDashboard.getNumber("Spindexer", 0)
-      //   );
-      spindexerMotor.set(SmartDashboard.getNumber("Spindexer", 0));
-      SmartDashboard.putNumber("Encoder Reading", spindexerMotor.getEncoder().getPosition());
+    // @Override
+    // public void periodic() {
+    //   //  setSpeed(
+    //   //     SmartDashboard.getNumber("Spindexer", 0)
+    //   //   );
+    //   spindexerMotor.set(SmartDashboard.getNumber("Spindexer", 0));
+    //   SmartDashboard.putNumber("Encoder Reading", spindexerMotor.getEncoder().getPosition());
 
-    }
+    // }
 }

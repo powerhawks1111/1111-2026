@@ -40,15 +40,15 @@ public class Hood extends SubsystemBase{
         hoodMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
     }
 
-    public Command positonHood(double position) {
-        return this.runOnce(() -> adjustHood(position));
+    public Command positonHood() {
+        return this.run(() -> adjustHood(SmartDashboard.getNumber("Hood", 0.2)));
     }
 
-    @Override
-    public void periodic() {
-        adjustHood(
-          SmartDashboard.getNumber("Hood", 0)
-        );
-        SmartDashboard.putNumber("HoodPositionOutput", hoodMotor.getEncoder().getPosition());
-    }
+    // @Override
+    // public void periodic() {
+    //     adjustHood(
+    //       SmartDashboard.getNumber("Hood", 0)
+    //     );
+    //     SmartDashboard.putNumber("HoodPositionOutput", hoodMotor.getEncoder().getPosition());
+    // }
 }

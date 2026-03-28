@@ -39,8 +39,9 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();  //This needs to stay in robotPeriodic in order for the periodic methods of the Subsystem classes to run
     m_robotContainer.updateVision();
-    m_robotContainer.test();
-    m_robotContainer.shootIntegrated();
+    //m_robotContainer.shootMinProduct();
+    // m_robotContainer.test();
+    // m_robotContainer.shootIntegrated();
   }
 
   public void autonomousInit() {

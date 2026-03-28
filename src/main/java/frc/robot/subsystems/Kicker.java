@@ -49,23 +49,26 @@ public class Kicker extends SubsystemBase{
     }
 
     public void setSameSpeed(double speed) {
-        backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
-        frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        //backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        //frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+
+        backMotor.set(speed);
+        frontMotor.set(speed);
     }
 
-    public Command runKicker(double speed) {
-        return this.runOnce(() -> setSameSpeed(speed));
+    public Command runKicker() {
+        return this.run(() -> setSameSpeed(SmartDashboard.getNumber("KickerSpeed", .8)));
     }
 
-    @Override
-    public void periodic() {
-        backMotor.set(
-            SmartDashboard.getNumber("KickerSpeed", 0)
-        );
-        frontMotor.set(
-            SmartDashboard.getNumber("KickerSpeed", 0)
-        );
+    // @Override
+    // public void periodic() {
+    //     backMotor.set(
+    //         SmartDashboard.getNumber("KickerSpeed", 0)
+    //     );
+    //     frontMotor.set(
+    //         SmartDashboard.getNumber("KickerSpeed", 0)
+    //     );
 
-    }
+    // }
 
 }

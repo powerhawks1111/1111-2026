@@ -29,7 +29,7 @@ public class Intake extends SubsystemBase{
 
         flipDownMotorConfig = new SparkMaxConfig();
         rollerMotorConfig = new SparkFlexConfig();
-        rollerMotorConfig.inverted(true);
+        //rollerMotorConfig.inverted(true);
 
         flipDownMotorConfig.encoder.positionConversionFactor(IntakeConst.positionConversionFactor);
         flipDownMotorConfig.closedLoop
@@ -45,19 +45,21 @@ public class Intake extends SubsystemBase{
         SmartDashboard.putNumber("Intake Flip Percent", 0);
     }
 
-    public void setRollerSpeed(int rpm) {
-        rollerMotor.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
+    public void setRollerSpeed(double rpm) {
+        //rollerMotor.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
+        rollerMotor.set(rpm);
     }
 
     //TODO: Might need to use feed forward to overcome gravity the first 90 degrees and fight against it the last 90 degrees of rotation
     public void setFlip(double position) {
-        flipDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
+        //flipDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
+        flipDownMotor.set(
+          SmartDashboard.getNumber("Intake Flip Percent", 0)
+        );
     }
 
     @Override
     public void periodic() {
-        rollerMotor.set(SmartDashboard.getNumber("Intake Roller Percent", 0));
-        flipDownMotor.set(SmartDashboard.getNumber("Intake Flip Percent", 0));
     }
     
   public Command deployIntake() { 
@@ -68,12 +70,16 @@ public class Intake extends SubsystemBase{
   }
   public Command runRollers(boolean reversed) {
     if(reversed) {
-    return this.runOnce(() -> setRollerSpeed(IntakeConst.rollerSpeed));
+    return this.run(() -> setRollerSpeed(
+      SmartDashboard.getNumber("Intake Roller Percent", .6)
+    ));
     } else {
-    return this.runOnce(() -> setRollerSpeed(-IntakeConst.rollerSpeed));
+    return this.run(() -> setRollerSpeed(-
+    SmartDashboard.getNumber("Intake Roller Percent", 0.6)));
     }
   }
+
   public Command stopRollers() {
-    return this.runOnce(() -> setRollerSpeed(0)); // TODO: change this to setvoltage to 0
+    return this.run(() -> setRollerSpeed(0)); // TODO: change this to setvoltage to 0
   }
 }
