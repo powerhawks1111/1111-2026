@@ -41,7 +41,7 @@ public class Hood extends SubsystemBase{
     }
 
     public Command positonHood() {
-        return this.run(() -> adjustHood(SmartDashboard.getNumber("Hood", 0.2)));
+        return this.run(() -> adjustHood(0.2));
     }
 
     public Command positionHoodWithInput(double position) {

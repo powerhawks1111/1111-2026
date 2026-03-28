@@ -62,7 +62,7 @@ public class Flywheel extends SubsystemBase{
 
     //TODO: Test if this should be runOnce or run
     public Command runFlywheel() {
-        return this.run(() -> setSpeed(SmartDashboard.getNumber("RPM", 3500)));
+        return this.run(() -> setSpeed(3500));
     }
 
     public Command runFlyWheelWithInput(double speed) {
@@ -71,10 +71,5 @@ public class Flywheel extends SubsystemBase{
 
     @Override
     public void periodic() {
-        setSpeed(
-          SmartDashboard.getNumber("RPM", 0)
-        );
-        SmartDashboard.putNumber("Velocity", rightShoot.getEncoder().getVelocity());
-        SmartDashboard.putNumber("Current", rightShoot.getOutputCurrent());
     }
 }

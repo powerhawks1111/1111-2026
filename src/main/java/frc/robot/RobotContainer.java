@@ -110,13 +110,16 @@ public class RobotContainer {
       m_operator.leftBumper().toggleOnFalse(m_intake.stopRollers());
       m_operator.leftBumper().toggleOnTrue(m_intake.runRollers(false));
 
-      m_operator.rightBumper().toggleOnTrue(new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker));
-      m_operator.rightBumper().toggleOnFalse(stopShooter());
+      m_operator.rightBumper().whileTrue(new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker));
+      m_operator.rightBumper().whileFalse(stopShooter());
 
       m_operator.a().onTrue(m_spindexer.reverseSpindexer());
+
+      m_operator.axisGreaterThan(3, 0.25).onTrue(m_intake.setVoltageManual(2).withTimeout(0.45).andThen(m_intake.stopIntakeFlipCommand()));
+      m_operator.axisGreaterThan(2, 0.25).onTrue(m_intake.setVoltageManual(-3).withTimeout(0.5).andThen(m_intake.stopIntakeFlipCommand()));
       
       // m_operator.b().onTrue(new ShootWithRange(m_flywheel, m_hood, m_spindexer, m_kicker, 
-      //   Controller.getShooterSimple(
+      //   Controller.getShooterSimple(/[.]
       //     Feet.convertFrom(
       //     Controller.hypotenuseCalculator(
       //       our_hub, 

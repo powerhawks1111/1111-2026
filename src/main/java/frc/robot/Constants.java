@@ -11,7 +11,7 @@ public class Constants {
 
     public class IntakeConst {
         //as of right now, both the intake and the rollers have a 1:1 conversion factor. 
-        public static final double positionConversionFactor = 1; //for flipper position
+        public static final double positionConversionFactor = 0.02777; //for flipper position
         public static final double velocityConversionFactor = 1; //for roller velocity
         
         public static final double kPFlip = 0;
