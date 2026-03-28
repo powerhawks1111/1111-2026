@@ -33,14 +33,15 @@ public class Vision extends SubsystemBase {
         .0381, 
         .1524, 
         new Rotation3d(
-        0,-.489, 0
+        Math.PI,-.489, 0 //our camera is flipped, and our camera is tilted 
         )
     );
-    private final PhotonPoseEstimator m_Estimator = new PhotonPoseEstimator(kTagLayout, robotToCamera);
+    private final PhotonPoseEstimator m_Estimator;
     private final PhotonCamera camera;
 
-    public Vision(String cameraName) {
+    public Vision(String cameraName, Transform3d cameraTransform) {
         camera = new PhotonCamera(cameraName);
+        m_Estimator = new PhotonPoseEstimator(kTagLayout, cameraTransform);
     }
 
     public Optional<EstimatedRobotPose> EstimatePose() {

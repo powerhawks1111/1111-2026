@@ -178,7 +178,6 @@ public class Drivetrain extends SubsystemBase{
         );
     }
 
-    //TODO if we have time, tune kalman filter
     public Pose2d getEstimatedPose() {
         return m_PoseEstimator.getEstimatedPosition();
     }
@@ -200,7 +199,6 @@ public class Drivetrain extends SubsystemBase{
         );
     }
 
-    //TODO call whenever we get apriltag data
     public void resetPose(Pose2d pose) {
         m_PoseEstimator.resetPose(pose);
     }

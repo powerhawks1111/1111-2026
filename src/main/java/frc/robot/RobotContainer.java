@@ -19,6 +19,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -53,8 +54,8 @@ public class RobotContainer {
 
   private final Drivetrain m_drivetrain = new Drivetrain();
 
-  private final Vision camLeft = new Vision(CameraConst.pvCamOne);
-  private final Vision camRight = new Vision(CameraConst.pvCamTwo);
+  private final Vision camLeft = new Vision(CameraConst.pvCamOne, new Transform3d());
+  private final Vision camRight = new Vision(CameraConst.pvCamTwo, new Transform3d());
 
   private final Intake m_intake = new Intake();
   private final Spindexer m_spindexer = new Spindexer();
@@ -146,7 +147,13 @@ public class RobotContainer {
           m_drivetrain.getEstimatedPose().getTranslation()), 
           Meters)
     );
-    
+    double turretSetpoint = Controller.calculateTurret(m_drivetrain.getEstimatedPose(), our_hub);
+    if (turretSetpoint < 10) {
+      m_turret.adjustTurret(turretSetpoint);
+    }
+    m_flywheel.setSpeed(input[0]);
+    m_hood.adjustHood(input[1]);
+
   }
 
   public void test() {

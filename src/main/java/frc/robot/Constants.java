@@ -87,8 +87,8 @@ public class Constants {
     }
 
     public class CameraConst {
-        public static final String pvCamOne = "OV9281";
-        public static final String pvCamTwo = "camera2";
+        public static final String pvCamOne = "CAMRIGHT";
+        public static final String pvCamTwo = "CAMLEFT";
         
         public static final double camX = 0; 
         public static final double camZ = 0; 
