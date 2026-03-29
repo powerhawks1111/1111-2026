@@ -59,6 +59,17 @@ public class Intake extends SubsystemBase{
         rollerMotor.set(SmartDashboard.getNumber("Intake Roller Percent", 0));
         flipDownMotor.set(SmartDashboard.getNumber("Intake Flip Percent", 0));
     }
+
+    public void setRollerPercent(double percent){ 
+
+  
+     rollerMotor.set(percent);
+       
+     
+
+
+
+    }
     
   public Command deployIntake() { 
     return this.runOnce(() -> setFlip(0));  //TODO: need to find position. 
@@ -68,9 +79,9 @@ public class Intake extends SubsystemBase{
   }
   public Command runRollers(boolean reversed) {
     if(reversed) {
-    return this.runOnce(() -> setRollerSpeed(IntakeConst.rollerSpeed));
+    return this.runOnce(() -> setRollerPercent(-SmartDashboard.getNumber("Intake Roller Percent", 0)));
     } else {
-    return this.runOnce(() -> setRollerSpeed(-IntakeConst.rollerSpeed));
+    return this.runOnce(() -> setRollerPercent(SmartDashboard.getNumber("Intake Roller Percent", 0)));
     }
   }
   public Command stopRollers() {
