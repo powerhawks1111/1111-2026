@@ -61,7 +61,7 @@ public class Kicker extends SubsystemBase{
     }
 
     public Command runKicker() {
-        return this.run(() -> setDiffSpeeds(0.7, 0.9));
+        return this.runEnd(() -> setDiffSpeeds(0.7, 0.9), () -> setSameSpeed(0));
     }
     
     public Command stopKicker() {

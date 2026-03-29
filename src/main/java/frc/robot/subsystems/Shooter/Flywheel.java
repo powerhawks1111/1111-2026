@@ -62,7 +62,7 @@ public class Flywheel extends SubsystemBase{
 
     //TODO: Test if this should be runOnce or run
     public Command runFlywheel() {
-        return this.run(() -> setSpeed(3300));
+        return this.runEnd(() -> setSpeed(3300),() -> setSpeed(1000));
     }
 
     public Command runFlyWheelWithInput(double speed) {

@@ -41,7 +41,7 @@ public class Hood extends SubsystemBase{
     }
 
     public Command positonHood() {
-        return this.run(() -> adjustHood(0.25));
+        return this.runEnd(() -> adjustHood(0.25), () -> adjustHood(0.25));
     }
 
     public Command positionHoodWithInput(double position) {

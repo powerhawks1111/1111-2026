@@ -26,6 +26,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
@@ -85,8 +86,17 @@ public class RobotContainer {
   
     public RobotContainer() {
       NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
-      NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().withTimeout(10).addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker()));
-      NamedCommands.registerCommand("Lower Intake", (m_intake.setVoltageManual(2).withTimezout(0.85).andThen(m_intake.stopIntakeFlipCommand())));
+//      NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
+      NamedCommands.registerCommand("Shoot", new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker).withTimeout(10).andThen(resetOdometry(
+            new Pose2d(
+                0,
+                0,
+                new Rotation2d(-1*Math.PI/4)
+            )
+      )));
+      NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4)));
+      //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
+      NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).withTimeout(0.85).andThen(m_intake.stopIntakeFlipCommand()));
       autoChooser = AutoBuilder.buildAutoChooser();
       SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -116,7 +126,7 @@ public class RobotContainer {
       m_operator.rightBumper().whileTrue(new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker).alongWith(
         Commands.run(() -> m_drivetrain.drive(0, 0, 0, 0, 0), m_drivetrain)
       ));
-      m_operator.rightBumper().whileFalse(stopShooter());
+      //m_operator.rightBumper().whileFalse(stopShooter());
 
       m_operator.a().onTrue(m_spindexer.reverseSpindexer());
       m_operator.x().whileTrue(m_intake.setVoltageManual(-1.5));
