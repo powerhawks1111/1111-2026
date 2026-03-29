@@ -187,7 +187,7 @@ public class Constants {
     }
     
     public class HoodConst {
-        public static final double positionConversionFactor = 0.04762;
+        public static final double positionConversionFactor = 0.04762; //21 roations of motor for 1 roations of the wheel
         
         public static final double kP = 2.5;
         public static final double kI = 0;
