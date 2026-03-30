@@ -94,7 +94,7 @@ public class RobotContainer {
                 new Rotation2d(-1*Math.PI/4)
             )
       )));
-      NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4)));
+      NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
       //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
       NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).withTimeout(0.85).andThen(m_intake.stopIntakeFlipCommand()));
       autoChooser = AutoBuilder.buildAutoChooser();
