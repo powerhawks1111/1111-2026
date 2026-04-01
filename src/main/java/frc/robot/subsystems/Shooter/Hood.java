@@ -32,27 +32,18 @@ public class Hood extends SubsystemBase{
         hoodMotor.getEncoder().setPosition(0);
         hoodMotor.configure(hoodMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_Controller = hoodMotor.getClosedLoopController();
-
-      SmartDashboard.putNumber("Hood", 0);
     }
 
     public void adjustHood(double position) {
         hoodMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
     }
 
-    public Command positonHood() {
-        return this.runEnd(() -> adjustHood(0.25), () -> adjustHood(0.25));
-    }
-
-    public Command positionHoodWithInput(double position) {
+    public Command positonHood(double position) {
+        //return this.runEnd(() -> adjustHood(position), () -> adjustHood(0.25)); //do we need to have an end action? 
         return this.run(() -> adjustHood(position));
     }
-
-    // @Override
-    // public void periodic() {
-    //     adjustHood(
-    //       SmartDashboard.getNumber("Hood", 0)
-    //     );
-    //     SmartDashboard.putNumber("HoodPositionOutput", hoodMotor.getEncoder().getPosition());
-    // }
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Hood Position", hoodMotor.getEncoder().getPosition());
+    }
 }

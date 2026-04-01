@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.*;
@@ -31,8 +30,6 @@ public class SwerveModule extends SubsystemBase {
         private SparkFlexConfig m_driveMotorConfig;
         private RelativeEncoder m_driveEncoder;
         private MAXMotionConfig m_MaxMotionConfig;
-
-        private SparkFlexConfig m_DRSConfig;
 
         //components for the turning section of the module. 
         private SparkMax m_turningMotor;

@@ -15,7 +15,7 @@ import frc.robot.subsystems.Shooter.Hood;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShootWithRange extends ParallelCommandGroup {
   public ShootWithRange(Flywheel flywheel, Hood hood, Spindexer spindexer, Kicker kicker, double[] inputs) {
-    addCommands(flywheel.runFlyWheelWithInput(inputs[0]), hood.positionHoodWithInput(inputs[1]), spindexer.runSpindexer(), kicker.runKicker());
+    //addCommands(flywheel.runFlyWheelWithInput(inputs[0]), hood.positionHoodWithInput(inputs[1]), spindexer.runSpindexer(), kicker.runKicker());
   }
   
 }

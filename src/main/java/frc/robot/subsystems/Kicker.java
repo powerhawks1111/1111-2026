@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
 import frc.robot.Constants.IntakeConst;
+import frc.robot.Constants.KickerConst;
 
 public class Kicker extends SubsystemBase{
     private SparkMax backMotor;
@@ -34,49 +35,23 @@ public class Kicker extends SubsystemBase{
 
         backMotorConfig.inverted(true);
 
-//        backMotorConfig.voltageCompensation(11);
-//        frontMotorConfig.voltageCompensation(11);
-
-        backMotorConfig.closedLoop
-            .pid(0, 0, 0);
         frontMotorConfig.closedLoop
-            .pid(0, 0, 0);
-
+            .pid(KickerConst.kPFront, KickerConst.kIFront, KickerConst.kDFront);
+        backMotorConfig.closedLoop
+            .pid(KickerConst.kPBack, KickerConst.kIBack, KickerConst.kDBack);
+        
         backMotor.configure(backMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         frontMotor.configure(frontMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
 
     }
 
     public void setSameSpeed(double speed) {
-        //backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
-        //frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
-
-        backMotor.set(speed);
-        frontMotor.set(speed);
-    }
-
-    public void setDiffSpeeds(double front, double back){
-        frontMotor.set(front);
-        backMotor.set(back);
-    }
-
-    public Command runKicker() {
-        return this.runEnd(() -> setDiffSpeeds(0.7, 0.9), () -> setSameSpeed(0));
+        backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
     }
     
     public Command stopKicker() {
         return this.run(() -> setSameSpeed(0));
     }
-
-    // @Override
-    // public void periodic() {
-    //     backMotor.set(
-    //         SmartDashboard.getNumber("KickerSpeed", 0)
-    //     );
-    //     frontMotor.set(
-    //         SmartDashboard.getNumber("KickerSpeed", 0)
-    //     );
-
-    // }
 
 }

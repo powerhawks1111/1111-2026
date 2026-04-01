@@ -19,7 +19,7 @@ public class Shoot extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     
-    addCommands(flywheel.runFlywheel(), hood.positonHood(), spindexer.runSpindexer(), kicker.runKicker());
+    //addCommands(flywheel.runFlywheel(), hood.positonHood(), spindexer.runSpindexer(), kicker.runKicker());
   }
 
 }

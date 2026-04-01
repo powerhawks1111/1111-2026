@@ -10,16 +10,12 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.util.PathPlannerLogging;
-
-import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -28,7 +24,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
 import frc.robot.Constants.DriveConst;
@@ -58,7 +53,7 @@ public class Drivetrain extends SubsystemBase{
     private final SwerveDrivePoseEstimator m_PoseEstimator;
     private final StructPublisher<Pose2d> posePub = NetworkTableInstance.getDefault()
         .getStructTopic("Robot/CurrentPose", Pose2d.struct).publish(); //use as template for publishing data to NetworkTables.
-    private final Field2d m_field = new Field2d();
+    //private final Field2d m_field = new Field2d();
     private final PIDController m_rotLockController;
 
     public Drivetrain() {
@@ -111,15 +106,14 @@ public class Drivetrain extends SubsystemBase{
         SmartDashboard.putNumber("navx value: ", navx.getRotation2d().getDegrees());
         posePub.set(m_PoseEstimator.getEstimatedPosition());
         
-
-        m_field.setRobotPose(m_PoseEstimator.getEstimatedPosition());
+        //m_field.setRobotPose(m_PoseEstimator.getEstimatedPosition());
 
         // PathPlannerLogging.setLogCurrentPoseCallback(
         // (pose) -> {
         // m_field.setRobotPose(pose);
         // });
         
-        SmartDashboard.putData(m_field);
+        //SmartDashboard.putData(m_field);
         }
 
     /**

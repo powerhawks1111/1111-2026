@@ -184,6 +184,14 @@ public class Constants {
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
+
+        //4 inches in conventional x axis: makes negative y?
+        //5 inches back 
+
+        //distance from center of robot (where our odometry is based off of) to center of where we actually shoot from 
+        public static final double robotToTurretCenterX = 0; 
+        public static final double robotToTurretCenterY = 0;
+        
     }
     
     public class HoodConst {
@@ -203,4 +211,15 @@ public class Constants {
         public static final double kS = 0;
         public static final double kV = .00183;
     }
+
+    public class KickerConst {
+        public static final double kPFront = 0;
+        public static final double kIFront = 0;
+        public static final double kDFront = 0;
+        
+        public static final double kPBack = 0;
+        public static final double kIBack = 0;
+        public static final double kDBack = 0;
+    }
+
 }

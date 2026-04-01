@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Shooter;
 
+import org.opencv.core.RotatedRect;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -48,7 +50,20 @@ public class Controller extends SubsystemBase {
     }
 
     /**
-     * calculates pure kinematics of stationary shot
+     * Method needed to convert where our robot center is on the field to where our turret is (where we're actually shooting from)
+     * @param currentPosition taken in by our odometry
+     * @return our turret's position on the field. 
+     */
+    public static Translation2d robotToTurretTranslation(Pose2d currentPosition) {
+        //treats our turret position as a polar coordinate, with the navx angle relative to the field being our angle value to multiply our radius (robotToTurretCenter) value by to get offsets. 
+        return new Translation2d(
+            currentPosition.getX() + (TurretConst.robotToTurretCenterX * Math.cos(currentPosition.getRotation().getRadians())), 
+            currentPosition.getY() + (TurretConst.robotToTurretCenterY * Math.sin(currentPosition.getRotation().getRadians())) 
+        );
+    }
+
+    /**
+     * calculates pure kinematics of stationary shot. all math used is available in a google doc in the shared drive
      * @param distance meters away as hypotenuse
      * @param heightDifference in meters, changes based on hub or cycling 
      * @param impactAngle angle we want our ball to hit

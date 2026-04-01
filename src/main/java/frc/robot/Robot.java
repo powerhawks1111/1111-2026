@@ -4,25 +4,12 @@
 
 package frc.robot;
 
-import java.util.Optional;
-
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathfindingCommand;
 
-import choreo.Choreo;
-import choreo.trajectory.SwerveSample;
-import choreo.trajectory.Trajectory;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructSubscriber;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Drivetrain;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -37,12 +24,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run();  //This needs to stay in robotPeriodic in order for the periodic methods of the Subsystem classes to run
+    CommandScheduler.getInstance().run();
     m_robotContainer.updateVision();
-    //m_robotContainer.simulate();
-    //m_robotContainer.shootMinProduct();
-    // m_robotContainer.test();
-    // m_robotContainer.shootIntegrated();
+    m_robotContainer.simulate();
   }
 
   public void autonomousInit() {

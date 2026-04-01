@@ -25,15 +25,11 @@ public class Flywheel extends SubsystemBase{
 
     private final SparkClosedLoopController m_controller;
     public Flywheel() {
-        SmartDashboard.putNumber("RPM", 0);
         leftShootConfig = new SparkFlexConfig();
         rightShootConfig = new SparkFlexConfig();
 
         leftShootConfig.idleMode(IdleMode.kCoast);
         rightShootConfig.idleMode(IdleMode.kCoast);
-
-//        leftShootConfig.smartCurrentLimit(80);
-//        rightShootConfig.smartCurrentLimit(80);
 
         leftShoot = new SparkFlex(CANID.LeftS, MotorType.kBrushless);
         rightShoot = new SparkFlex(CANID.RightS, MotorType.kBrushless);
@@ -41,15 +37,12 @@ public class Flywheel extends SubsystemBase{
         leftShootConfig.voltageCompensation(12);
         rightShootConfig.voltageCompensation(12);
 
-        //rightShootConfig.openLoopRampRate(2);
         rightShootConfig.closedLoop.pid(FlywheelConst.kP, FlywheelConst.kI, FlywheelConst.kD);
         rightShootConfig.closedLoop.feedForward
             .kV(FlywheelConst.kV)
             .kS(FlywheelConst.kS);
 
         leftShootConfig.follow(CANID.RightS, true);
-        //leftShootConfig.inverted(true);
-
         leftShoot.configure(leftShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         rightShoot.configure(rightShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_controller = rightShoot.getClosedLoopController();
@@ -60,16 +53,11 @@ public class Flywheel extends SubsystemBase{
         m_controller.setSetpoint(rpm, ControlType.kVelocity);
     }
 
-    //TODO: Test if this should be runOnce or run
-    public Command runFlywheel() {
-        return this.runEnd(() -> setSpeed(3300),() -> setSpeed(1000));
+    public Command runFlywheel(double rpm) {
+        return this.runEnd(() -> setSpeed(rpm),() -> setSpeed(1000)); //idle at 1k rpm to prevent voltage drops
     }
-
-    public Command runFlyWheelWithInput(double speed) {
-        return this.run(() -> setSpeed(speed));
-    }
-
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Shooter RPM", leftShoot.getEncoder().getVelocity());
     }
 }
