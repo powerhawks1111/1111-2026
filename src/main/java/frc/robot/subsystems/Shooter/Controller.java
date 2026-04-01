@@ -58,7 +58,7 @@ public class Controller extends SubsystemBase {
         //treats our turret position as a polar coordinate, with the navx angle relative to the field being our angle value to multiply our radius (robotToTurretCenter) value by to get offsets. 
         return new Translation2d(
             currentPosition.getX() + (TurretConst.robotToTurretCenterX * Math.cos(currentPosition.getRotation().getRadians())), 
-            currentPosition.getY() + (TurretConst.robotToTurretCenterY * Math.sin(currentPosition.getRotation().getRadians())) 
+            currentPosition.getY() + (TurretConst.robotToTurretCenterY * Math.sin(currentPosition.getRotation().getRadians())) //appears that y coordinate isn't negative? strange.
         );
     }
 

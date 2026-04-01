@@ -63,7 +63,8 @@ public class RobotContainer {
 
   private final Translation2d our_hub;
   
-  private final Field2d m_field = new Field2d();
+  private final Field2d m_robotField = new Field2d();
+  private final Field2d m_turretField = new Field2d();
 
   private final SendableChooser<Command> autoChooser;
   
@@ -98,7 +99,6 @@ public class RobotContainer {
   }
 
   public void simulate() {
-
     //will eventually switch to below, for now need to simulate
     //Pose2d currentPose = m_drivetrain.getEstimatedPose();
     Pose2d currentPose = new Pose2d(
@@ -107,7 +107,15 @@ public class RobotContainer {
       new Rotation2d(SmartDashboard.getNumber("Robot Rotation (Radians)", 0))
     );
 
-    m_field.setRobotPose(currentPose);
+    Pose2d turretPose = new Pose2d(
+      Controller.robotToTurretTranslation(currentPose),
+      currentPose.getRotation()
+    );
+    
+
+    m_robotField.setRobotPose(currentPose);
+    SmartDashboard.putData("Robot Field", m_robotField);
+
 
     SmartDashboard.putNumber(
       "Robot Hypotenuse To Target (Meters)", 
@@ -150,10 +158,16 @@ public class RobotContainer {
 
     SmartDashboard.putNumber(
       "Turret Angle (Radians)", 
-      0
+      Controller.calculateTurret(turretPose, our_hub)
     );
-
-
+    
+    m_turretField.setRobotPose(
+      new Pose2d(
+        turretPose.getTranslation(),
+        new Rotation2d(Controller.calculateTurret(turretPose, our_hub) + turretPose.getRotation().getRadians())
+      )
+    );
+    SmartDashboard.putData("Turret Field", m_turretField);
   }
 
   public void updateVision() {

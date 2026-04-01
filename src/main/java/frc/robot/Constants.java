@@ -189,8 +189,8 @@ public class Constants {
         //5 inches back 
 
         //distance from center of robot (where our odometry is based off of) to center of where we actually shoot from 
-        public static final double robotToTurretCenterX = 0; 
-        public static final double robotToTurretCenterY = 0;
+        public static final double robotToTurretCenterX = 0.127; 
+        public static final double robotToTurretCenterY = 0.1016;
         
     }
     
