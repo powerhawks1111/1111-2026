@@ -17,8 +17,6 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-    FollowPathCommand.warmupCommand().schedule();
-    PathfindingCommand.warmupCommand().schedule();
     
   }
 
@@ -30,14 +28,14 @@ public class Robot extends TimedRobot {
   }
 
   public void autonomousInit() {
-    m_robotContainer.getAutonomousCommand().schedule();
+    //m_robotContainer.getAutonomousCommand().schedule();
   }
 
   @Override
   public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    // if (m_autonomousCommand != null) {
+    //   m_autonomousCommand.cancel();
+    // }
   }
 
   @Override

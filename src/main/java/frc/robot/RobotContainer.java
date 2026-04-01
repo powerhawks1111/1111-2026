@@ -51,12 +51,12 @@ public class RobotContainer {
   private final Vision camRight = new Vision(CameraConst.pvCamTwo, CameraConst.rightCamTransform);
 
 
-  private final Intake m_intake = new Intake();
-  private final Spindexer m_spindexer = new Spindexer();
-  private final Kicker m_kicker = new Kicker();
-  private final Turret m_turret = new Turret();
-  private final Hood m_hood = new Hood();
-  private final Flywheel m_flywheel = new Flywheel();
+  // private final Intake m_intake = new Intake();
+  // private final Spindexer m_spindexer = new Spindexer();
+  // private final Kicker m_kicker = new Kicker();
+  // private final Turret m_turret = new Turret();
+  // private final Hood m_hood = new Hood();
+  // private final Flywheel m_flywheel = new Flywheel();
   private final CommandXboxController m_driver = new CommandXboxController(0);
   private final CommandXboxController m_operator = new CommandXboxController(1);
   private final Optional<DriverStation.Alliance> alliance;
@@ -66,11 +66,12 @@ public class RobotContainer {
   private final Field2d m_robotField = new Field2d();
   private final Field2d m_turretField = new Field2d();
 
-  private final SendableChooser<Command> autoChooser;
+  //private final SendableChooser<Command> autoChooser;
   
     public RobotContainer() {
-      autoChooser = AutoBuilder.buildAutoChooser();
-      SmartDashboard.putData("Auto Chooser", autoChooser);
+      //autoChooser = AutoBuilder.buildAutoChooser();
+      //SmartDashboard.putData("Auto Chooser", autoChooser);
+      
       alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
           boolean isBlueAlliance = alliance.get() == DriverStation.Alliance.Blue;
@@ -191,15 +192,15 @@ public class RobotContainer {
     }
   }
 
-  public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
+  // public Command getAutonomousCommand() {
+  //   return autoChooser.getSelected();
+  // }
 
-  public Command resetOdometry(Pose2d pose) {
-    return Commands.runOnce(() -> m_drivetrain.resetPose(pose), m_drivetrain);
-  }
+  // public Command resetOdometry(Pose2d pose) {
+  //   return Commands.runOnce(() -> m_drivetrain.resetPose(pose), m_drivetrain);
+  // }
 
-  public Command resetNavX() {
-    return Commands.runOnce(() -> m_drivetrain.resetNavx(), m_drivetrain);
-  }
+  // public Command resetNavX() {
+  //   return Commands.runOnce(() -> m_drivetrain.resetNavx(), m_drivetrain);
+  // }
 }
