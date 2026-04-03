@@ -1,7 +1,5 @@
 package frc.robot.subsystems.Shooter;
 
-import org.opencv.core.RotatedRect;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;

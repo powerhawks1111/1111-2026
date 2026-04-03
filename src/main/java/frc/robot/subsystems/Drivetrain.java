@@ -53,7 +53,7 @@ public class Drivetrain extends SubsystemBase{
     private final SwerveDrivePoseEstimator m_PoseEstimator;
     private final StructPublisher<Pose2d> posePub = NetworkTableInstance.getDefault()
         .getStructTopic("Robot/CurrentPose", Pose2d.struct).publish(); //use as template for publishing data to NetworkTables.
-    //private final Field2d m_field = new Field2d();
+    private final Field2d m_field = new Field2d();
     private final PIDController m_rotLockController;
 
     public Drivetrain() {
@@ -106,14 +106,14 @@ public class Drivetrain extends SubsystemBase{
         SmartDashboard.putNumber("navx value: ", navx.getRotation2d().getDegrees());
         posePub.set(m_PoseEstimator.getEstimatedPosition());
         
-        //m_field.setRobotPose(m_PoseEstimator.getEstimatedPosition());
+        m_field.setRobotPose(m_PoseEstimator.getEstimatedPosition());
 
         // PathPlannerLogging.setLogCurrentPoseCallback(
         // (pose) -> {
         // m_field.setRobotPose(pose);
         // });
         
-        //SmartDashboard.putData(m_field);
+        SmartDashboard.putData(m_field);
         }
 
     /**

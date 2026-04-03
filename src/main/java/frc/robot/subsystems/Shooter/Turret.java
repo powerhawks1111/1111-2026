@@ -1,7 +1,6 @@
 package frc.robot.subsystems.Shooter;
 
 import com.revrobotics.spark.*;
-import com.revrobotics.*;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.config.*;
@@ -10,7 +9,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANID;
-import frc.robot.Constants.SpindexerConst;
 import frc.robot.Constants.TurretConst;
 
 import com.revrobotics.spark.SparkBase.*;

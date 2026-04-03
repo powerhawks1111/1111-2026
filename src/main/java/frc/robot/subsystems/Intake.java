@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase{
 
         flipDownMotorConfig = new SparkFlexConfig();
         rollerMotorConfig = new SparkFlexConfig();
-        flipDownMotorConfig.idleMode(IdleMode.kCoast);
+        flipDownMotorConfig.idleMode(IdleMode.kBrake);
         flipDownMotorConfig.inverted(true);
 
         flipDownMotorConfig.encoder.positionConversionFactor(IntakeConst.positionConversionFactor);

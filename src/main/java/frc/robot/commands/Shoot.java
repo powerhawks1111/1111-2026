@@ -16,9 +16,6 @@ import frc.robot.subsystems.Shooter.Hood;
 public class Shoot extends ParallelCommandGroup {
   /** Creates a new Shoot. */
   public Shoot(Flywheel flywheel, Hood hood, Spindexer spindexer, Kicker kicker) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    
     //addCommands(flywheel.runFlywheel(), hood.positonHood(), spindexer.runSpindexer(), kicker.runKicker());
   }
 
