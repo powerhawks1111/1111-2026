@@ -7,25 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "To fuel"
+            "pathName": "Back to shoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Lower Intake"
+            "name": "Shoot"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 6.0
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Gather fuel"
+            "name": "Stop Shooter"
           }
         }
       ]
