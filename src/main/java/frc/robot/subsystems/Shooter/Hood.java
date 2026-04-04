@@ -48,11 +48,11 @@ public class Hood extends SubsystemBase{
         return this.run(() -> adjustHood(position));
     }
 
-    // @Override
-    // public void periodic() {
-    //     adjustHood(
-    //       SmartDashboard.getNumber("Hood", 0)
-    //     );
-    //     SmartDashboard.putNumber("HoodPositionOutput", hoodMotor.getEncoder().getPosition());
-    // }
+    @Override
+    public void periodic() {
+        adjustHood(
+          SmartDashboard.getNumber("Hood", 0)
+        );
+        SmartDashboard.putNumber("HoodPositionOutput", hoodMotor.getEncoder().getPosition());
+    }
 }
