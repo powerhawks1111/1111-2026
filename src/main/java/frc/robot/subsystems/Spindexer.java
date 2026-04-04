@@ -49,12 +49,12 @@ public class Spindexer extends SubsystemBase{
       return this.run(() -> setSpeed(-.8));
     }
 
-    // @Override
-    // public void periodic() {
-    //   //  setSpeed(
-    //   //     SmartDashboard.getNumber("Spindexer", 0)
-    //   //   );
-    //   spindexerMotor.set(SmartDashboard.getNumber("Spindexer", 0));
-    //   SmartDashboard.putNumber("Encoder Reading", spindexerMotor.getEncoder().getPosition());
-    // }
+    @Override
+    public void periodic() {
+      //  setSpeed(
+      //     SmartDashboard.getNumber("Spindexer", 0)
+      //   );
+      spindexerMotor.set(SmartDashboard.getNumber("Spindexer", 0));
+      SmartDashboard.putNumber("Encoder Reading", spindexerMotor.getEncoder().getPosition());
+    }
 }

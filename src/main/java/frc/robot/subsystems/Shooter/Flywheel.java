@@ -53,7 +53,8 @@ public class Flywheel extends SubsystemBase{
         leftShoot.configure(leftShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         rightShoot.configure(rightShootConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_controller = rightShoot.getClosedLoopController();
-        
+
+        SmartDashboard.putNumber("Flywheel Speed", 0);
     }
 
     public void setSpeed(double rpm) {
@@ -71,5 +72,6 @@ public class Flywheel extends SubsystemBase{
 
     @Override
     public void periodic() {
+        setSpeed(SmartDashboard.getNumber("Flywheel Speed", 0));
     }
 }

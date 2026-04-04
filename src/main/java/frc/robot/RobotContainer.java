@@ -63,8 +63,8 @@ public class RobotContainer {
 
   private final Drivetrain m_drivetrain = new Drivetrain();
 
-  private final Vision camLeft = new Vision(CameraConst.pvCamOne, CameraConst.leftCamTransform);
-  private final Vision camRight = new Vision(CameraConst.pvCamTwo, CameraConst.rightCamTransform);
+  private final Vision camLeft = new Vision(CameraConst.LeftCamName, CameraConst.leftCamTransform);
+  private final Vision camRight = new Vision(CameraConst.RightCamName, CameraConst.rightCamTransform);
 
   private final Intake m_intake = new Intake();
   private final Spindexer m_spindexer = new Spindexer();
