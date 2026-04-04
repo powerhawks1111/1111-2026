@@ -55,6 +55,6 @@ public class Spindexer extends SubsystemBase{
       //     SmartDashboard.getNumber("Spindexer", 0)
       //   );
       spindexerMotor.set(SmartDashboard.getNumber("Spindexer", 0));
-      SmartDashboard.putNumber("Encoder Reading", spindexerMotor.getEncoder().getPosition());
+      SmartDashboard.putNumber("Spindexer velocity", spindexerMotor.getEncoder().getVelocity());
     }
 }

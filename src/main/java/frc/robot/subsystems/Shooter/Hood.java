@@ -53,6 +53,6 @@ public class Hood extends SubsystemBase{
         adjustHood(
           SmartDashboard.getNumber("Hood", 0)
         );
-        SmartDashboard.putNumber("HoodPositionOutput", hoodMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Hood Position", hoodMotor.getEncoder().getPosition());
     }
 }

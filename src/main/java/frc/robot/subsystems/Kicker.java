@@ -78,7 +78,8 @@ public class Kicker extends SubsystemBase{
         frontMotor.set(
             SmartDashboard.getNumber("Front KickerSpeed", 0)
         );
-
+            SmartDashboard.putNumber("Back Kicker velocity", backMotor.getEncoder().getVelocity());
+            SmartDashboard.putNumber("Front Kicker velocity", frontMotor.getEncoder().getVelocity());
     }
 
 }

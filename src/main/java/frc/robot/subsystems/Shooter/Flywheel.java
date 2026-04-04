@@ -61,7 +61,6 @@ public class Flywheel extends SubsystemBase{
         m_controller.setSetpoint(rpm, ControlType.kVelocity);
     }
 
-    //TODO: Test if this should be runOnce or run
     public Command runFlywheel() {
         return this.runEnd(() -> setSpeed(3300),() -> setSpeed(1000));
     }
@@ -73,5 +72,8 @@ public class Flywheel extends SubsystemBase{
     @Override
     public void periodic() {
         setSpeed(SmartDashboard.getNumber("Flywheel Speed", 0));
+
+         SmartDashboard.putNumber("Left flywheel velocity", leftShoot.getEncoder().getVelocity());
+         SmartDashboard.putNumber("Right flywheel velocity", rightShoot.getEncoder().getVelocity());
     }
 }
