@@ -88,13 +88,14 @@ public class RobotContainer {
     public RobotContainer() {
       NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
 //      NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
-      NamedCommands.registerCommand("Shoot", new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker).withTimeout(10).andThen(resetOdometry(
+      NamedCommands.registerCommand("Shoot from hub", new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker).withTimeout(10).andThen(resetOdometry(
             new Pose2d(
                 0,
                 0,
                 new Rotation2d(-1*Math.PI/4)
             )
-      )));
+      ))); 
+      NamedCommands.registerCommand("Shoot", new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker).withTimeout(10));
       NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
       //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
       NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).withTimeout(0.85).andThen(m_intake.stopIntakeFlipCommand()));
