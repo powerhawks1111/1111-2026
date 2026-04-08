@@ -49,13 +49,14 @@ public class Controller extends SubsystemBase {
 
     /**
      * takes the inputs from the math and converts to what's needed for flywheel
-     * NOTE: CANNOT PASS IN ZERO AS THE DESIRED VELOCITY
-     * @param math the [meters/sec, degrees] needed to make a shot.
-     * @return double[] with the needed rpm and hood position. 
+     * @param velocity (meters per second)
+     * @param angle (degrees NOT RADIANS)
+     * @return {rpm, hood}
      */
-    public static double[] getValuesFromMath(double[] math) {
-        double rpm = -41.2 + 5.99 * Math.log(math[0]);
-        double hood = 18.5 * Math.pow(Math.E, -0.0506 * math[1]);
+    public static double[] getValuesFromMath(double velocity, double angle) {
+        double rpm = (686 * velocity) - 1731;
+        //double rpm = -41.2 + 5.99 * Math.log(velocity);
+        double hood = 18.5 * Math.pow(Math.E, -0.0506 * angle);
         double[] values = {rpm,hood};
         return values;
     }
@@ -70,16 +71,16 @@ public class Controller extends SubsystemBase {
     public static double[] calculateShooterStatic(double distance, double heightDifference, double impactAngle) {
         //calclates ball angle
         shooterPureAngle = Math.atan(
-            ((2 * heightDifference) / distance) + (Math.tan(impactAngle))
+            (((2 * heightDifference) / distance) + (Math.tan(impactAngle)))
         );
-        staticShot[0] = shooterPureAngle;
+        staticShot[0] = shooterPureAngle; 
 
         //calculates ball velocity
         shooterPureSpeed = Math.sqrt(
             (9.81 * distance * distance)
             /
             (
-                (2 * Math.cos(shooterPureAngle) * Math.cos(shooterPureAngle)) * ((distance * Math.tan(shooterPureAngle)) - heightDifference)
+                (2 * (Math.cos(shooterPureAngle) * Math.cos(shooterPureAngle))) * ((distance * Math.tan(shooterPureAngle)) - heightDifference)
             )
         );
         staticShot[1] = shooterPureSpeed;

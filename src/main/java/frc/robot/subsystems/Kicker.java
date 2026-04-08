@@ -76,23 +76,25 @@ public class Kicker extends SubsystemBase{
     }
 
     public void setDiffSpeeds(double front, double back){
-                backMotor.getClosedLoopController().setSetpoint(front, ControlType.kVelocity);
-        frontMotor.getClosedLoopController().setSetpoint(back, ControlType.kVelocity);
+        // backMotor.getClosedLoopController().setSetpoint(front, ControlType.kVelocity);
+        // frontMotor.getClosedLoopController().setSetpoint(back, ControlType.kVelocity);
 
+        backMotor.set(back);
+        frontMotor.set(front);
 
-        SmartDashboard.putNumber(
-            "BackMotorSetpoint", backMotor.getClosedLoopController().getSetpoint()    
-        );
-        SmartDashboard.putNumber(
-            "FrontMotorSetpoint", frontMotor.getClosedLoopController().getSetpoint()    
-        );
+        // SmartDashboard.putNumber(
+        //     "BackMotorSetpoint", backMotor.getClosedLoopController().getSetpoint()    
+        // );
+        // SmartDashboard.putNumber(
+        //     "FrontMotorSetpoint", frontMotor.getClosedLoopController().getSetpoint()    
+        // );
 
-        SmartDashboard.putNumber(
-            "BackMotorError", backMotor.getClosedLoopController().getSetpoint() - backMotor.getEncoder().getVelocity()
-        );
-        SmartDashboard.putNumber(
-            "FrontMotorError", frontMotor.getClosedLoopController().getSetpoint() - frontMotor.getEncoder().getVelocity()
-        );
+        // SmartDashboard.putNumber(
+        //     "BackMotorError", backMotor.getClosedLoopController().getSetpoint() - backMotor.getEncoder().getVelocity()
+        // );
+        // SmartDashboard.putNumber(
+        //     "FrontMotorError", frontMotor.getClosedLoopController().getSetpoint() - frontMotor.getEncoder().getVelocity()
+        // );
 
     }
 
@@ -116,6 +118,9 @@ public class Kicker extends SubsystemBase{
 
             SmartDashboard.putNumber("Back Kicker velocity", backMotor.getEncoder().getVelocity());
             SmartDashboard.putNumber("Front Kicker velocity", frontMotor.getEncoder().getVelocity());
+            
+            SmartDashboard.putNumber("Front kick applied output", frontMotor.getAppliedOutput());
+            SmartDashboard.putNumber("back kick applied output", backMotor.getAppliedOutput());
     }
 
 }

@@ -71,8 +71,8 @@ public class Flywheel extends SubsystemBase{
 
     @Override
     public void periodic() {
-        setSpeed(SmartDashboard.getNumber("Flywheel Speed", 0));
-
+        //setSpeed(SmartDashboard.getNumber("Flywheel Speed", 0));
+        SmartDashboard.putNumber("FLywheel applied output", leftShoot.getAppliedOutput());
          SmartDashboard.putNumber("Left flywheel velocity", leftShoot.getEncoder().getVelocity());
          SmartDashboard.putNumber("Right flywheel velocity", rightShoot.getEncoder().getVelocity());
     }
