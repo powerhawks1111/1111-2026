@@ -38,8 +38,8 @@ public class Flywheel extends SubsystemBase{
         leftShoot = new SparkFlex(CANID.LeftS, MotorType.kBrushless);
         rightShoot = new SparkFlex(CANID.RightS, MotorType.kBrushless);
 
-        leftShootConfig.voltageCompensation(11);
-        rightShootConfig.voltageCompensation(11);
+        leftShootConfig.voltageCompensation(12);
+        rightShootConfig.voltageCompensation(12);
 
         //rightShootConfig.openLoopRampRate(2);
         rightShootConfig.closedLoop.pid(FlywheelConst.kP, FlywheelConst.kI, FlywheelConst.kD);
