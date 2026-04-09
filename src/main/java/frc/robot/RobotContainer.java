@@ -85,11 +85,6 @@ public class RobotContainer {
       .getStructTopic("Robot/CurrentPose", Pose2d.struct).subscribe(new Pose2d());
   
     public RobotContainer() {
-
-      SmartDashboard.putNumber("Distance X", 0);
-      SmartDashboard.putNumber("HeightDifference", 0);
-      SmartDashboard.putNumber("Impact Angle Degrees", 0);
-
       NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
 //      NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
       NamedCommands.registerCommand("Shoot", new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker).withTimeout(10).andThen(resetOdometry(
@@ -117,7 +112,7 @@ public class RobotContainer {
           our_hub = FIELD_CONST.BLUE_HUB;
         }
       SmartDashboard.putString("Alliance Manual", alliance.toString());
-      //configureBindings();
+      configureBindings();
     }
   
     private void configureBindings() {
@@ -232,34 +227,6 @@ public class RobotContainer {
         ))
         , FIELD_CONST.BLUE_HUB)
     ));
-  }
-
-  public void temp() {
-    double[] shooterRaw = Controller.calculateShooterStatic(
-      SmartDashboard.getNumber("Distance X", 0), 
-      SmartDashboard.getNumber("HeightDifference", 0), 
-      Math.toRadians(
-        SmartDashboard.getNumber("Impact Angle Degrees", 0)
-      ));
-
-    double[] realData = Controller.getValuesFromMath(
-      shooterRaw[1], Math.toDegrees(shooterRaw[0])
-    );
-
-
-
-      m_flywheel.setSpeed(
-        (realData[0])
-      );
-      m_hood.adjustHood(realData[1]);
-
-      SmartDashboard.putNumber("Angle From Math", shooterRaw[0]);
-      SmartDashboard.putNumber("velocity From Math", shooterRaw[1]);
-
-
-      SmartDashboard.putNumber("RPM From Math", realData[0]);
-      SmartDashboard.putNumber("Hood From Math", realData[1]);
-
   }
 
   public void updateVision() {

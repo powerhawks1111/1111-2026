@@ -32,7 +32,6 @@ public class Hood extends SubsystemBase{
         hoodMotor.getEncoder().setPosition(0);
         hoodMotor.configure(hoodMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_Controller = hoodMotor.getClosedLoopController();
-        
 
       SmartDashboard.putNumber("Hood", 0);
     }
@@ -51,10 +50,9 @@ public class Hood extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // adjustHood(
-        //   SmartDashboard.getNumber("Hood", 0)
-        // );
-
+        adjustHood(
+          SmartDashboard.getNumber("Hood", 0)
+        );
         SmartDashboard.putNumber("Hood Position", hoodMotor.getEncoder().getPosition());
     }
 }
