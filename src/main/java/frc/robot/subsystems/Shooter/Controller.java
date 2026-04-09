@@ -48,19 +48,6 @@ public class Controller extends SubsystemBase {
     }
 
     /**
-     * takes the inputs from the math and converts to what's needed for flywheel
-     * NOTE: CANNOT PASS IN ZERO AS THE DESIRED VELOCITY
-     * @param math the [meters/sec, degrees] needed to make a shot.
-     * @return double[] with the needed rpm and hood position. 
-     */
-    public static double[] getValuesFromMath(double[] math) {
-        double rpm = -41.2 + 5.99 * Math.log(math[0]);
-        double hood = 18.5 * Math.pow(Math.E, -0.0506 * math[1]);
-        double[] values = {rpm,hood};
-        return values;
-    }
-
-    /**
      * calculates pure kinematics of stationary shot
      * @param distance meters away as hypotenuse
      * @param heightDifference in meters, changes based on hub or cycling 
