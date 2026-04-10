@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConst;
 
@@ -20,31 +21,6 @@ public class Controller extends SubsystemBase {
     private static InterpolatingDoubleTreeMap hoodMap;
         
     public Controller() {
-        rpmMap = new InterpolatingDoubleTreeMap();
-        hoodMap = new InterpolatingDoubleTreeMap();
-
-        rpmMap.put(3.0 + 1.75, 3500.0);
-        rpmMap.put(6.0 + 1.75, 4000.0);
-        rpmMap.put(9.0 + 1.75, 4500.0);
-        rpmMap.put(12.0  + 1.75, 4700.0);
-
-        hoodMap.put(3.0 + 1.75, 0.20);
-        hoodMap.put(6.0 + 1.75, 0.25);
-        hoodMap.put(9.0 + 1.75, 0.3);
-        hoodMap.put(12.0 + 1.75, .4);
-    }
-
-    /**
-     * 
-     * @param distance the raw distance to the hub. NOTE, it's in FEET
-     * @return double[] -> {RPM, angle}
-     */
-    public static double[] getShooterSimple(double distance) {
-        double[] data = {
-            rpmMap.get(distance),
-            hoodMap.get(distance)
-        };
-        return data;
     }
 
     /**
@@ -59,6 +35,21 @@ public class Controller extends SubsystemBase {
         double hood = 18.5 * Math.pow(Math.E, -0.0506 * angle);
         double[] values = {rpm,hood};
         return values;
+    }
+
+    /**
+   * gets new position of turret on field based on robot angle 
+   * based on polar coordinate equations 
+   * Make sure to call in between grabbing odometry and passing position into shot.
+   * @param navxAngle must be in radians 
+   * @return new Translation2d NOTE WHEN WE SIMMED WE HAD TO FLIP TYPICAL VARIABLES
+   */
+    public static Translation2d calculateShooterOffset(double navxAngle, Translation2d rawOdomPosition) {
+        return new Translation2d(
+          (TurretConst.r * Math.cos(navxAngle)) + rawOdomPosition.getX(),
+          (TurretConst.r * Math.sin(navxAngle)) + rawOdomPosition.getY()
+        );
+        //TODO IF TIME SIM
     }
 
     /**
@@ -113,7 +104,6 @@ public class Controller extends SubsystemBase {
         }
     }
 
-    //public static double  //WHAT WAS I GOING TO PUT HERE WHAT DID I FORGET
     
     /**
      * 
@@ -132,13 +122,14 @@ public class Controller extends SubsystemBase {
         }
         return previousShot; 
     }
-
-    public static double[] improvedSOTM() {
-        return null;
-    }
-    
     public static double hypotenuseCalculator(Translation2d target, Translation2d position) {
         return (Math.sqrt(Math.pow((target.getX() - position.getX()), 2) + Math.pow((target.getY() - position.getY()), 2))); 
     }
+
+    // public Command USETHISSHOOT(double distance, double height, double impactAngle) {
+    //     return this.run(
+    //         () -> 
+    //     )
+    // }
 
 }

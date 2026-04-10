@@ -90,23 +90,23 @@ public class Constants {
     }
 
     public class CameraConst {
-        public static final String LeftCamName = "CAMRIGHT";
-        public static final String RightCamName = "CAMLEFT";
+        public static final String LeftCamName = "CAMLEFT";
+        public static final String RightCamName = "CAMRIGHT";
         
         public static final double LeftCamX = 0.0381; 
         public static final double LeftCamY = 0.319; 
         public static final double LeftCamZ = 0.152;
         public static final double LeftCamRoll = 0; 
-        public static final double LeftCamPitch = 0.541;    
-        public static final double LeftCamYaw = (3 * Math.PI) / 2;  //TODO: why does Math.PI / 2 not work?
+        public static final double LeftCamPitch = -0.541;    
+        public static final double LeftCamYaw = (Math.PI) / 2;  //TODO: why does Math.PI / 2 not work?
         
 
         public static final double RightCamX = 0.09; 
         public static final double RightCamY = -0.319; 
         public static final double RightCamZ = 0.152; 
         public static final double RightCamRoll = 0;
-        public static final double RightCamPitch = 0.541; 
-        public static final double RightCamYaw = ( Math.PI) / 2;  //TODO: Shouldn't this be - Math.PI / 2?
+        public static final double RightCamPitch = -0.541; 
+        public static final double RightCamYaw = (3* Math.PI) / 2;  //TODO: Shouldn't this be - Math.PI / 2?
         
         public static final Transform3d rightCamTransform = new Transform3d(
             new Translation3d(
@@ -184,6 +184,8 @@ public class Constants {
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
+
+        public static final double r = 0.16; //meters, center of shooter to center of robot 
     }
     
     public class HoodConst {
