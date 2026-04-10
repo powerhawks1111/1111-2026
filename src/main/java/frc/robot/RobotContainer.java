@@ -136,12 +136,44 @@ public class RobotContainer {
         }
 
 public void runContButtons() {
-  if(m_driver.x().getAsBoolean()) {
-              shootFromDistanceManual();
-            }
+
+  //SHOOTER
+  if(m_operator.a().getAsBoolean()) {
+    shootFromDistanceManual();
+    m_spindexer.setSpeed(.95);
+    m_kicker.setDiffSpeeds(.6, .6);
+  }
   else {
     resetShooter();
+    m_spindexer.setSpeed(0);
+    m_kicker.setDiffSpeeds(0, 0);
   }
+
+  //INTAKE
+  if(m_operator.b().getAsBoolean()) {
+    m_intake.setFlip(0.15);
+  } else {
+    m_intake.setFlip(0);
+    if(m_operator.x().getAsBoolean()) {
+    m_intake.setFlip(-0.2);
+  } else {
+    m_intake.setFlip(0);
+  }
+  }
+
+  //ROLLER may have to invert
+  if(m_operator.rightBumper().getAsBoolean()) {
+    m_intake.setRollerSpeed(-.7);
+  } else {
+    m_intake.setRollerSpeed(0);
+  }
+
+  
+}
+
+public void runIntake(double roller, double voltage) {
+  m_intake.setRollerSpeed(roller);
+  m_intake.setFlip(voltage);
 }
       
 public void runContinuouslyForShotCalc() {

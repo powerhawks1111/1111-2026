@@ -42,15 +42,19 @@ public class Intake extends SubsystemBase{
 
     }
 
-    public void setRollerSpeed(double rpm) {
+    public void setRollerSpeed(double dutyCycle) {
         //rollerMotor.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
-        rollerMotor.set(rpm);
+        rollerMotor.set(dutyCycle);
     }
 
-    //TODO: Might need to use feed forward to overcome gravity the first 90 degrees and fight against it the last 90 degrees of rotation
-    public void setFlip(double position) {
-      //0 -> 12.03
-        flipDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
+    // //TODO: Might need to use feed forward to overcome gravity the first 90 degrees and fight against it the last 90 degrees of rotation
+    // public void setFlip(double position) {
+    //   //0 -> 12.03
+    //     flipDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
+    // }
+
+    public void setFlip(double dutyCycle) {
+      flipDownMotor.set(dutyCycle);
     }
 
     @Override
