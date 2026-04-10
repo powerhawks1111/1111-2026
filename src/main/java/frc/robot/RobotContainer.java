@@ -93,13 +93,7 @@ public class RobotContainer {
       
             NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
       //    NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
-            NamedCommands.registerCommand("Shoot", new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker).withTimeout(10).andThen(resetOdometry(
-                  new Pose2d(
-                      0,
-                      0,
-                      new Rotation2d(-1*Math.PI/4)
-                  )
-            )));
+            NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(10));
             NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
             //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
             NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).withTimeout(0.85).andThen(m_intake.stopIntakeFlipCommand()));
@@ -135,40 +129,52 @@ public class RobotContainer {
 
         }
 
-public void runContButtons() {
+public Command shootFromDistanceCommand(){
+    return Commands.run(() -> {
+      shootFromDistanceManual();
+       m_spindexer.setSpeed(.7);
+       m_kicker.setDiffSpeeds(.6, .6);
+    });
+}
 
+public void runButtonNew() {
   //SHOOTER
-  if(m_operator.a().getAsBoolean()) {
+  if(m_operator.rightTrigger(.5).getAsBoolean()) {
     shootFromDistanceManual();
-    m_spindexer.setSpeed(.95);
+    m_spindexer.setSpeed(.7);
     m_kicker.setDiffSpeeds(.6, .6);
-  }
-  else {
+  } else if (m_operator.y().getAsBoolean()) {
+    resetShooter();
+    m_spindexer.setSpeed(-.5);
+    m_kicker.setDiffSpeeds(-.25, -.25);
+  } else {
     resetShooter();
     m_spindexer.setSpeed(0);
-    m_kicker.setDiffSpeeds(0, 0);
+    m_kicker.setDiffSpeeds(0,0);
   }
 
   //INTAKE
-  if(m_operator.b().getAsBoolean()) {
-    m_intake.setFlip(0.15);
-  } else {
-    m_intake.setFlip(0);
-    if(m_operator.x().getAsBoolean()) {
-    m_intake.setFlip(-0.2);
-  } else {
-    m_intake.setFlip(0);
-  }
-  }
-
-  //ROLLER may have to invert
-  if(m_operator.rightBumper().getAsBoolean()) {
+  if(m_operator.leftTrigger(.5).getAsBoolean()) {
     m_intake.setRollerSpeed(-.7);
   } else {
     m_intake.setRollerSpeed(0);
   }
 
-  
+  if(m_operator.leftBumper().getAsBoolean()) {
+    m_intake.setFlip(0.15);
+  } else if (m_operator.rightBumper().getAsBoolean()) {
+    m_intake.setFlip(-.2);
+  } else {
+    m_intake.setFlip(0);
+  }
+
+  //ROLLER
+  if(m_operator.leftTrigger(.4).getAsBoolean()) {
+    m_intake.setRollerSpeed(-.6);
+  } else {
+    m_intake.setRollerSpeed(0);
+  }
+
 }
 
 public void runIntake(double roller, double voltage) {
@@ -176,8 +182,11 @@ public void runIntake(double roller, double voltage) {
   m_intake.setFlip(voltage);
 }
       
-public void runContinuouslyForShotCalc() {
-      
+public static double scaleImpactAngle(double distance) {
+  return (80 - (3.8598 * distance));
+}
+
+public void runContinuouslyForShotCalc() {   
         alliance = DriverStation.getAlliance();
             if (alliance.isPresent()) {
               boolean isBlueAlliance = alliance.get() == DriverStation.Alliance.Blue;
@@ -213,7 +222,7 @@ public void runContinuouslyForShotCalc() {
       distance, //TODO SIM
       1.321, //had to use other height - 2 meter iirc? hopefully will fix with metal coz our shooter ASS
         Math.toRadians(
-        67
+        scaleImpactAngle(distance)
         )
       );
 
