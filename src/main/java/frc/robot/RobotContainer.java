@@ -75,54 +75,148 @@ public class RobotContainer {
   private final Controller m_controller = new Controller();
   private final CommandXboxController m_driver = new CommandXboxController(0);
   private final CommandXboxController m_operator = new CommandXboxController(1);
-  private final Optional<DriverStation.Alliance> alliance;
-
-  private final Translation2d our_hub;
-
-  private final SendableChooser<Command> autoChooser;
+  private Optional<DriverStation.Alliance> alliance;
   
-    public RobotContainer() {
+    private Translation2d our_hub;
+      
+        private final SendableChooser<Command> autoChooser;
+        
+          public RobotContainer() {
+      
+            SmartDashboard.putNumber("X", 0);
+            SmartDashboard.putNumber("Y", 0);
+            SmartDashboard.putNumber("ROT", 0);
+      
+            SmartDashboard.putNumber("Distance X", 0);
+            SmartDashboard.putNumber("HeightDifference", 0);
+            SmartDashboard.putNumber("Impact Angle Degrees", 0);
+      
+            NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
+      //    NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
+            NamedCommands.registerCommand("Shoot", new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker).withTimeout(10).andThen(resetOdometry(
+                  new Pose2d(
+                      0,
+                      0,
+                      new Rotation2d(-1*Math.PI/4)
+                  )
+            )));
+            NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
+            //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
+            NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).withTimeout(0.85).andThen(m_intake.stopIntakeFlipCommand()));
+            autoChooser = AutoBuilder.buildAutoChooser();
+            SmartDashboard.putData("Auto Chooser", autoChooser);
+      
+            alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                boolean isBlueAlliance = alliance.get() == DriverStation.Alliance.Blue;
+                if (isBlueAlliance) {
+                  our_hub = FIELD_CONST.BLUE_HUB;
+                } else {
+                  our_hub = FIELD_CONST.RED_HUB;
+                }
+              } else {
+                our_hub = FIELD_CONST.RED_HUB;
+              }
+            configureBindings();
+          }
+        
+          private void configureBindings() {
+            m_driver.button(1).onTrue(resetNavX());
+      
+            m_driver.button(2).onTrue(resetOdometry(new Pose2d())); //TODO RESET TO ALLIANCE HUB BASE
+      
+            // if(m_driver.x().getAsBoolean()) {
+            //   shootFromDistanceManual();
+            // }
 
-      SmartDashboard.putNumber("Distance X", 0);
-      SmartDashboard.putNumber("HeightDifference", 0);
-      SmartDashboard.putNumber("Impact Angle Degrees", 0);
+            m_drivetrain.setDefaultCommand(
+              Commands.run(
+                () -> m_drivetrain.drive(
+                  -m_driver.getRawAxis(1), 
+                  -m_driver.getRawAxis(0), 
+                  -m_driver.getRawAxis(4), 5, 2), m_drivetrain)
+            );
 
-      NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
-//    NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
-      NamedCommands.registerCommand("Shoot", new Shoot(m_flywheel, m_hood, m_spindexer, m_kicker).withTimeout(10).andThen(resetOdometry(
-            new Pose2d(
-                0,
-                0,
-                new Rotation2d(-1*Math.PI/4)
-            )
-      )));
-      NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
-      //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
-      NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).withTimeout(0.85).andThen(m_intake.stopIntakeFlipCommand()));
-      autoChooser = AutoBuilder.buildAutoChooser();
-      SmartDashboard.putData("Auto Chooser", autoChooser);
+        }
 
-      alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-          boolean isBlueAlliance = alliance.get() == DriverStation.Alliance.Blue;
-          if (isBlueAlliance) {
-            our_hub = FIELD_CONST.BLUE_HUB;
+
+      
+public void runContinuouslyForShotCalc() {
+      
+        alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+              boolean isBlueAlliance = alliance.get() == DriverStation.Alliance.Blue;
+              if (isBlueAlliance) {
+                our_hub = FIELD_CONST.BLUE_HUB;
           } else {
             our_hub = FIELD_CONST.RED_HUB;
           }
         } else {
-          our_hub = FIELD_CONST.BLUE_HUB;
+          our_hub = FIELD_CONST.RED_HUB;
         }
-      configureBindings();
-    }
+
+  Pose2d currentPose = m_drivetrain.getEstimatedPose();
+
+  // Pose2d currentPose =
+  //   new Pose2d(new Translation2d(
+  //       SmartDashboard.getNumber("X", 0),
+  //       SmartDashboard.getNumber("Y", 0)), 
+  //       new Rotation2d(
+  //         SmartDashboard.getNumber("ROT", 0)
+  //       )
+  // );
   
-    private void configureBindings() {
-      m_driver.button(1).onTrue(resetNavX());
+  
+  double distance = Controller.hypotenuseCalculator(
+    our_hub, 
+    currentPose.getTranslation()
+  );
 
-      m_driver.button(2).onTrue(resetOdometry(new Pose2d())); //TODO RESET TO ALLIANCE HUB BASE
+    SmartDashboard.putNumber("DISTANCEFROMTARGET", distance);
 
+    double[] shooterRaw = Controller.calculateShooterStatic(
+      distance, //TODO SIM
+      1.321, //had to use other height - 2 meter iirc? hopefully will fix with metal coz our shooter ASS
+        Math.toRadians(
+        67
+        )
+      );
 
+    double[] realData = Controller.getValuesFromMath(
+      shooterRaw[1], Math.toDegrees(shooterRaw[0])
+    );
 
+    // m_flywheel.setSpeed(
+    //   (realData[0])
+    // );
+    // m_hood.adjustHood(realData[1]);
+
+      SmartDashboard.putNumber("Angle From Math", shooterRaw[0]);
+      SmartDashboard.putNumber("velocity From Math", shooterRaw[1]);
+
+      SmartDashboard.putNumber("RPM From Math", realData[0]);
+      SmartDashboard.putNumber("Hood From Math", realData[1]);
+ 
+  }
+
+  // public Command shootFromDistance() {
+  //   return Commands.parallel(
+  //       m_flywheel.runFlyWheelWithInput(
+  //       SmartDashboard.getNumber("RPM From Math", 0)
+  //     ),
+  //     m_hood.positionHoodWithInput(
+  //       SmartDashboard.getNumber("Hood From Math", 0)
+  //     )
+  //   );
+  // }
+
+    public void shootFromDistanceManual() {
+        m_flywheel.runFlyWheelWithInput(
+        SmartDashboard.getNumber("RPM From Math", 0)
+      );
+      m_hood.positionHoodWithInput(
+        SmartDashboard.getNumber("Hood From Math", 0)
+      );
   }
 
   // public void test() {
@@ -144,44 +238,6 @@ public class RobotContainer {
   public Command shootWithDistanceToHub() {
     return Commands.parallel(
       m_drivetrain.aimDrivetrainCommand(our_hub, our_hub)
-    );
-  }
-
-  //based off the temp method below
-  public Command getShotCommandHub() {
-    
-    double distance = Controller.hypotenuseCalculator(our_hub, 
-      Controller.calculateShooterOffset(
-        m_drivetrain.getEstimatedPose().getRotation().getRadians(), 
-        m_drivetrain.getEstimatedPose().getTranslation())
-    );
-
-    double[] shooterRaw = Controller.calculateShooterStatic(
-      distance, //TODO SIM
-      1.321, //had to use other height - 2 meter iirc? hopefully will fix with metal coz our shooter ASS
-        Math.toRadians(
-        67
-        )
-      );
-
-    double[] realData = Controller.getValuesFromMath(
-      shooterRaw[1], Math.toDegrees(shooterRaw[0])
-    );
-
-    m_flywheel.setSpeed(
-      (realData[0])
-    );
-    m_hood.adjustHood(realData[1]);
-
-      SmartDashboard.putNumber("Angle From Math", shooterRaw[0]);
-      SmartDashboard.putNumber("velocity From Math", shooterRaw[1]);
-
-      SmartDashboard.putNumber("RPM From Math", realData[0]);
-      SmartDashboard.putNumber("Hood From Math", realData[1]);
-
-    return Commands.parallel(
-      m_flywheel.runFlyWheelWithInput(realData[0]),
-      m_hood.positionHoodWithInput(realData[1])
     );
   }
 

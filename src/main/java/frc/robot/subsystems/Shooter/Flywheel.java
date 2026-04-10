@@ -66,9 +66,8 @@ public class Flywheel extends SubsystemBase{
     }
 
     public Command runFlyWheelWithInput(double speed) {
-        return this.runEnd(
-            () -> setSpeed(speed),
-            () -> setSpeed(1000) //idle at 1k
+        return this.run(
+            () -> setSpeed(speed)
         );
     }
 

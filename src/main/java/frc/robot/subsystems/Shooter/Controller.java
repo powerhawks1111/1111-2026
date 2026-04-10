@@ -46,8 +46,9 @@ public class Controller extends SubsystemBase {
    */
     public static Translation2d calculateShooterOffset(double navxAngle, Translation2d rawOdomPosition) {
         return new Translation2d(
-          (TurretConst.r * Math.cos(navxAngle)) + rawOdomPosition.getX(),
-          (TurretConst.r * Math.sin(navxAngle)) + rawOdomPosition.getY()
+            //the reason for sin cos flip is because we offset by 90 degrees due to navx vs shooter angle 
+          (-TurretConst.r * Math.cos(navxAngle)) + rawOdomPosition.getX(),
+          (-TurretConst.r * Math.sin(navxAngle)) + rawOdomPosition.getY()
         );
         //TODO IF TIME SIM
     }
