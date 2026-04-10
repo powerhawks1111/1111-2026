@@ -130,13 +130,18 @@ public class RobotContainer {
         }
 
 public Command shootFromDistanceCommand(){
-    return Commands.run(() -> {
+    return Commands.runEnd(() -> {
       shootFromDistanceManual();
        m_spindexer.setSpeed(.7);
        m_kicker.setDiffSpeeds(.6, .6);
+    }, 
+    () -> { 
+       resetShooter();
+    m_spindexer.setSpeed(0);
+    m_kicker.setDiffSpeeds(0,0);
+    
     });
-}
-
+  }
 public void runButtonNew() {
   //SHOOTER
   if(m_operator.rightTrigger(.5).getAsBoolean()) {

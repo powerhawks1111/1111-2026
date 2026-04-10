@@ -11,22 +11,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shoot"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 10.0
-                }
-              }
-            ]
+            "name": "Shoot"
           }
         }
       ]
