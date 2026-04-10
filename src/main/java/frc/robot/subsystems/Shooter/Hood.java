@@ -42,7 +42,7 @@ public class Hood extends SubsystemBase{
     }
 
     public Command positonHood() {
-        return this.runEnd(() -> adjustHood(0.25), () -> adjustHood(0.25));
+        return this.run(() -> adjustHood(0.25));
     }
 
     public Command positionHoodWithInput(double position) {
@@ -55,6 +55,6 @@ public class Hood extends SubsystemBase{
         //   SmartDashboard.getNumber("Hood", 0)
         // );
 
-        SmartDashboard.putNumber("Hood Position", hoodMotor.getEncoder().getPosition());
+        //SmartDashboard.putNumber("Hood Position", hoodMotor.getEncoder().getPosition());
     }
 }
