@@ -120,14 +120,10 @@ public class RobotContainer {
             configureBindings();
           }
         
-          private void configureBindings() {
+  private void configureBindings() {
             m_driver.button(1).onTrue(resetNavX());
       
             m_driver.button(2).onTrue(resetOdometry(new Pose2d())); //TODO RESET TO ALLIANCE HUB BASE
-      
-            // if(m_driver.x().getAsBoolean()) {
-            //   shootFromDistanceManual();
-            // }
 
             m_drivetrain.setDefaultCommand(
               Commands.run(
@@ -139,7 +135,14 @@ public class RobotContainer {
 
         }
 
-
+public void runContButtons() {
+  if(m_driver.x().getAsBoolean()) {
+              shootFromDistanceManual();
+            }
+  else {
+    resetShooter();
+  }
+}
       
 public void runContinuouslyForShotCalc() {
       
@@ -211,11 +214,22 @@ public void runContinuouslyForShotCalc() {
   // }
 
     public void shootFromDistanceManual() {
-        m_flywheel.runFlyWheelWithInput(
+      m_flywheel.setSpeed(
         SmartDashboard.getNumber("RPM From Math", 0)
       );
-      m_hood.positionHoodWithInput(
+      m_hood.adjustHood(
         SmartDashboard.getNumber("Hood From Math", 0)
+      );
+      System.out.println(
+        SmartDashboard.getNumber("Hood From Math", 0));
+  }
+
+   public void resetShooter() {
+      m_flywheel.setSpeed(
+        2000
+      );
+      m_hood.adjustHood(
+        0
       );
   }
 
@@ -249,38 +263,38 @@ public void runContinuouslyForShotCalc() {
   // }
 
 
-  public void temp() {
-    double[] shooterRaw = Controller.calculateShooterStatic(
-      SmartDashboard.getNumber("Distance X", 0), 
-      SmartDashboard.getNumber("HeightDifference", 0), 
-      Math.toRadians(
-        SmartDashboard.getNumber("Impact Angle Degrees", 0)
-      ));
+  // public void temp() {
+  //   double[] shooterRaw = Controller.calculateShooterStatic(
+  //     SmartDashboard.getNumber("Distance X", 0), 
+  //     SmartDashboard.getNumber("HeightDifference", 0), 
+  //     Math.toRadians(
+  //       SmartDashboard.getNumber("Impact Angle Degrees", 0)
+  //     ));
 
-    double[] realData = Controller.getValuesFromMath(
-      shooterRaw[1], Math.toDegrees(shooterRaw[0])
-    );
+  //   double[] realData = Controller.getValuesFromMath(
+  //     shooterRaw[1], Math.toDegrees(shooterRaw[0])
+  //   );
 
-      m_flywheel.setSpeed(
-        (realData[0])
-      );
-      m_hood.adjustHood(realData[1]);
+  //     m_flywheel.setSpeed(
+  //       (realData[0])
+  //     );
+  //     m_hood.adjustHood(realData[1]);
 
-      SmartDashboard.putNumber("Angle From Math", shooterRaw[0]);
-      SmartDashboard.putNumber("velocity From Math", shooterRaw[1]);
+  //     SmartDashboard.putNumber("Angle From Math", shooterRaw[0]);
+  //     SmartDashboard.putNumber("velocity From Math", shooterRaw[1]);
 
 
-      SmartDashboard.putNumber("RPM From Math", realData[0]);
-      SmartDashboard.putNumber("Hood From Math", realData[1]);
+  //     SmartDashboard.putNumber("RPM From Math", realData[0]);
+  //     SmartDashboard.putNumber("Hood From Math", realData[1]);
 
-  }
+  // }
 
   public void updateVision() {
-    // Optional<EstimatedRobotPose> estimatel = caml.EstimatePose();
-    // if (estimatel.isPresent()) {
-    //   m_drivetrain.updatePoseWithVision(estimatel.get());
-    //   Pose2d m_pose = estimatel.get().estimatedPose.toPose2d();
-    // }
+    Optional<EstimatedRobotPose> estimatel = caml.EstimatePose();
+    if (estimatel.isPresent()) {
+      m_drivetrain.updatePoseWithVision(estimatel.get());
+      Pose2d m_pose = estimatel.get().estimatedPose.toPose2d();
+    }
 
     Optional<EstimatedRobotPose> estimater = camR.EstimatePose();
     if (estimater.isPresent()) {

@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -32,6 +33,8 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     FollowPathCommand.warmupCommand().schedule();
     PathfindingCommand.warmupCommand().schedule();
+
+    DataLogManager.start();
     
   }
 
@@ -39,7 +42,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();  //This needs to stay in robotPeriodic in order for the periodic methods of the Subsystem classes to run
     m_robotContainer.updateVision();
-    //m_robotContainer.runContinuouslyForShotCalc();
+    m_robotContainer.runContinuouslyForShotCalc();
+    m_robotContainer.runContButtons();
 
     //m_robotContainer.temp();
     //m_robotContainer.simulate();
