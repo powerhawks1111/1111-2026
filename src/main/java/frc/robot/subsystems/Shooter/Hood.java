@@ -38,11 +38,18 @@ public class Hood extends SubsystemBase{
     }
 
     public void adjustHood(double position) {
-        hoodMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
+
+        if(position < 1){
+         hoodMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition); 
+        }
+        else {
+            hoodMotor.getClosedLoopController().setSetpoint(0.5, ControlType.kPosition);
+
+        }
     }
 
     public Command positonHood() {
-        return this.run(() -> adjustHood(0.25));
+        return this.run(() -> adjustHood(0.25)); 
     }
 
     public Command positionHoodWithInput(double position) {
@@ -55,6 +62,6 @@ public class Hood extends SubsystemBase{
         //   SmartDashboard.getNumber("Hood", 0)
         // );
 
-        //SmartDashboard.putNumber("Hood Position", hoodMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Hood Position", hoodMotor.getEncoder().getPosition());
     }
 }
