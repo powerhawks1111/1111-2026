@@ -130,10 +130,10 @@ public class RobotContainer {
                   -m_driver.getRawAxis(4), 5, 2), m_drivetrain)
             );
 
-            // m_driver.a().whileTrue(
-            //   m_drivetrain.aimDrivetrainCommand(
-            //     m_drivetrain.getEstimatedPose().getTranslation(), our_hub)
-            // );
+            m_driver.a().whileTrue(
+              m_drivetrain.aimDrivetrainCommand(
+                m_drivetrain.getEstimatedPose().getTranslation(), our_hub)
+            );
           configNew();
         }
 
@@ -195,7 +195,7 @@ public void runContinuouslyForShotCalc() {
 
     double[] shooterRaw = Controller.calculateShooterStatic(
       distance, //TODO SIM
-      1.321, //had to use other height - 2 meter iirc? hopefully will fix with metal coz our shooter ASS
+      FIELD_CONST.HUB_SHOOTER_DIFFERENCE, //had to use other height - 2 meter iirc? hopefully will fix with metal coz our shooter ASS
         Math.toRadians(
         scaleImpactAngle(distance)
         )

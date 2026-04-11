@@ -9,12 +9,6 @@
           "data": {
             "name": "Lower Intake"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Run Intake"
-          }
         }
       ]
     }

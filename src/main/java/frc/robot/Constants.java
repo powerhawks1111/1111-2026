@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit; 
 
 public class Constants {
 
@@ -164,15 +166,14 @@ public class Constants {
         //all units in meters, based on offsets from blue origin
         public static final Translation2d BLUE_HUB = new Translation2d(4.62, 4.025);
         public static final Translation2d RED_HUB = new Translation2d(11.92, 4.025);
+          public static final Translation2d BLUE_SHUTTLE_LEFT = new Translation2d(Units.inchesToMeters(39),Units.inchesToMeters(272));
+          public static final Translation2d BLUE_SHUTTLE_RIGHT = new Translation2d(Units.inchesToMeters(25),Units.inchesToMeters(39));
+          public static final Translation2d RED_SHUTTLE_LEFT = new Translation2d(Units.inchesToMeters(0),Units.inchesToMeters(0));
+           public static final Translation2d RED_SHUTTLE_RIGHT = new Translation2d(Units.inchesToMeters(0),Units.inchesToMeters(0)); 
+          
         public static final double SHOOTER_HEIGHT = 0.4572;
         public static final double HUB_HEIGHT = 1.8288;
         public static final double HUB_SHOOTER_DIFFERENCE = HUB_HEIGHT - SHOOTER_HEIGHT;
-        
-        
-        public static final double[] BLUE_CYCLE_NORTH = {1,1};
-        public static final double[] BLUE_CYCLE_SOUTH = {1,1};
-        public static final double[] RED_CYCLE_NORTH = {1,1};
-        public static final double[] RED_CYCLE_SOUTH = {1,1};
     }
 
     public class TurretConst {
