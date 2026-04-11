@@ -127,6 +127,11 @@ public class RobotContainer {
                   -m_driver.getRawAxis(4), 5, 2), m_drivetrain)
             );
 
+            m_driver.a().whileTrue(
+              m_drivetrain.aimDrivetrainCommand(
+                m_drivetrain.getEstimatedPose().getTranslation(), our_hub)
+            );
+          configNew();
         }
 
 public Command shootFromDistanceCommand(){
@@ -403,22 +408,20 @@ public void runContinuouslyForShotCalc() {
       () -> m_intake.setRollerSpeed(0), 
       m_intake)
   );
+  //TODO JAM MODE
   
-  if(m_operator.leftBumper().getAsBoolean()) {
-    m_intake.setFlip(0.15);
-  } else if (m_operator.rightBumper().getAsBoolean()) {
-    m_intake.setFlip(-.2);
-  } else {
-    m_intake.setFlip(0);
-  }
-
-  //ROLLER
-  if(m_operator.leftTrigger(.4).getAsBoolean()) {
-    m_intake.setRollerSpeed(-.6);
-  } else {
-    m_intake.setRollerSpeed(0);
-  }
-
+  m_operator.leftBumper().onTrue(
+    Commands.runEnd(
+      () -> m_intake.setFlip(.15), 
+      () -> m_intake.setFlip(0), 
+      m_intake)
+  );
+  m_operator.rightBumper().onTrue(
+    Commands.runEnd(
+      () -> m_intake.setFlip(-.2), 
+      () -> m_intake.setFlip(0), 
+      m_intake)
+  );
 }
 
 }
