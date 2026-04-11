@@ -93,10 +93,11 @@ public class RobotContainer {
       
             NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
       //    NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
-            NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(10));
+            NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(5.5));
             NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
             //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
             NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).withTimeout(0.85).andThen(m_intake.stopIntakeFlipCommand()));
+            NamedCommands.registerCommand("Run Intake",m_intake.runRollers(false).withTimeout(5).andThen(m_intake.stopRollers()));
             autoChooser = AutoBuilder.buildAutoChooser();
             SmartDashboard.putData("Auto Chooser", autoChooser);
       
