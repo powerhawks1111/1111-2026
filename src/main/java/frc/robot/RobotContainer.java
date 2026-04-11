@@ -371,7 +371,7 @@ public void runContinuouslyForShotCalc() {
 
   public void configNew() {
   //SHOOTER
-    m_operator.rightTrigger(.5).onTrue(
+    m_operator.rightTrigger(.5).whileTrue(
         Commands.parallel(
           Commands.run(
             () -> shootFromDistanceManual(), m_flywheel),
@@ -390,7 +390,7 @@ public void runContinuouslyForShotCalc() {
         )
     );
 
-    m_operator.y().onTrue(
+    m_operator.y().whileTrue(
       Commands.runEnd(
         () -> m_spindexer.setSpeed(-.5), 
         () -> m_spindexer.setSpeed(0), 
@@ -402,7 +402,7 @@ public void runContinuouslyForShotCalc() {
         )
     );
 
-  m_operator.leftTrigger(.5).and(m_operator.a()).onTrue(
+  m_operator.leftTrigger(.5).and(m_operator.a()).whileTrue(
     Commands.runEnd(
       () -> m_intake.setRollerSpeed(-.7), 
       () -> m_intake.setRollerSpeed(0), 
@@ -410,18 +410,20 @@ public void runContinuouslyForShotCalc() {
   );
   //TODO JAM MODE
   
-  m_operator.leftBumper().onTrue(
+  m_operator.leftBumper().whileTrue(
     Commands.runEnd(
       () -> m_intake.setFlip(.15), 
       () -> m_intake.setFlip(0), 
       m_intake)
   );
-  m_operator.rightBumper().onTrue(
+
+  m_operator.rightBumper().whileTrue(
     Commands.runEnd(
       () -> m_intake.setFlip(-.2), 
       () -> m_intake.setFlip(0), 
       m_intake)
   );
+  
 }
 
 }
