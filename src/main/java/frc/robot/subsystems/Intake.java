@@ -76,10 +76,10 @@ public class Intake extends SubsystemBase{
   }
   public Command runRollers(boolean reversed) {
     if(reversed) {
-    return this.run(() -> setRollerSpeed(.8
+    return this.run(() -> setRollerSpeed(.7
     ));
     } else {
-    return this.run(() -> setRollerSpeed(-.8));
+    return this.run(() -> setRollerSpeed(-.7));
     }
   }
 

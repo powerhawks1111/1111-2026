@@ -43,7 +43,7 @@ public class Hood extends SubsystemBase{
          hoodMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition); 
         }
         else {
-            hoodMotor.getClosedLoopController().setSetpoint(0.5, ControlType.kPosition);
+            hoodMotor.getClosedLoopController().setSetpoint(0.9, ControlType.kPosition);
 
         }
     }

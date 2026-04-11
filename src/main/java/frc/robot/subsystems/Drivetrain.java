@@ -67,7 +67,8 @@ public class Drivetrain extends SubsystemBase{
         private static PIDController m_rotLockController;
             
                 public Drivetrain() {
-                    m_rotLockController = new PIDController(DriveConst.autoLockP, DriveConst.autoLockP, DriveConst.autoLockP);
+                    m_rotLockController = new PIDController(.07, DriveConst.autoLockP, DriveConst.autoLockP);
+
                 m_rotLockController.enableContinuousInput(0, 2 * Math.PI);
                 m_rotLockController.setTolerance(0.0872665); //five degrees 
         
@@ -224,25 +225,56 @@ public class Drivetrain extends SubsystemBase{
             }
             
     public Command aimDrivetrainCommand(Translation2d position, Translation2d target) {
-        double x = (target.getX() - position.getX());
-        if (x == 0) {
-            x = 0.001;
-        }
-        
+        //THANK YOU 449!!
+        Translation2d difference = new Translation2d(target.getX() - position.getX(), target.getY() - position.getY());
+        Rotation2d differenceAngle = difference.getAngle();
+        double newAngle = differenceAngle.getRadians();
+
         return this.runEnd(
             () -> drive(0, 0, 
             m_rotLockController.calculate(
                 navx.getRotation2d().getRadians(), 
-                Math.atan(
-                    (target.getY() - position.getY())
-                    /
-                    (target.getX() - position.getX())
-                )
+                (newAngle - (Math.PI / 2))
             )
             , 10, 10),
             () -> drive(0, 0, 0, 0, 0)
         );
     }
+
+    public static void simulateAutoLock(Translation2d position, Translation2d target) {
+        double x = (target.getX() - position.getX());
+        if (x == 0) {
+            x = 0.001;
+        }
+        SmartDashboard.putNumber("DiffX", x);
+        SmartDashboard.putNumber("DiffY", (target.getY() - position.getY())
+        );
+        SmartDashboard.putNumber(
+            "DiffAngle", (Math.atan(
+                    (target.getY() - position.getY())
+                    /
+                    (target.getX() - position.getX())
+                )));
+        double angle = Math.atan(
+                (target.getY() - position.getY())
+                /
+                (target.getX() - position.getX())
+            );
+        double controllerOutput = m_rotLockController.calculate(
+            navx.getRotation2d().getRadians(), 
+            angle ); //todo -pi / 4
+        SmartDashboard.putNumber("AUTOALIGN ANGLE", angle);
+        SmartDashboard.putNumber("AUTOALIGN ANGLEDEGREES", Math.toDegrees(angle));
+        SmartDashboard.putNumber("Controller Output", controllerOutput); //wont need coz cant sim navx?
+
+        Translation2d difference = new Translation2d(target.getX() - position.getX(), target.getY() - position.getY());
+        Rotation2d differenceAngle = difference.getAngle();
+        double newAngle = differenceAngle.getRadians();
+
+        SmartDashboard.putNumber("NEWNEWANGLE", newAngle);
+        SmartDashboard.putNumber("NEWNEWANGLEDEGREES", Math.toDegrees(newAngle));
+    }
+    
 
 
 }

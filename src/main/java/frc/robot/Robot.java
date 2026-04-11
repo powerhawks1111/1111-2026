@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();  //This needs to stay in robotPeriodic in order for the periodic methods of the Subsystem classes to run
     m_robotContainer.updateVision();
     m_robotContainer.runContinuouslyForShotCalc();
+    //m_robotContainer.tempsim();
 
     //m_robotContainer.temp();
     //m_robotContainer.simulate();
@@ -53,6 +54,11 @@ public class Robot extends TimedRobot {
 
   public void autonomousInit() {
     m_robotContainer.getAutonomousCommand().schedule();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+
   }
 
   @Override
