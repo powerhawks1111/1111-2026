@@ -38,8 +38,8 @@ public class Flywheel extends SubsystemBase{
         leftShoot = new SparkFlex(CANID.LeftS, MotorType.kBrushless);
         rightShoot = new SparkFlex(CANID.RightS, MotorType.kBrushless);
 
-        leftShootConfig.voltageCompensation(12);
-        rightShootConfig.voltageCompensation(12);
+        leftShootConfig.voltageCompensation(11);
+        rightShootConfig.voltageCompensation(11);
 
         //rightShootConfig.openLoopRampRate(2);
         rightShootConfig.closedLoop.pid(FlywheelConst.kP, FlywheelConst.kI, FlywheelConst.kD);
@@ -73,8 +73,8 @@ public class Flywheel extends SubsystemBase{
 
     @Override
     public void periodic() {
-        setSpeed(SmartDashboard.getNumber("Flywheel Speed", 0));
-
+        //setSpeed(SmartDashboard.getNumber("Flywheel Speed", 0));
+        SmartDashboard.putNumber("FLywheel applied output", leftShoot.getAppliedOutput());
          SmartDashboard.putNumber("Left flywheel velocity", leftShoot.getEncoder().getVelocity());
          SmartDashboard.putNumber("Right flywheel velocity", rightShoot.getEncoder().getVelocity());
     }

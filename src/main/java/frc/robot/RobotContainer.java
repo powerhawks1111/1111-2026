@@ -93,11 +93,10 @@ public class RobotContainer {
       
             NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
       //    NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
-            NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(5.5));
+            NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(10));
             NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
             //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
             NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).withTimeout(0.85).andThen(m_intake.stopIntakeFlipCommand()));
-            NamedCommands.registerCommand("Run Intake",m_intake.runRollers(false).withTimeout(5).andThen(m_intake.stopRollers()));
             autoChooser = AutoBuilder.buildAutoChooser();
             SmartDashboard.putData("Auto Chooser", autoChooser);
       
@@ -128,6 +127,11 @@ public class RobotContainer {
                   -m_driver.getRawAxis(4), 5, 2), m_drivetrain)
             );
 
+            m_driver.a().whileTrue(
+              m_drivetrain.aimDrivetrainCommand(
+                m_drivetrain.getEstimatedPose().getTranslation(), our_hub)
+            );
+          configNew();
         }
 
 public Command shootFromDistanceCommand(){
@@ -143,6 +147,7 @@ public Command shootFromDistanceCommand(){
     
     });
   }
+
 public void runButtonNew() {
   //SHOOTER
   if(m_operator.rightTrigger(.5).getAsBoolean()) {
@@ -363,4 +368,62 @@ public void runContinuouslyForShotCalc() {
   public Command resetNavX() {
     return Commands.runOnce(() -> m_drivetrain.resetNavx(), m_drivetrain);
   }
+
+  public void configNew() {
+  //SHOOTER
+    m_operator.rightTrigger(.5).whileTrue(
+        Commands.parallel(
+          Commands.run(
+            () -> shootFromDistanceManual(), m_flywheel),
+          Commands.run(
+            () -> m_spindexer.setSpeed(.7), m_spindexer),
+          Commands.run(
+            () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
+        )).onFalse(
+        Commands.parallel(
+          Commands.run(
+            () -> shootFromDistanceManual(), m_flywheel),
+          Commands.run(
+            () -> m_spindexer.setSpeed(0), m_spindexer),
+          Commands.run(
+            () -> m_kicker.setDiffSpeeds(0, 0), m_kicker)
+        )
+    );
+
+    m_operator.y().whileTrue(
+      Commands.runEnd(
+        () -> m_spindexer.setSpeed(-.5), 
+        () -> m_spindexer.setSpeed(0), 
+        m_spindexer).alongWith(
+          Commands.runEnd(
+            () -> m_kicker.setDiffSpeeds(-0.6, -0.6), 
+            () -> m_kicker.setDiffSpeeds(0, 0), 
+            m_kicker)
+        )
+    );
+
+  m_operator.leftTrigger(.5).and(m_operator.a()).whileTrue(
+    Commands.runEnd(
+      () -> m_intake.setRollerSpeed(-.7), 
+      () -> m_intake.setRollerSpeed(0), 
+      m_intake)
+  );
+  //TODO JAM MODE
+  
+  m_operator.leftBumper().whileTrue(
+    Commands.runEnd(
+      () -> m_intake.setFlip(.15), 
+      () -> m_intake.setFlip(0), 
+      m_intake)
+  );
+
+  m_operator.rightBumper().whileTrue(
+    Commands.runEnd(
+      () -> m_intake.setFlip(-.2), 
+      () -> m_intake.setFlip(0), 
+      m_intake)
+  );
+  
+}
+
 }
