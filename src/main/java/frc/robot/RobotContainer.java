@@ -93,7 +93,7 @@ public class RobotContainer {
       
             NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
       //    NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
-            NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(10));
+            NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(5 ));
             NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
             //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
             NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).withTimeout(0.85).andThen(m_intake.stopIntakeFlipCommand()));
@@ -196,6 +196,7 @@ public void runIntake(double roller, double voltage) {
 public static double scaleImpactAngle(double distance) {
   return (80 - (3.8598 * distance));
 }
+
 
 public void runContinuouslyForShotCalc() {   
         alliance = DriverStation.getAlliance();
@@ -379,16 +380,9 @@ public void runContinuouslyForShotCalc() {
             () -> m_spindexer.setSpeed(.7), m_spindexer),
           Commands.run(
             () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
-        )).onFalse(
-        Commands.parallel(
-          Commands.run(
-            () -> shootFromDistanceManual(), m_flywheel),
-          Commands.run(
-            () -> m_spindexer.setSpeed(0), m_spindexer),
-          Commands.run(
-            () -> m_kicker.setDiffSpeeds(0, 0), m_kicker)
-        )
-    );
+        )).whileFalse(
+        Commands.run(() -> resetShooter())
+        );
 
     m_operator.y().whileTrue(
       Commands.runEnd(
@@ -402,9 +396,16 @@ public void runContinuouslyForShotCalc() {
         )
     );
 
-  m_operator.leftTrigger(.5).and(m_operator.a()).whileTrue(
+  m_operator.leftTrigger(.5).whileTrue(
     Commands.runEnd(
-      () -> m_intake.setRollerSpeed(-.7), 
+      () -> m_intake.setRollerSpeed(-.65), 
+      () -> m_intake.setRollerSpeed(0), 
+      m_intake)
+  );
+
+  m_operator.a().whileTrue(
+    Commands.runEnd(
+      () -> m_intake.setRollerSpeed(-1), 
       () -> m_intake.setRollerSpeed(0), 
       m_intake)
   );
