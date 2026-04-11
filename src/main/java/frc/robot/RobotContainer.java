@@ -148,46 +148,6 @@ public Command shootFromDistanceCommand(){
     });
   }
 
-public void runButtonNew() {
-  //SHOOTER
-  if(m_operator.rightTrigger(.5).getAsBoolean()) {
-    shootFromDistanceManual();
-    m_spindexer.setSpeed(.7);
-    m_kicker.setDiffSpeeds(.6, .6);
-  } else if (m_operator.y().getAsBoolean()) {
-    resetShooter();
-    m_spindexer.setSpeed(-.5);
-    m_kicker.setDiffSpeeds(-.25, -.25);
-  } else {
-    resetShooter();
-    m_spindexer.setSpeed(0);
-    m_kicker.setDiffSpeeds(0,0);
-  }
-
-  //INTAKE
-  if(m_operator.leftTrigger(.5).getAsBoolean()) {
-    m_intake.setRollerSpeed(-.7);
-  } else {
-    m_intake.setRollerSpeed(0);
-  }
-
-  if(m_operator.leftBumper().getAsBoolean()) {
-    m_intake.setFlip(0.15);
-  } else if (m_operator.rightBumper().getAsBoolean()) {
-    m_intake.setFlip(-.2);
-  } else {
-    m_intake.setFlip(0);
-  }
-
-  //ROLLER
-  if(m_operator.leftTrigger(.4).getAsBoolean()) {
-    m_intake.setRollerSpeed(-.6);
-  } else {
-    m_intake.setRollerSpeed(0);
-  }
-
-}
-
 public void runIntake(double roller, double voltage) {
   m_intake.setRollerSpeed(roller);
   m_intake.setFlip(voltage);

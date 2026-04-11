@@ -224,6 +224,11 @@ public class Drivetrain extends SubsystemBase{
             }
             
     public Command aimDrivetrainCommand(Translation2d position, Translation2d target) {
+        double x = (target.getX() - position.getX());
+        if (x == 0) {
+            x = 0.001;
+        }
+        
         return this.runEnd(
             () -> drive(0, 0, 
             m_rotLockController.calculate(
