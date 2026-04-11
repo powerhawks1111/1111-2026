@@ -142,6 +142,7 @@ public Command shootFromDistanceCommand(){
     
     });
   }
+
 public void runButtonNew() {
   //SHOOTER
   if(m_operator.rightTrigger(.5).getAsBoolean()) {
@@ -362,4 +363,62 @@ public void runContinuouslyForShotCalc() {
   public Command resetNavX() {
     return Commands.runOnce(() -> m_drivetrain.resetNavx(), m_drivetrain);
   }
+
+  public void configNew() {
+  //SHOOTER
+    m_operator.rightTrigger(.5).onTrue(
+        Commands.parallel(
+          Commands.run(
+            () -> shootFromDistanceManual(), m_flywheel),
+          Commands.run(
+            () -> m_spindexer.setSpeed(.7), m_spindexer),
+          Commands.run(
+            () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
+        )).onFalse(
+        Commands.parallel(
+          Commands.run(
+            () -> shootFromDistanceManual(), m_flywheel),
+          Commands.run(
+            () -> m_spindexer.setSpeed(0), m_spindexer),
+          Commands.run(
+            () -> m_kicker.setDiffSpeeds(0, 0), m_kicker)
+        )
+    );
+
+    m_operator.y().onTrue(
+      Commands.runEnd(
+        () -> m_spindexer.setSpeed(-.5), 
+        () -> m_spindexer.setSpeed(0), 
+        m_spindexer).alongWith(
+          Commands.runEnd(
+            () -> m_kicker.setDiffSpeeds(-0.6, -0.6), 
+            () -> m_kicker.setDiffSpeeds(0, 0), 
+            m_kicker)
+        )
+    );
+
+  m_operator.leftTrigger(.5).and(m_operator.a()).onTrue(
+    Commands.runEnd(
+      () -> m_intake.setRollerSpeed(-.7), 
+      () -> m_intake.setRollerSpeed(0), 
+      m_intake)
+  );
+  
+  if(m_operator.leftBumper().getAsBoolean()) {
+    m_intake.setFlip(0.15);
+  } else if (m_operator.rightBumper().getAsBoolean()) {
+    m_intake.setFlip(-.2);
+  } else {
+    m_intake.setFlip(0);
+  }
+
+  //ROLLER
+  if(m_operator.leftTrigger(.4).getAsBoolean()) {
+    m_intake.setRollerSpeed(-.6);
+  } else {
+    m_intake.setRollerSpeed(0);
+  }
+
+}
+
 }
