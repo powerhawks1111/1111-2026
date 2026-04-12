@@ -23,12 +23,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "backtoShoot"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Shoot"
