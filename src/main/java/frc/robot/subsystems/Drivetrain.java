@@ -224,19 +224,22 @@ public class Drivetrain extends SubsystemBase{
                 return AutoBuilder.pathfindToPose(targetPose, pathConstraints, 0.1);
             }
             
-    public Command aimDrivetrainCommand(Translation2d position, Translation2d target) {
+    public Command aimDrivetrainCommand(Pose2d position, Translation2d target) {
         //THANK YOU 449!!
-        Translation2d difference = new Translation2d(target.getX() - position.getX(), target.getY() - position.getY());
+        Translation2d difference = new Translation2d(target.getX() - position.getTranslation().getX(), target.getY() - position.getTranslation().getY());
         Rotation2d differenceAngle = difference.getAngle();
         double newAngle = differenceAngle.getRadians();
-
+        System.out.println("AUTOALIGNANGLE DEG: " +  Math.toDegrees(newAngle));
+        SmartDashboard.putNumber("AUTOALIGNANGLE DEG W Offset", Math.toDegrees((newAngle) - (Math.PI / 2)));
+        
+        
         return this.runEnd(
             () -> drive(0, 0, 
             m_rotLockController.calculate(
-                navx.getRotation2d().getRadians(), 
-                (newAngle - (Math.PI / 2))
-            )
-            , 10, 10),
+                getEstimatedPose().getRotation().getRadians(), 
+                newAngle),
+            //), 10,10
+             10, 10),
             () -> drive(0, 0, 0, 0, 0)
         );
     }

@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 
 import com.revrobotics.spark.*;
+
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.*;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -76,10 +79,10 @@ public class Intake extends SubsystemBase{
   }
   public Command runRollers(boolean reversed) {
     if(reversed) {
-    return this.run(() -> setRollerSpeed(.7
+    return this.run(() -> setRollerSpeed(.5
     ));
     } else {
-    return this.run(() -> setRollerSpeed(-.7));
+    return this.run(() -> setRollerSpeed(-.5));
     }
   }
 
@@ -100,6 +103,15 @@ public class Intake extends SubsystemBase{
   }
 
   public Command stopIntakeFlipCommand() {
-    return this.run(() -> flipDownMotor.setVoltage(0));
+    return this.runOnce(() -> flipDownMotor.setVoltage(0));
   }
+
+  public boolean stopIntakeCheck() {
+    if(flipDownMotor.getEncoder().getPosition() > .25) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }

@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -63,7 +64,7 @@ public class RobotContainer {
 
   private final Drivetrain m_drivetrain = new Drivetrain();
 
-  private final Vision caml = new Vision(CameraConst.LeftCamName, CameraConst.leftCamTransform);
+//  private final Vision caml = new Vision(CameraConst.LeftCamName, CameraConst.leftCamTransform);
   private final Vision camR = new Vision(CameraConst.RightCamName, CameraConst.rightCamTransform);
 
   private final Intake m_intake = new Intake();
@@ -78,6 +79,8 @@ public class RobotContainer {
   private Optional<DriverStation.Alliance> alliance;
   
     private Translation2d our_hub;
+    private Translation2d left_shuttle;
+    private Translation2d right_shuttle; 
       
         private final SendableChooser<Command> autoChooser;
         
@@ -98,7 +101,9 @@ public class RobotContainer {
             NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(5.5));
             NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
             //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
-            NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).withTimeout(0.85).andThen(m_intake.stopIntakeFlipCommand()));
+            NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).until(
+              () -> m_intake.stopIntakeCheck()
+            ).andThen(m_intake.stopIntakeFlipCommand()));//andThen(m_intake.stopIntakeFlipCommand()));
             NamedCommands.registerCommand("Run Intake",m_intake.runRollers(false).withTimeout(5).andThen(m_intake.stopRollers()));
             autoChooser = AutoBuilder.buildAutoChooser();
             SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -106,13 +111,23 @@ public class RobotContainer {
             alliance = DriverStation.getAlliance();
               if (alliance.isPresent()) {
                 boolean isBlueAlliance = alliance.get() == DriverStation.Alliance.Blue;
+
+              
+
                 if (isBlueAlliance) {
                   our_hub = FIELD_CONST.BLUE_HUB;
+                  left_shuttle = FIELD_CONST.BLUE_SHUTTLE_LEFT;
+                  left_shuttle = FIELD_CONST.BLUE_SHUTTLE_RIGHT;
                 } else {
                   our_hub = FIELD_CONST.RED_HUB;
+                  right_shuttle = FIELD_CONST.RED_SHUTTLE_LEFT;
+                  right_shuttle = FIELD_CONST.RED_SHUTTLE_RIGHT;
                 }
+                
               } else {
                 our_hub = FIELD_CONST.RED_HUB;
+                right_shuttle = FIELD_CONST.RED_SHUTTLE_LEFT;
+                right_shuttle = FIELD_CONST.RED_SHUTTLE_RIGHT;
               }
             configureBindings();
           }
@@ -132,7 +147,7 @@ public class RobotContainer {
 
             m_driver.a().whileTrue(
               m_drivetrain.aimDrivetrainCommand(
-                m_drivetrain.getEstimatedPose().getTranslation(), our_hub)
+                m_drivetrain.getEstimatedPose(), our_hub)
             );
           configNew();
         }
@@ -142,11 +157,13 @@ public Command shootFromDistanceCommand(){
       shootFromDistanceManual();
        m_spindexer.setSpeed(.7);
        m_kicker.setDiffSpeeds(.6, .6);
+       m_intake.runRollers(false); 
     }, 
     () -> { 
        resetShooter();
     m_spindexer.setSpeed(0);
     m_kicker.setDiffSpeeds(0,0);
+    m_intake.stopRollers();
     
     });
   }
@@ -275,7 +292,7 @@ public void runContinuouslyForShotCalc() {
 
   public Command shootWithDistanceToHub() {
     return Commands.parallel(
-      m_drivetrain.aimDrivetrainCommand(our_hub, our_hub)
+      m_drivetrain.aimDrivetrainCommand(m_drivetrain.getEstimatedPose(), our_hub)
     );
   }
 
@@ -314,11 +331,11 @@ public void runContinuouslyForShotCalc() {
   // }
 
   public void updateVision() {
-    Optional<EstimatedRobotPose> estimatel = caml.EstimatePose();
-    if (estimatel.isPresent()) {
-      m_drivetrain.updatePoseWithVision(estimatel.get());
-      Pose2d m_pose = estimatel.get().estimatedPose.toPose2d();
-    }
+    // Optional<EstimatedRobotPose> estimatel = caml.EstimatePose();
+    // if (estimatel.isPresent()) {
+    //   m_drivetrain.updatePoseWithVision(estimatel.get());
+    //   Pose2d m_pose = estimatel.get().estimatedPose.toPose2d();
+    // }
 
     Optional<EstimatedRobotPose> estimater = camR.EstimatePose();
     if (estimater.isPresent()) {

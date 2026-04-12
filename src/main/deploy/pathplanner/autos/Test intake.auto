@@ -9,11 +9,17 @@
           "data": {
             "name": "Lower Intake"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Run Intake"
+          }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }

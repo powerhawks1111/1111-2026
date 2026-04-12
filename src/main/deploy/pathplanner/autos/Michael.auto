@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "To fuel"
+            "pathName": "Backup"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "intkake bump"
+            "name": "Shoot"
           }
         }
       ]
