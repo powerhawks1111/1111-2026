@@ -75,7 +75,7 @@ public class RobotContainer {
   private final Flywheel m_flywheel = new Flywheel();
   private final Controller m_controller = new Controller();
   private final CommandXboxController m_driver = new CommandXboxController(0);
-  private final CommandXboxController m_operator = new CommandXboxController(1);
+//  private final CommandXboxController m_operator = new CommandXboxController(1);
   private Optional<DriverStation.Alliance> alliance;
   
     private Translation2d our_hub;
@@ -129,13 +129,16 @@ public class RobotContainer {
                 right_shuttle = FIELD_CONST.RED_SHUTTLE_LEFT;
                 right_shuttle = FIELD_CONST.RED_SHUTTLE_RIGHT;
               }
+            SmartDashboard.putNumber("Target RPM", 0);
+            SmartDashboard.putNumber("Target Hood", 0);
+
             configureBindings();
           }
         
   private void configureBindings() {
             m_driver.y().onTrue(resetNavX());
       
-            m_driver.button(2).onTrue(resetOdometry(new Pose2d())); //TODO RESET TO ALLIANCE HUB BASE
+            //m_driver.button(2).onTrue(resetOdometry(new Pose2d())); //TODO RESET TO ALLIANCE HUB BASE
 
             m_drivetrain.setDefaultCommand(
               Commands.run(
@@ -145,10 +148,10 @@ public class RobotContainer {
                   -m_driver.getRawAxis(4), 5, 2), m_drivetrain)
             );
 
-            m_driver.a().whileTrue(
-              m_drivetrain.aimDrivetrainCommand(
-                m_drivetrain.getEstimatedPose(), our_hub)
-            );
+            // m_driver.a().whileTrue(
+            //   m_drivetrain.aimDrivetrainCommand(
+            //     m_drivetrain.getEstimatedPose(), our_hub)
+            // );
           configNew();
         }
 
@@ -248,10 +251,10 @@ public void runContinuouslyForShotCalc() {
 
     public void shootFromDistanceManual() {
       m_flywheel.setSpeed(
-        SmartDashboard.getNumber("RPM From Math", 0)
+        SmartDashboard.getNumber("Target RPM", 0)
       );
       m_hood.adjustHood(
-        SmartDashboard.getNumber("Hood From Math", 0)
+        SmartDashboard.getNumber("Target Hood", 0)
       );
   }
 
@@ -359,32 +362,32 @@ public void runContinuouslyForShotCalc() {
 
   public void configNew() {
   //SHOOTER
-    m_operator.rightTrigger(.5).whileTrue(
+    m_driver.rightTrigger(.5).whileTrue(
         Commands.parallel(
           Commands.run(
             () -> shootFromDistanceManual(), m_flywheel),
           Commands.run(
-            () -> m_spindexer.setSpeed(.7), m_spindexer),
+            () -> m_spindexer.setSpeed(.85), m_spindexer),
           Commands.run(
-            () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
+            () -> m_kicker.setDiffSpeeds(1, 1), m_kicker)
         )).whileFalse(
         Commands.run(() -> resetShooter())
         );
 
          //SHUTTLE
-    m_operator.b().whileTrue(
-        Commands.parallel(
-          Commands.run(
-            () -> shuttle(), m_flywheel),
-          Commands.run(
-            () -> m_spindexer.setSpeed(.7), m_spindexer),
-          Commands.run(
-            () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
-        )).whileFalse(
-        Commands.run(() -> resetShooter())
-        );
+    // m_operator.b().whileTrue(
+    //     Commands.parallel(
+    //       Commands.run(
+    //         () -> shuttle(), m_flywheel),
+    //       Commands.run(
+    //         () -> m_spindexer.setSpeed(.7), m_spindexer),
+    //       Commands.run(
+    //         () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
+    //     )).whileFalse(
+    //     Commands.run(() -> resetShooter())
+    //     );
 
-    m_operator.y().whileTrue(
+    m_driver.b().whileTrue(
       Commands.runEnd(
         () -> m_spindexer.setSpeed(-.5), 
         () -> m_spindexer.setSpeed(0), 
@@ -396,29 +399,26 @@ public void runContinuouslyForShotCalc() {
         )
     );
 
-  m_operator.leftTrigger(.5).whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setRollerSpeed(-.65), 
-      () -> m_intake.setRollerSpeed(0), 
-      m_intake)
+  m_driver.leftTrigger(.5).whileTrue(
+    m_intake.runRollers(false)
   );
 
-  m_operator.a().whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setRollerSpeed(-1), 
-      () -> m_intake.setRollerSpeed(0), 
-      m_intake)
-  );
+  // m_operator.a().whileTrue(
+  //   Commands.runEnd(
+  //     () -> m_intake.setRollerSpeed(-1), 
+  //     () -> m_intake.setRollerSpeed(0), 
+  //     m_intake)
+  // );
   //TODO JAM MODE
   
-  m_operator.leftBumper().whileTrue(
+  m_driver.leftBumper().whileTrue(
     Commands.runEnd(
       () -> m_intake.setFlip(.15), 
       () -> m_intake.setFlip(0), 
       m_intake)
   );
 
-  m_operator.rightBumper().whileTrue(
+  m_driver.rightBumper().whileTrue(
     Commands.runEnd(
       () -> m_intake.setFlip(-.2), 
       () -> m_intake.setFlip(0), 

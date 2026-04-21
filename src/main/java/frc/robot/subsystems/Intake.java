@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase{
     private SparkFlexConfig rollerMotorConfig;
 
     public Intake() {
-      SmartDashboard.putNumber("INTAKE", 0);
+      SmartDashboard.putNumber("Intake Speed", 0.5);
         flipDownMotor = new SparkFlex(CANID.Flipper, MotorType.kBrushless);
         rollerMotor = new SparkFlex(CANID.Rollers, MotorType.kBrushless);
 
@@ -41,6 +41,7 @@ public class Intake extends SubsystemBase{
             .pid(0, 0, 0);
 
         flipDownMotor.configure(flipDownMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        rollerMotorConfig.inverted(true);
         rollerMotor.configure(rollerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
 
     }
@@ -79,10 +80,13 @@ public class Intake extends SubsystemBase{
   }
   public Command runRollers(boolean reversed) {
     if(reversed) {
-    return this.run(() -> setRollerSpeed(.5
-    ));
+      return this.runEnd(
+        () -> rollerMotor.set(-SmartDashboard.getNumber("Intake Speed", 0.5)),
+        () -> rollerMotor.set(0));
     } else {
-    return this.run(() -> setRollerSpeed(-.5));
+      return this.runEnd(
+        () -> rollerMotor.set(SmartDashboard.getNumber("Intake Speed", 0.5)),
+        () -> rollerMotor.set(0));
     }
   }
 
