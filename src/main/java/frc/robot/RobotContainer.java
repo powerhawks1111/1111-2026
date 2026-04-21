@@ -130,13 +130,25 @@ public class RobotContainer {
                 right_shuttle = FIELD_CONST.RED_SHUTTLE_RIGHT;
               }
 
+        SmartDashboard.putNumber("Manual RPM", 3800);
+        SmartDashboard.putNumber("Manual Hood Setting", .25);
             configureBindings();
           }
         
   private void configureBindings() {
             m_driver.y().onTrue(resetNavX());
-      
-            //m_driver.button(2).onTrue(resetOdometry(new Pose2d())); //TODO RESET TO ALLIANCE HUB BASE
+          // new Pose2d(new Translation2d(
+    //     SmartDashboard.getNumber("X", 0),
+    //     SmartDashboard.getNumber("Y", 0)), 
+    //     new Rotation2d(
+    //       SmartDashboard.getNumber("ROT", 0)
+    //     )
+
+            m_driver.x().onTrue(resetOdometry(new Pose2d(new Translation2d(
+        SmartDashboard.getNumber("X", 3.6),
+        SmartDashboard.getNumber("Y", 4)), 
+        new Rotation2d(0)
+            ))); // RESET TO ALLIANCE HUB BASE
 
             m_drivetrain.setDefaultCommand(
               Commands.run(
@@ -155,7 +167,7 @@ public class RobotContainer {
 
 public Command shootFromDistanceCommand(){
     return Commands.runEnd(() -> {
-      shootFromDistanceManual();
+      shootFromDistanceCalculate();
        m_spindexer.setSpeed(.7);
        m_kicker.setDiffSpeeds(.6, .6);
        m_intake.runRollers(false); 
@@ -248,6 +260,15 @@ public void runContinuouslyForShotCalc() {
   // }
 
     public void shootFromDistanceManual() {
+      m_flywheel.setSpeed(
+        SmartDashboard.getNumber("Manual RPM", 3800)
+      );
+      m_hood.adjustHood(
+        SmartDashboard.getNumber("Manual Hood Setting", .25)
+      );
+  }
+
+  public void shootFromDistanceCalculate() {
       m_flywheel.setSpeed(
         SmartDashboard.getNumber("RPM From Math", 0)
       );
@@ -363,7 +384,7 @@ public void runContinuouslyForShotCalc() {
     m_driver.rightTrigger(.5).whileTrue(
         Commands.parallel(
           Commands.run(
-            () -> shootFromDistanceManual(), m_flywheel),
+            () -> shootFromDistanceCalculate(), m_flywheel),
           Commands.run(
             () -> m_spindexer.setSpeed(.85), m_spindexer),
           Commands.run(
@@ -372,18 +393,17 @@ public void runContinuouslyForShotCalc() {
         Commands.run(() -> resetShooter())
         );
 
-         //SHUTTLE
-    // m_operator.b().whileTrue(
-    //     Commands.parallel(
-    //       Commands.run(
-    //         () -> shuttle(), m_flywheel),
-    //       Commands.run(
-    //         () -> m_spindexer.setSpeed(.7), m_spindexer),
-    //       Commands.run(
-    //         () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
-    //     )).whileFalse(
-    //     Commands.run(() -> resetShooter())
-    //     );
+    m_driver.a().whileTrue(
+        Commands.parallel(
+          Commands.run(
+            () -> shootFromDistanceManual(), m_flywheel),
+          Commands.run(
+            () -> m_spindexer.setSpeed(.85), m_spindexer),
+          Commands.run(
+            () -> m_kicker.setDiffSpeeds(1, 1), m_kicker)
+        )).whileFalse(
+        Commands.run(() -> resetShooter())
+        );
 
     m_driver.b().whileTrue(
       Commands.runEnd(
