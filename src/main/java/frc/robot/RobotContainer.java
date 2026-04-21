@@ -129,8 +129,6 @@ public class RobotContainer {
                 right_shuttle = FIELD_CONST.RED_SHUTTLE_LEFT;
                 right_shuttle = FIELD_CONST.RED_SHUTTLE_RIGHT;
               }
-            SmartDashboard.putNumber("Target RPM", 0);
-            SmartDashboard.putNumber("Target Hood", 0);
 
             configureBindings();
           }
@@ -251,10 +249,10 @@ public void runContinuouslyForShotCalc() {
 
     public void shootFromDistanceManual() {
       m_flywheel.setSpeed(
-        SmartDashboard.getNumber("Target RPM", 0)
+        SmartDashboard.getNumber("RPM From Math", 0)
       );
       m_hood.adjustHood(
-        SmartDashboard.getNumber("Target Hood", 0)
+        SmartDashboard.getNumber("Hood From Math", 0)
       );
   }
 
