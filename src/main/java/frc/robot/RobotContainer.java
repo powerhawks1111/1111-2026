@@ -129,8 +129,8 @@ public class RobotContainer {
                 right_shuttle = FIELD_CONST.RED_SHUTTLE_LEFT;
                 right_shuttle = FIELD_CONST.RED_SHUTTLE_RIGHT;
               }
-            SmartDashboard.putNumber("Target RPM", 0);
-            SmartDashboard.putNumber("Target Hood", 0);
+            SmartDashboard.putNumber("Target RPM", 4000);
+            SmartDashboard.putNumber("Target Hood", 0.3);
 
             configureBindings();
           }
@@ -251,10 +251,10 @@ public void runContinuouslyForShotCalc() {
 
     public void shootFromDistanceManual() {
       m_flywheel.setSpeed(
-        SmartDashboard.getNumber("Target RPM", 0)
+        SmartDashboard.getNumber("Target RPM", 4000)
       );
       m_hood.adjustHood(
-        SmartDashboard.getNumber("Target Hood", 0)
+        SmartDashboard.getNumber("Target Hood", 0.3)
       );
   }
 
@@ -270,7 +270,7 @@ public void runContinuouslyForShotCalc() {
 
    public void resetShooter() {
       m_flywheel.setSpeed(
-        2000
+        0
       );
       m_hood.adjustHood(
         0
@@ -411,19 +411,19 @@ public void runContinuouslyForShotCalc() {
   // );
   //TODO JAM MODE
   
-  m_driver.leftBumper().whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setFlip(.15), 
-      () -> m_intake.setFlip(0), 
-      m_intake)
-  );
+  // m_driver.leftBumper().whileTrue(
+  //   Commands.runEnd(
+  //     () -> m_intake.setFlip(.15), 
+  //     () -> m_intake.setFlip(0), 
+  //     m_intake)
+  // );
 
-  m_driver.rightBumper().whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setFlip(-.2), 
-      () -> m_intake.setFlip(0), 
-      m_intake)
-  );
+  // m_driver.rightBumper().whileTrue(
+  //   Commands.runEnd(
+  //     () -> m_intake.setFlip(-.2), 
+  //     () -> m_intake.setFlip(0), 
+  //     m_intake)
+  // );
   
 }
 
