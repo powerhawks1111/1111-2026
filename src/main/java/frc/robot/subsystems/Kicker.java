@@ -17,14 +17,14 @@ import frc.robot.Constants.CANID;
 import frc.robot.Constants.IntakeConst;
 
 public class Kicker extends SubsystemBase{
-    private SparkMax backMotor;
+    //private SparkMax backMotor;
     private SparkMaxConfig backMotorConfig;
 
     private SparkFlex frontMotor;
     private SparkFlexConfig frontMotorConfig;
 
     public Kicker() {
-        backMotor = new SparkMax(CANID.BackK, MotorType.kBrushless);
+        //backMotor = new SparkMax(CANID.BackK, MotorType.kBrushless);
         frontMotor = new SparkFlex(CANID.FrontK, MotorType.kBrushless);
 
         backMotorConfig = new SparkMaxConfig();
@@ -45,7 +45,7 @@ public class Kicker extends SubsystemBase{
         frontMotorConfig.closedLoop
             .pid(0, 0, 0);
 
-        backMotor.configure(backMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        //backMotor.configure(backMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         frontMotor.configure(frontMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
 
         SmartDashboard.putNumber("Back KickerSpeed", 0);
@@ -53,20 +53,20 @@ public class Kicker extends SubsystemBase{
     }
 
     public void setSameSpeed(double speed) {
-        backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        //backMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
         frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
 
 
-        SmartDashboard.putNumber(
-            "BackMotorSetpoint", backMotor.getClosedLoopController().getSetpoint()    
-        );
+       // SmartDashboard.putNumber(
+           // "BackMotorSetpoint", backMotor.getClosedLoopController().getSetpoint()    
+        //);
         SmartDashboard.putNumber(
             "FrontMotorSetpoint", frontMotor.getClosedLoopController().getSetpoint()    
         );
 
-        SmartDashboard.putNumber(
-            "BackMotorError", backMotor.getClosedLoopController().getSetpoint() - backMotor.getEncoder().getVelocity()
-        );
+       // SmartDashboard.putNumber(
+         //   "BackMotorError", backMotor.getClosedLoopController().getSetpoint() - backMotor.getEncoder().getVelocity()
+       // );
         SmartDashboard.putNumber(
             "FrontMotorError", frontMotor.getClosedLoopController().getSetpoint() - frontMotor.getEncoder().getVelocity()
         );
@@ -79,7 +79,7 @@ public class Kicker extends SubsystemBase{
         // backMotor.getClosedLoopController().setSetpoint(front, ControlType.kVelocity);
         // frontMotor.getClosedLoopController().setSetpoint(back, ControlType.kVelocity);
 
-        backMotor.set(back);
+        //backMotor.set(back);
         frontMotor.set(front);
 
         // SmartDashboard.putNumber(
@@ -108,19 +108,19 @@ public class Kicker extends SubsystemBase{
 
     @Override
     public void periodic() {
-        backMotor.set(
-             SmartDashboard.getNumber("Back KickerSpeed", 0)
-        );
+       // backMotor.set(
+       //      SmartDashboard.getNumber("Back KickerSpeed", 0)
+       // );
         frontMotor.set(
             SmartDashboard.getNumber("Front KickerSpeed", 0)
         );
 
 
-            SmartDashboard.putNumber("Back Kicker velocity", backMotor.getEncoder().getVelocity());
+          //  SmartDashboard.putNumber("Back Kicker velocity", backMotor.getEncoder().getVelocity());
             SmartDashboard.putNumber("Front Kicker velocity", frontMotor.getEncoder().getVelocity());
             
             SmartDashboard.putNumber("Front kick applied output", frontMotor.getAppliedOutput());
-            SmartDashboard.putNumber("back kick applied output", backMotor.getAppliedOutput());
+          //SmartDashboard.putNumber("back kick applied output", backMotor.getAppliedOutput());
     }
 
 }
