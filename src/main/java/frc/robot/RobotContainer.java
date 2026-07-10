@@ -135,7 +135,7 @@ public class RobotContainer {
   private void configureBindings() {
             m_driver.y().onTrue(resetNavX());
       
-            m_driver.button(2).onTrue(resetOdometry(new Pose2d())); //TODO RESET TO ALLIANCE HUB BASE
+            m_driver.b().onTrue(resetOdometry(new Pose2d())); //TODO RESET TO ALLIANCE HUB BASE
 
             m_drivetrain.setDefaultCommand(
               Commands.run(
@@ -149,8 +149,86 @@ public class RobotContainer {
               m_drivetrain.aimDrivetrainCommand(
                 m_drivetrain.getEstimatedPose(), our_hub)
             );
-          configNew();
-        }
+//SHOOTER
+    m_operator.rightTrigger(.5).whileTrue(
+        Commands.parallel(
+          Commands.run(
+            () -> shootFromDistanceManual(), m_flywheel),
+          Commands.run(
+            () -> m_spindexer.setSpeed(.7), m_spindexer),
+          Commands.run(
+            () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
+        )).whileFalse(
+        Commands.run(() -> resetShooter())
+        );
+
+         //SHUTTLE
+    m_operator.b().whileTrue(
+        Commands.parallel(
+          Commands.run(
+            () -> shuttle(), m_flywheel),
+          Commands.run(
+            () -> m_spindexer.setSpeed(.7), m_spindexer),
+          Commands.run(
+            () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
+        )).whileFalse(
+        Commands.run(() -> resetShooter())
+        );
+
+    m_operator.y().whileTrue(
+      Commands.runEnd(
+        () -> m_spindexer.setSpeed(-.5), 
+        () -> m_spindexer.setSpeed(0), 
+        m_spindexer).alongWith(
+          Commands.runEnd(
+            () -> m_kicker.setDiffSpeeds(-0.6, -0.6), 
+            () -> m_kicker.setDiffSpeeds(0, 0), 
+            m_kicker)
+        )
+    );
+
+  m_operator.leftTrigger(.5).whileTrue(
+    Commands.runEnd(
+      () -> m_intake.setRollerSpeed(-.65), 
+      () -> m_intake.setRollerSpeed(0), 
+      m_intake)
+  );
+
+  m_operator.a().whileTrue(
+    Commands.runEnd(
+      () -> m_intake.setRollerSpeed(-1), 
+      () -> m_intake.setRollerSpeed(0), 
+      m_intake)
+  );
+  //TODO JAM MODE
+  
+  m_operator.leftBumper().whileTrue(
+    Commands.runEnd(
+      () -> m_intake.setFlip(.15), 
+      () -> m_intake.setFlip(0), 
+      m_intake)
+  );
+
+  m_operator.rightBumper().whileTrue(
+    Commands.runEnd(
+      () -> m_intake.setFlip(-.2), 
+      () -> m_intake.setFlip(0), 
+      m_intake)
+  );
+  
+}
+
+public void tempsim() {
+  Pose2d currentPose =
+    new Pose2d(new Translation2d(
+        SmartDashboard.getNumber("X Sim", 0),
+        SmartDashboard.getNumber("Y Sim", 0)), 
+        new Rotation2d(
+          SmartDashboard.getNumber("ROTSIM", 0)
+        )
+  );
+
+  m_drivetrain.simulateAutoLock(currentPose.getTranslation(), our_hub);        }
 
 public Command shootFromDistanceCommand(){
     return Commands.runEnd(() -> {
@@ -357,87 +435,6 @@ public void runContinuouslyForShotCalc() {
     return Commands.runOnce(() -> m_drivetrain.resetNavx(), m_drivetrain);
   }
 
-  public void configNew() {
-  //SHOOTER
-    m_operator.rightTrigger(.5).whileTrue(
-        Commands.parallel(
-          Commands.run(
-            () -> shootFromDistanceManual(), m_flywheel),
-          Commands.run(
-            () -> m_spindexer.setSpeed(.7), m_spindexer),
-          Commands.run(
-            () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
-        )).whileFalse(
-        Commands.run(() -> resetShooter())
-        );
-
-         //SHUTTLE
-    m_operator.b().whileTrue(
-        Commands.parallel(
-          Commands.run(
-            () -> shuttle(), m_flywheel),
-          Commands.run(
-            () -> m_spindexer.setSpeed(.7), m_spindexer),
-          Commands.run(
-            () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
-        )).whileFalse(
-        Commands.run(() -> resetShooter())
-        );
-
-    m_operator.y().whileTrue(
-      Commands.runEnd(
-        () -> m_spindexer.setSpeed(-.5), 
-        () -> m_spindexer.setSpeed(0), 
-        m_spindexer).alongWith(
-          Commands.runEnd(
-            () -> m_kicker.setDiffSpeeds(-0.6, -0.6), 
-            () -> m_kicker.setDiffSpeeds(0, 0), 
-            m_kicker)
-        )
-    );
-
-  m_operator.leftTrigger(.5).whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setRollerSpeed(-.65), 
-      () -> m_intake.setRollerSpeed(0), 
-      m_intake)
-  );
-
-  m_operator.a().whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setRollerSpeed(-1), 
-      () -> m_intake.setRollerSpeed(0), 
-      m_intake)
-  );
-  //TODO JAM MODE
   
-  m_operator.leftBumper().whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setFlip(.15), 
-      () -> m_intake.setFlip(0), 
-      m_intake)
-  );
-
-  m_operator.rightBumper().whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setFlip(-.2), 
-      () -> m_intake.setFlip(0), 
-      m_intake)
-  );
-  
-}
-
-public void tempsim() {
-  Pose2d currentPose =
-    new Pose2d(new Translation2d(
-        SmartDashboard.getNumber("X Sim", 0),
-        SmartDashboard.getNumber("Y Sim", 0)), 
-        new Rotation2d(
-          SmartDashboard.getNumber("ROTSIM", 0)
-        )
-  );
-
-  m_drivetrain.simulateAutoLock(currentPose.getTranslation(), our_hub);
-}
 
 }
