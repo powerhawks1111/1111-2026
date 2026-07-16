@@ -103,11 +103,11 @@ public class Constants {
         public static final double LeftCamYaw = (Math.PI) / 2;  //TODO: why does Math.PI / 2 not work?
         
 
-        public static final double RightCamX = 0.09; 
-        public static final double RightCamY = -0.319; 
-        public static final double RightCamZ = 0.152; 
+        public static final double RightCamX = 0.0508; //Units are in Meters
+        public static final double RightCamY = -0.3302; 
+        public static final double RightCamZ = 0.2159; 
         public static final double RightCamRoll = 0;
-        public static final double RightCamPitch = -0.541; 
+        public static final double RightCamPitch = -0.454; 
         public static final double RightCamYaw = (3* Math.PI) / 2;  //TODO: Shouldn't this be - Math.PI / 2?
         
         public static final Transform3d rightCamTransform = new Transform3d(
@@ -160,6 +160,7 @@ public class Constants {
         //intake
         public static final int Rollers = 16;
         public static final int Flipper = 17;
+        //public static final int Extender = 17;
     }
 
     public class FIELD_CONST {

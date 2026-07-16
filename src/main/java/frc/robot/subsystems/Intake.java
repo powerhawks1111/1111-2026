@@ -21,7 +21,9 @@ import frc.robot.Constants.IntakeConst;
 
 public class Intake extends SubsystemBase{
     private SparkFlex flipDownMotor;
+    //private SparkFlex ExtendingMotor;
     private SparkFlexConfig flipDownMotorConfig;
+    //private SparkFlexConfig ExtendingMotorConfig;
 
     private SparkFlex rollerMotor;
     private SparkFlexConfig rollerMotorConfig;
@@ -29,11 +31,14 @@ public class Intake extends SubsystemBase{
     public Intake() {
       SmartDashboard.putNumber("INTAKE", 0);
         flipDownMotor = new SparkFlex(CANID.Flipper, MotorType.kBrushless);
+        //ExtendingMotor = new SparkFlax(CANDID.Extender, MotorType.kBrushless);
         rollerMotor = new SparkFlex(CANID.Rollers, MotorType.kBrushless);
 
         flipDownMotorConfig = new SparkFlexConfig();
+        //ExtendingMotorConfig = new SparkFlexConfig();
         rollerMotorConfig = new SparkFlexConfig();
         flipDownMotorConfig.idleMode(IdleMode.kBrake);
+        //ExtedningMotorConfig.idleMode(IdleMode.kBrake);
         flipDownMotorConfig.inverted(true);
 
         flipDownMotorConfig.encoder.positionConversionFactor(IntakeConst.positionConversionFactor);

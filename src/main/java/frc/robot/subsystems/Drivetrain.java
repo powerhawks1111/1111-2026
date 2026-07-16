@@ -67,9 +67,9 @@ public class Drivetrain extends SubsystemBase{
         private static PIDController m_rotLockController;
             
                 public Drivetrain() {
-                    m_rotLockController = new PIDController(.07, DriveConst.autoLockP, DriveConst.autoLockP);
+                    m_rotLockController = new PIDController(0.1, DriveConst.autoLockP, DriveConst.autoLockP);
 
-                m_rotLockController.enableContinuousInput(0, 2 * Math.PI);
+                //m_rotLockController.enableContinuousInput(0, 2 * Math.PI);
                 m_rotLockController.setTolerance(0.0872665); //five degrees 
         
                 m_PoseEstimator = new SwerveDrivePoseEstimator(
@@ -229,8 +229,8 @@ public class Drivetrain extends SubsystemBase{
         Translation2d difference = new Translation2d(target.getX() - position.getTranslation().getX(), target.getY() - position.getTranslation().getY());
         Rotation2d differenceAngle = difference.getAngle();
         double newAngle = differenceAngle.getRadians();
-        System.out.println("AUTOALIGNANGLE DEG: " +  Math.toDegrees(newAngle));
-        SmartDashboard.putNumber("AUTOALIGNANGLE DEG W Offset", Math.toDegrees((newAngle) - (Math.PI / 2)));
+        SmartDashboard.putNumber("AUTOALIGNANGLE DEG: " , Math.toDegrees(newAngle));
+        //SmartDashboard.putNumber("AUTOALIGNANGLE DEG W Offset", Math.toDegrees((newAngle) - (Math.PI / 2)));
         
         
         return this.runEnd(
