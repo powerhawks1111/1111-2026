@@ -67,7 +67,7 @@ public class Drivetrain extends SubsystemBase{
         private static PIDController m_rotLockController;
             
                 public Drivetrain() {
-                    m_rotLockController = new PIDController(0.1, DriveConst.autoLockP, DriveConst.autoLockP);
+                    m_rotLockController = new PIDController(1/Math.PI, DriveConst.autoLockP, DriveConst.autoLockP);
 
                 //m_rotLockController.enableContinuousInput(0, 2 * Math.PI);
                 m_rotLockController.setTolerance(0.0872665); //five degrees 
@@ -223,23 +223,36 @@ public class Drivetrain extends SubsystemBase{
                 );
                 return AutoBuilder.pathfindToPose(targetPose, pathConstraints, 0.1);
             }
-            
-    public Command aimDrivetrainCommand(Pose2d position, Translation2d target) {
+    
+    public double getAngleToTarget(Pose2d position, Translation2d target) {
         //THANK YOU 449!!
         Translation2d difference = new Translation2d(target.getX() - position.getTranslation().getX(), target.getY() - position.getTranslation().getY());
         Rotation2d differenceAngle = difference.getAngle();
         double newAngle = differenceAngle.getRadians();
         SmartDashboard.putNumber("AUTOALIGNANGLE DEG: " , Math.toDegrees(newAngle));
         //SmartDashboard.putNumber("AUTOALIGNANGLE DEG W Offset", Math.toDegrees((newAngle) - (Math.PI / 2)));
-        
+         SmartDashboard.putNumber("TargetX",target.getX());
+        SmartDashboard.putNumber("targetY",target.getY());
+        SmartDashboard.putNumber("positionX",position.getX());
+        SmartDashboard.putNumber("positionY",position.getY());
+        System.out.println("I am here");
+
+        return newAngle;
+    }
+    public Command aimDrivetrainCommand(Pose2d position, Translation2d target) {
+       SmartDashboard.putNumber("TargetX",target.getX());
+        SmartDashboard.putNumber("targetY",target.getY());
+        SmartDashboard.putNumber("positionX",position.getX());
+        SmartDashboard.putNumber("positionY",position.getY());
+       
         
         return this.runEnd(
             () -> drive(0, 0, 
             m_rotLockController.calculate(
-                getEstimatedPose().getRotation().getRadians(), 
-                newAngle),
+                getEstimatedPose().getRotation().getRadians()-(Math.PI/2), 
+                getAngleToTarget(getEstimatedPose(), target)),
             //), 10,10
-             10, 10),
+             5, 2),
             () -> drive(0, 0, 0, 0, 0)
         );
     }

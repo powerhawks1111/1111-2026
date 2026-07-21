@@ -20,32 +20,28 @@ import frc.robot.Constants.CANID;
 import frc.robot.Constants.IntakeConst;
 
 public class Intake extends SubsystemBase{
-    private SparkFlex flipDownMotor;
-    //private SparkFlex ExtendingMotor;
-    private SparkFlexConfig flipDownMotorConfig;
-    //private SparkFlexConfig ExtendingMotorConfig;
+    private SparkFlex ExtendingMotor;
+    private SparkFlexConfig ExtendingMotorConfig;
 
     private SparkFlex rollerMotor;
     private SparkFlexConfig rollerMotorConfig;
 
     public Intake() {
       SmartDashboard.putNumber("INTAKE", 0);
-        flipDownMotor = new SparkFlex(CANID.Flipper, MotorType.kBrushless);
-        //ExtendingMotor = new SparkFlax(CANDID.Extender, MotorType.kBrushless);
+        ExtendingMotor = new SparkFlex(CANID.Extender, MotorType.kBrushless);
         rollerMotor = new SparkFlex(CANID.Rollers, MotorType.kBrushless);
 
-        flipDownMotorConfig = new SparkFlexConfig();
-        //ExtendingMotorConfig = new SparkFlexConfig();
+        ExtendingMotorConfig = new SparkFlexConfig();
         rollerMotorConfig = new SparkFlexConfig();
-        flipDownMotorConfig.idleMode(IdleMode.kBrake);
-        //ExtedningMotorConfig.idleMode(IdleMode.kBrake);
-        flipDownMotorConfig.inverted(true);
+        ExtendingMotorConfig.idleMode(IdleMode.kBrake);
+        
+        //ExtendingMotorConfig.inverted(true); does this need to be inverted?
 
-        flipDownMotorConfig.encoder.positionConversionFactor(IntakeConst.positionConversionFactor);
-        flipDownMotorConfig.closedLoop
+        ExtendingMotorConfig.encoder.positionConversionFactor(IntakeConst.positionConversionFactor);
+        ExtendingMotorConfig.closedLoop
             .pid(0, 0, 0);
 
-        flipDownMotor.configure(flipDownMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        ExtendingMotor.configure(ExtendingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         rollerMotor.configure(rollerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
 
     }
@@ -62,7 +58,7 @@ public class Intake extends SubsystemBase{
     // }
 
     public void setFlip(double dutyCycle) {
-      flipDownMotor.set(dutyCycle);
+      ExtendingMotor.set(dutyCycle);
     }
 
     @Override
@@ -70,7 +66,7 @@ public class Intake extends SubsystemBase{
     }
     
   public Command setVoltageManual(double voltage) {
-      return this.run(() -> flipDownMotor.setVoltage(
+      return this.run(() -> ExtendingMotor.setVoltage(
         voltage
       )
     );
@@ -96,23 +92,23 @@ public class Intake extends SubsystemBase{
   }
   public void runIntakeManually(double leftTrigger, double rightTrigger) {
       if(leftTrigger > rightTrigger) {
-        flipDownMotor.set(-leftTrigger/2); //max of 6v allowed 
+        ExtendingMotor.set(-leftTrigger/2); //max of 6v allowed 
       }
       if(leftTrigger < rightTrigger) {
-        flipDownMotor.set(rightTrigger/2); //max of 6v allowed 
+        ExtendingMotor.set(rightTrigger/2); //max of 6v allowed 
       }
   }
 
-  public Command runIntakeFlipManuallyCommand(double left, double right) {
+ /*  public Command runIntakeFlipManuallyCommand(double left, double right) {
     return this.run(() -> runIntakeManually(left, right));
   }
 
   public Command stopIntakeFlipCommand() {
     return this.runOnce(() -> flipDownMotor.setVoltage(0));
   }
-
+*/
   public boolean stopIntakeCheck() {
-    if(flipDownMotor.getEncoder().getPosition() > .25) {
+    if(ExtendingMotor.getEncoder().getPosition() > .25) {
       return true;
     } else {
       return false;
