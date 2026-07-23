@@ -133,9 +133,9 @@ public class RobotContainer {
           }
         
   private void configureBindings() {
-            m_driver.y().onTrue(resetNavX());
+            m_driver.y().onTrue(resetNavX()); //Resets NavX
       
-            m_driver.b().onTrue(resetOdometry(new Pose2d())); //TODO RESET TO ALLIANCE HUB BASE
+            m_driver.b().onTrue(resetOdometry(new Pose2d())); // Resets alliance hub base
 
             m_drivetrain.setDefaultCommand(
               Commands.run(
@@ -145,7 +145,7 @@ public class RobotContainer {
                   -m_driver.getRawAxis(4), 5, 2), m_drivetrain)
             );
 
-            m_driver.a().whileTrue(
+            m_driver.a().whileTrue( // Aligns shooter to hub 
               m_drivetrain.aimDrivetrainCommand(
                 m_drivetrain.getEstimatedPose(), our_hub)
             );
@@ -175,6 +175,7 @@ public class RobotContainer {
         Commands.run(() -> resetShooter())
         );
 
+    // Unjams spindexer and kicker
     m_operator.y().whileTrue(
       Commands.runEnd(
         () -> m_spindexer.setSpeed(-.5), 
@@ -186,29 +187,30 @@ public class RobotContainer {
             m_kicker)
         )
     );
-
+  
+  // Runs intake rollers
   m_operator.leftTrigger(.5).whileTrue(
     Commands.runEnd(
       () -> m_intake.setRollerSpeed(-.65), 
       () -> m_intake.setRollerSpeed(0), 
       m_intake)
   );
-
+  // Boost intake rollers
   m_operator.a().whileTrue(
     Commands.runEnd(
       () -> m_intake.setRollerSpeed(-1), 
       () -> m_intake.setRollerSpeed(0), 
       m_intake)
   );
-  //TODO JAM MODE
-  
+
+  // Puts down intake
   m_operator.leftBumper().whileTrue(
     Commands.runEnd(
       () -> m_intake.setFlip(.15), 
       () -> m_intake.setFlip(0), 
       m_intake)
   );
-
+  // Puts up intake
   m_operator.rightBumper().whileTrue(
     Commands.runEnd(
       () -> m_intake.setFlip(-.2), 
