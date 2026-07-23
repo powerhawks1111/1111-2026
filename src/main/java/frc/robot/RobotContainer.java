@@ -101,9 +101,9 @@ public class RobotContainer {
             NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(5.5));
             NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
             //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
-           // NamedCommands.registerCommand("Lower Intake", m_intake.setVoltageManual(2).until(
+           // NamedCommands.registerCommand("Extend Intake", m_intake.setVoltageManual(2).until(
             //  () -> m_intake.stopIntakeCheck()
-            //).andThen(m_intake.stopIntakeFlipCommand()));//andThen(m_intake.stopIntakeFlipCommand()));
+            //).andThen(m_intake.stopIntakeExtendCommand()));//andThen(m_intake.stopIntakeExtendCommand()));
             NamedCommands.registerCommand("Run Intake",m_intake.runRollers(false).withTimeout(5).andThen(m_intake.stopRollers()));
             autoChooser = AutoBuilder.buildAutoChooser();
             SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -365,12 +365,13 @@ public void runContinuouslyForShotCalc() {
             () -> shootFromDistanceManual(), m_flywheel),
           Commands.run(
             () -> m_spindexer.setSpeed(.7), m_spindexer),
-          Commands.run(
-            () -> m_kicker.setSpeed(0.6), m_kicker)
+          Commands.runEnd(
+            () -> m_kicker.setSpeed(0.6),
+            () -> m_kicker.setSpeed(0.0), m_kicker)
         )).whileFalse(
         Commands.run(() -> resetShooter())
         );
-
+    
          //SHUTTLE
     m_operator.b().whileTrue(
         Commands.parallel(
@@ -413,14 +414,14 @@ public void runContinuouslyForShotCalc() {
   
   m_operator.leftBumper().whileTrue(
     Commands.runEnd(
-      () -> m_intake.setExtend(.15), 
+      () -> m_intake.setExtend(.15), //question where is this number coming from?
       () -> m_intake.setExtend(0), 
       m_intake)
   );
 
   m_operator.rightBumper().whileTrue(
     Commands.runEnd(
-      () -> m_intake.setExtend(-.2), 
+      () -> m_intake.setExtend(-.2), //question why is the number to retract the intake higher than extending it?
       () -> m_intake.setExtend(0), 
       m_intake)
   );

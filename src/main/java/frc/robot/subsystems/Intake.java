@@ -31,6 +31,7 @@ public class Intake extends SubsystemBase{
         ExtendingMotor = new SparkFlex(CANID.Extender, MotorType.kBrushless);
         rollerMotor = new SparkFlex(CANID.Rollers, MotorType.kBrushless);
 
+
         ExtendingMotorConfig = new SparkFlexConfig();
         rollerMotorConfig = new SparkFlexConfig();
         ExtendingMotorConfig.idleMode(IdleMode.kBrake);
@@ -39,9 +40,11 @@ public class Intake extends SubsystemBase{
 
         ExtendingMotorConfig.encoder.positionConversionFactor(IntakeConst.positionConversionFactor);
         ExtendingMotorConfig.closedLoop
-            .pid(0, 0, 0);
-
+            .pid(IntakeConst.kPExtend, IntakeConst.kIExtend, IntakeConst.kDExtend);
+        ExtendingMotor.getEncoder().setPosition(0);
         ExtendingMotor.configure(ExtendingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        ExtendingMotor.getClosedLoopController();
+
         rollerMotor.configure(rollerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
 
     }
@@ -52,14 +55,20 @@ public class Intake extends SubsystemBase{
     }
 
     // //TODO: Might need to use feed forward to overcome gravity the first 90 degrees and fight against it the last 90 degrees of rotation
-    // public void setFlip(double position) {
+    // public void setExtend(double position) {
     //   //0 -> 12.03
-    //     flipDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
+    //     ExtendDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
     // }
+      public void setExtend(double IntakeExtendSetPoint){
+  
+       // ExtendingMotor.getClosedLoopController().setSetpoint(IntakeExtendSetPoint, ControlType.kPosition);
+      }
 
-    public void setExtend(double dutyCycle) {
-      ExtendingMotor.set(dutyCycle);
-    }
+
+  //  public void setExtend(double dutyCycle) {
+// ExtendingMotor.getClosedLoop().setSetpoint(IntakeExtendSetPoint, ControlType.kVoltage);
+   //   ExtendingMotor.set(dutyCycle);
+   // }
 
     @Override
     public void periodic() {
@@ -99,12 +108,12 @@ public class Intake extends SubsystemBase{
       }
   }
 
- /*  public Command runIntakeFlipManuallyCommand(double left, double right) {
+ /*  public Command runIntakeExtendManuallyCommand(double left, double right) {
     return this.run(() -> runIntakeManually(left, right));
   }
 
-  public Command stopIntakeFlipCommand() {
-    return this.runOnce(() -> flipDownMotor.setVoltage(0));
+  public Command stopIntakeExtendCommand() {
+    return this.runOnce(() -> ExtendDownMotor.setVoltage(0));
   }
 */
   public boolean stopIntakeCheck() {
@@ -113,6 +122,7 @@ public class Intake extends SubsystemBase{
     } else {
       return false;
     }
+  
   }
 
 }
