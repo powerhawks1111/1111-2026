@@ -57,7 +57,7 @@ public class Intake extends SubsystemBase{
     //     flipDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
     // }
 
-    public void setFlip(double dutyCycle) {
+    public void setExtend(double dutyCycle) {
       ExtendingMotor.set(dutyCycle);
     }
 
@@ -73,10 +73,10 @@ public class Intake extends SubsystemBase{
   }
 
   public Command deployIntake() { 
-    return this.runOnce(() -> setFlip(0));  //TODO: need to find position. 
+    return this.runOnce(() -> setExtend(0));  //TODO: need to find position. 
   }
   public Command retractIntake() {
-    return this.runOnce(() -> setFlip(0)); // TODO: will we want this?
+    return this.runOnce(() -> setExtend(0)); // TODO: will we want this?
   }
   public Command runRollers(boolean reversed) {
     if(reversed) {

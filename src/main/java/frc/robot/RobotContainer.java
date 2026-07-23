@@ -156,13 +156,13 @@ public Command shootFromDistanceCommand(){
     return Commands.runEnd(() -> {
       shootFromDistanceManual();
        m_spindexer.setSpeed(.7);
-       m_kicker.setDiffSpeeds(.6, .6);
+       m_kicker.setSpeed(.6);
        m_intake.runRollers(false); 
     }, 
     () -> { 
        resetShooter();
     m_spindexer.setSpeed(0);
-    m_kicker.setDiffSpeeds(0,0);
+    m_kicker.setSpeed(0);
     m_intake.stopRollers();
     
     });
@@ -170,7 +170,7 @@ public Command shootFromDistanceCommand(){
 
 public void runIntake(double roller, double voltage) {
   m_intake.setRollerSpeed(roller);
-  m_intake.setFlip(voltage);
+  m_intake.setExtend(voltage);
 }
       
 public static double scaleImpactAngle(double distance) {
@@ -366,7 +366,7 @@ public void runContinuouslyForShotCalc() {
           Commands.run(
             () -> m_spindexer.setSpeed(.7), m_spindexer),
           Commands.run(
-            () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
+            () -> m_kicker.setSpeed(0.6), m_kicker)
         )).whileFalse(
         Commands.run(() -> resetShooter())
         );
@@ -379,7 +379,7 @@ public void runContinuouslyForShotCalc() {
           Commands.run(
             () -> m_spindexer.setSpeed(.7), m_spindexer),
           Commands.run(
-            () -> m_kicker.setDiffSpeeds(0.6, 0.6), m_kicker)
+            () -> m_kicker.setSpeed(0.6), m_kicker)
         )).whileFalse(
         Commands.run(() -> resetShooter())
         );
@@ -390,8 +390,8 @@ public void runContinuouslyForShotCalc() {
         () -> m_spindexer.setSpeed(0), 
         m_spindexer).alongWith(
           Commands.runEnd(
-            () -> m_kicker.setDiffSpeeds(-0.6, -0.6), 
-            () -> m_kicker.setDiffSpeeds(0, 0), 
+            () -> m_kicker.setSpeed(-0.6), //question on this peice of code, why are there two set speeds for the spindexer and kicker?
+            () -> m_kicker.setSpeed(0), 
             m_kicker)
         )
     );
@@ -413,15 +413,15 @@ public void runContinuouslyForShotCalc() {
   
   m_operator.leftBumper().whileTrue(
     Commands.runEnd(
-      () -> m_intake.setFlip(.15), 
-      () -> m_intake.setFlip(0), 
+      () -> m_intake.setExtend(.15), 
+      () -> m_intake.setExtend(0), 
       m_intake)
   );
 
   m_operator.rightBumper().whileTrue(
     Commands.runEnd(
-      () -> m_intake.setFlip(-.2), 
-      () -> m_intake.setFlip(0), 
+      () -> m_intake.setExtend(-.2), 
+      () -> m_intake.setExtend(0), 
       m_intake)
   );
   

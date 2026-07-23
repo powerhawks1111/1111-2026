@@ -44,7 +44,7 @@ public class Kicker extends SubsystemBase{
         SmartDashboard.putNumber("Front KickerSpeed", 0);
     }
 
-    public void setSameSpeed(double speed) {
+    public void setSpeed(double speed) {
  
         frontMotor.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
 
@@ -62,12 +62,12 @@ public class Kicker extends SubsystemBase{
         //frontMotor.set(speed);
     }
 
-    public void setDiffSpeeds(double front, double back){
+    //public void setDiffSpeeds(double front, double back){
 
         // frontMotor.getClosedLoopController().setSetpoint(back, ControlType.kVelocity);
 
 
-        frontMotor.set(front);
+        //frontMotor.set(front);
 
    
         // SmartDashboard.putNumber(
@@ -78,15 +78,15 @@ public class Kicker extends SubsystemBase{
         // SmartDashboard.putNumber(
         //     "FrontMotorError", frontMotor.getClosedLoopController().getSetpoint() - frontMotor.getEncoder().getVelocity()
         // );
-
-    }
+        //}
+    
 
     public Command runKicker() {
-        return this.runEnd(() -> setDiffSpeeds(0.7, 0.9), () -> setSameSpeed(0));
+        return this.runEnd(() -> setSpeed(0.7), () -> setSpeed(0));
     }
     
     public Command stopKicker() {
-        return this.run(() -> setSameSpeed(0));
+        return this.run(() -> setSpeed(0));
     }
 
     @Override
