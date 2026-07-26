@@ -64,6 +64,9 @@ public class Intake extends SubsystemBase{
        ExtendingMotor.getClosedLoopController().setSetpoint(IntakeExtendSetPoint, ControlType.kPosition);
       }
 
+      public void stopIntake(){
+        ExtendingMotor.setVoltage(0);
+      }
 
   //  public void setExtend(double dutyCycle) {
 // ExtendingMotor.getClosedLoop().setSetpoint(IntakeExtendSetPoint, ControlType.kVoltage);

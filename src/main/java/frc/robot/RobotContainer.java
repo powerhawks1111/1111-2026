@@ -60,6 +60,7 @@ import frc.robot.subsystems.Shooter.Flywheel;
 import frc.robot.subsystems.Shooter.Hood;
 import frc.robot.subsystems.Shooter.Turret;
 
+
 public class RobotContainer {
 
   private final Drivetrain m_drivetrain = new Drivetrain();
@@ -132,33 +133,93 @@ public class RobotContainer {
             configureBindings();
           }
         
-  private void configureBindings() {
-            m_driver.y().onTrue(resetNavX());
-      
-            m_driver.button(2).onTrue(resetOdometry(new Pose2d())); //TODO RESET TO ALLIANCE HUB BASE
+          private void configureBindings() {
+            m_driver.y().onTrue(resetNavX()); // Resets NavX , sets to 0
+
+            m_driver.b().onTrue(resetOdometry(new Pose2d())); // TODO RESET TO ALLIANCE HUB BASE
 
             m_drivetrain.setDefaultCommand(
-              Commands.run(
-                () -> m_drivetrain.drive(
-                  -m_driver.getRawAxis(1), 
-                  -m_driver.getRawAxis(0), 
-                  -m_driver.getRawAxis(4), 5, 2), m_drivetrain)
-            );
-
+                Commands.run(
+                    () -> m_drivetrain.drive(
+                        -m_driver.getLeftX(),
+                        -m_driver.getLeftY(),
+                        -m_driver.getRightX(), 5, 2),
+                    m_drivetrain));
+            // auto aligns and shoots simultaniously from the drivers right trigger
             m_driver.rightTrigger().whileTrue(
-              Commands.parallel(
-                m_drivetrain.aimDrivetrainCommand( m_drivetrain.getEstimatedPose(), our_hub),
-                Commands.run(
-              () -> shootFromDistanceManual(), m_flywheel),
-                Commands.run(
-              () -> m_spindexer.setSpeed(.7), m_spindexer),
+                Commands.parallel(
+                    m_drivetrain.aimDrivetrainCommand(m_drivetrain.getEstimatedPose(), our_hub),
+                    Commands.run(
+                        () -> shootFromDistanceManual(), m_flywheel),
+                    Commands.run(
+                        () -> m_spindexer.setSpeed(.7), m_spindexer),
+                    Commands.runEnd(
+                        () -> m_kicker.setSpeed(0.6),
+                        () -> m_kicker.setSpeed(0.0), m_kicker)
+
+                ));
+            // SHOOTER
+            m_operator.rightTrigger(.5).whileTrue(
+                Commands.parallel(
+                    Commands.run(
+                        () -> shootFromDistanceManual(), m_flywheel),
+                    Commands.run(
+                        () -> m_spindexer.setSpeed(.7), m_spindexer),
+                    Commands.runEnd(
+                        () -> m_kicker.setSpeed(0.6),
+                        () -> m_kicker.setSpeed(0.0), m_kicker)))
+                .whileFalse(
+                    Commands.run(() -> resetShooter()));
+
+            // SHUTTLE
+            m_operator.b().whileTrue(
+                Commands.parallel(
+                    Commands.run(
+                        () -> shuttle(), m_flywheel),
+                    Commands.run(
+                        () -> m_spindexer.setSpeed(.7), m_spindexer),
+                    Commands.run(
+                        () -> m_kicker.setSpeed(0.6), m_kicker)))
+                .whileFalse(
+                    Commands.run(() -> resetShooter()));
+            //unjams spindexer and kicker
+            m_operator.y().whileTrue(
                 Commands.runEnd(
-              () -> m_kicker.setSpeed(0.6),
-              () -> m_kicker.setSpeed(0.0), m_kicker)
-                
-            ));
-          configNew();
-        }
+                    () -> m_spindexer.setSpeed(-.5),
+                    () -> m_spindexer.setSpeed(0),
+                    m_spindexer).alongWith(
+                        Commands.runEnd(
+                            () -> m_kicker.setSpeed(-0.6),
+                            () -> m_kicker.setSpeed(0),
+                            m_kicker)));
+            
+            //runs intake rollers
+            m_operator.leftTrigger(.5).whileTrue(
+                Commands.runEnd(
+                    () -> m_intake.setRollerSpeed(-.65),
+                    () -> m_intake.setRollerSpeed(0),
+                    m_intake));
+            //boost intake rollers
+            m_operator.a().whileTrue(
+                Commands.runEnd(
+                    () -> m_intake.setRollerSpeed(-1),
+                    () -> m_intake.setRollerSpeed(0),
+                    m_intake));
+            // TODO JAM MODE
+            //Extends intake
+            m_operator.leftBumper().whileTrue(
+                Commands.runEnd(
+                    () -> m_intake.setExtend(IntakeConst.IntakeExtendSetPoint),
+                    () -> m_intake.stopIntake(),
+                    m_intake));
+            //retracts intake
+            m_operator.rightBumper().whileTrue(
+                Commands.runEnd(
+                    () -> m_intake.setExtend(0), 
+                    () -> m_intake.stopIntake(),
+                    m_intake));
+
+          }
 
 public Command shootFromDistanceCommand(){
     return Commands.runEnd(() -> {
@@ -364,77 +425,6 @@ public void runContinuouslyForShotCalc() {
   public Command resetNavX() {
     return Commands.runOnce(() -> m_drivetrain.resetNavx(), m_drivetrain);
   }
-
-  public void configNew() {
-  //SHOOTER
-    m_operator.rightTrigger(.5).whileTrue(
-        Commands.parallel(
-          Commands.run(
-            () -> shootFromDistanceManual(), m_flywheel),
-          Commands.run(
-            () -> m_spindexer.setSpeed(.7), m_spindexer),
-          Commands.runEnd(
-            () -> m_kicker.setSpeed(0.6),
-            () -> m_kicker.setSpeed(0.0), m_kicker)
-        )).whileFalse(
-        Commands.run(() -> resetShooter())
-        );
-    
-         //SHUTTLE
-    m_operator.b().whileTrue(
-        Commands.parallel(
-          Commands.run(
-            () -> shuttle(), m_flywheel),
-          Commands.run(
-            () -> m_spindexer.setSpeed(.7), m_spindexer),
-          Commands.run(
-            () -> m_kicker.setSpeed(0.6), m_kicker)
-        )).whileFalse(
-        Commands.run(() -> resetShooter())
-        );
-
-    m_operator.y().whileTrue(
-      Commands.runEnd(
-        () -> m_spindexer.setSpeed(-.5), 
-        () -> m_spindexer.setSpeed(0), 
-        m_spindexer).alongWith(
-          Commands.runEnd(
-            () -> m_kicker.setSpeed(-0.6),
-            () -> m_kicker.setSpeed(0), 
-            m_kicker)
-        )
-    );
-
-  m_operator.leftTrigger(.5).whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setRollerSpeed(-.65), 
-      () -> m_intake.setRollerSpeed(0), 
-      m_intake)
-  );
-
-  m_operator.a().whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setRollerSpeed(-1), 
-      () -> m_intake.setRollerSpeed(0), 
-      m_intake)
-  );
-  //TODO JAM MODE
-  
-  m_operator.leftBumper().whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setExtend(.15), //question where is this number coming from?
-      () -> m_intake.setExtend(0), 
-      m_intake)
-  );
-
-  m_operator.rightBumper().whileTrue(
-    Commands.runEnd(
-      () -> m_intake.setExtend(-.2), //question why is the number to retract the intake higher than extending it?
-      () -> m_intake.setExtend(0), 
-      m_intake)
-  );
-  
-}
 
 public void tempsim() {
   Pose2d currentPose =
