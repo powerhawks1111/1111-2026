@@ -145,10 +145,18 @@ public class RobotContainer {
                   -m_driver.getRawAxis(4), 5, 2), m_drivetrain)
             );
 
-            m_driver.a().whileTrue(
-              m_drivetrain.aimDrivetrainCommand(
-                m_drivetrain.getEstimatedPose(), our_hub)
-            );
+            m_driver.rightTrigger().whileTrue(
+              Commands.parallel(
+                m_drivetrain.aimDrivetrainCommand( m_drivetrain.getEstimatedPose(), our_hub),
+                Commands.run(
+              () -> shootFromDistanceManual(), m_flywheel),
+                Commands.run(
+              () -> m_spindexer.setSpeed(.7), m_spindexer),
+                Commands.runEnd(
+              () -> m_kicker.setSpeed(0.6),
+              () -> m_kicker.setSpeed(0.0), m_kicker)
+                
+            ));
           configNew();
         }
 
@@ -391,7 +399,7 @@ public void runContinuouslyForShotCalc() {
         () -> m_spindexer.setSpeed(0), 
         m_spindexer).alongWith(
           Commands.runEnd(
-            () -> m_kicker.setSpeed(-0.6), //question on this peice of code, why are there two set speeds for the spindexer and kicker?
+            () -> m_kicker.setSpeed(-0.6),
             () -> m_kicker.setSpeed(0), 
             m_kicker)
         )
