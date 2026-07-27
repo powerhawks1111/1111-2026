@@ -99,7 +99,7 @@ public class RobotContainer {
       
            NamedCommands.registerCommand("Deploy InTake", m_intake.deployIntake()); 
             NamedCommands.registerCommand("Retract Intake", m_intake.retractIntake()); 
-            
+
            NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
       //    NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
             NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(5.5));
@@ -226,6 +226,7 @@ public class RobotContainer {
 
 public Command shootFromDistanceCommand(){
     return Commands.runEnd(() -> {
+      
       shootFromDistanceManual();
        m_spindexer.setSpeed(.7);
        m_kicker.setSpeed(.6);
