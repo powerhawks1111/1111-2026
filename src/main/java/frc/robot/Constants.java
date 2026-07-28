@@ -18,10 +18,10 @@ public class Constants {
         public static double gearRatio = 42/11; // taking the bigger gear (42teeth) dived by the smaller pinion (11teeth), smaller gear is on the motor
         public static final double positionConversionFactor =((wheelDiameter * Math.PI) / gearRatio);
         // 0.08422; //previous number : 0.02777
-        public static final double IntakeExtendSetPoint = 12; //in inches
+        public static final double IntakeExtendSetPoint = 11; //in inches
         public static final double velocityConversionFactor = 1; //for roller velocity
         
-        public static final double kPExtend = 0;
+        public static final double kPExtend = 0.033;
         public static final double kIExtend = 0;
         public static final double kDExtend = 0;
         
@@ -110,7 +110,7 @@ public class Constants {
 
         public static final double RightCamX = 0.0508; //Units are in Meters
         public static final double RightCamY = -0.3302; 
-        public static final double RightCamZ = 0.2159; 
+        public static final double RightCamZ = 0.2032; 
         public static final double RightCamRoll = 0;
         public static final double RightCamPitch = -0.454; 
         public static final double RightCamYaw = (3* Math.PI) / 2;  //TODO: Shouldn't this be - Math.PI / 2?

@@ -36,7 +36,7 @@ public class Intake extends SubsystemBase{
         rollerMotorConfig = new SparkFlexConfig();
         ExtendingMotorConfig.idleMode(IdleMode.kBrake);
         
-        //ExtendingMotorConfig.inverted(true); does this need to be inverted?
+        ExtendingMotorConfig.inverted(true);
 
         ExtendingMotorConfig.encoder.positionConversionFactor(IntakeConst.positionConversionFactor);
         ExtendingMotorConfig.closedLoop
@@ -63,6 +63,7 @@ public class Intake extends SubsystemBase{
   
        ExtendingMotor.getClosedLoopController().setSetpoint(IntakeExtendSetPoint, ControlType.kPosition);
       }
+
 
       public void stopIntake(){
         ExtendingMotor.setVoltage(0);

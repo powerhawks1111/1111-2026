@@ -130,6 +130,7 @@ public class RobotContainer {
                 right_shuttle = FIELD_CONST.RED_SHUTTLE_LEFT;
                 right_shuttle = FIELD_CONST.RED_SHUTTLE_RIGHT;
               }
+
             configureBindings();
           }
         
@@ -196,13 +197,13 @@ public class RobotContainer {
             //runs intake rollers
             m_operator.leftTrigger(.5).whileTrue(
                 Commands.runEnd(
-                    () -> m_intake.setRollerSpeed(-.65),
+                    () -> m_intake.setRollerSpeed(.5),
                     () -> m_intake.setRollerSpeed(0),
                     m_intake));
-            //boost intake rollers
-            m_operator.a().whileTrue(
+            //boost intake roller
+                      m_operator.a().whileTrue(
                 Commands.runEnd(
-                    () -> m_intake.setRollerSpeed(-1),
+                    () -> m_intake.setRollerSpeed(.6),
                     () -> m_intake.setRollerSpeed(0),
                     m_intake));
             // TODO JAM MODE
@@ -220,7 +221,32 @@ public class RobotContainer {
                     m_intake));
 
           }
+/*  public Command feedFuelShooterReady(){
+    if (Commands.parallel(
+         m_drivetrain.aimDrivetrainCommand(m_drivetrain.getEstimatedPose(), our_hub),
+          Commands.run(
+            () -> shootFromDistanceManual(), m_flywheel),
+          Commands.runEnd(
+            () -> m_kicker.setSpeed(0.6),
+            () -> m_kicker.setSpeed(0.0), m_kicker))){
+            m_spindexer.setSpeed(0.7);
+            } else {
+            m_spindexer.setSpeed(0.0)
+          }
+ }
 
+ public Command feedFuelShooterRead(){
+    if (m_drivetrain.aimDrivetrainCommand(m_drivetrain.getEstimatedPose(), our_hub),
+        m_flywheel.shootFromDistanceManual(), m_flywheel
+          Commands.runEnd(
+            () -> m_kicker.setSpeed(0.6),
+            () -> m_kicker.setSpeed(0.0), m_kicker))){
+            m_spindexer.setSpeed(0.7);
+            } else {
+            m_spindexer.setSpeed(0.0)
+          }
+ }
+*/
 public Command shootFromDistanceCommand(){
     return Commands.runEnd(() -> {
       shootFromDistanceManual();
