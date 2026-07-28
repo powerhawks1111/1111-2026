@@ -98,8 +98,7 @@ public class RobotContainer {
             SmartDashboard.putNumber("Impact Angle Degrees", 0);
       
            NamedCommands.registerCommand("Deploy InTake", m_intake.deployIntake()); 
-            NamedCommands.registerCommand("Retract Intake", m_intake.retractIntake()); 
-
+            NamedCommands.registerCommand("Retract Intake", m_intake.retractIntake());
            NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
       //    NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
             NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(5.5));
@@ -108,7 +107,7 @@ public class RobotContainer {
            // NamedCommands.registerCommand("Extend Intake", m_intake.setVoltageManual(2).until(
             //  () -> m_intake.stopIntakeCheck()
             //).andThen(m_intake.stopIntakeExtendCommand()));//andThen(m_intake.stopIntakeExtendCommand()));
-            NamedCommands.registerCommand("Run Intake",m_intake.runRollers(false).withTimeout(5).andThen(m_intake.stopRollers()));
+            NamedCommands.registerCommand("Run Intake",m_intake.runRollers(true).withTimeout(5).andThen(m_intake.stopRollers()));
             autoChooser = AutoBuilder.buildAutoChooser();
             SmartDashboard.putData("Auto Chooser", autoChooser);
       
@@ -226,7 +225,6 @@ public class RobotContainer {
 
 public Command shootFromDistanceCommand(){
     return Commands.runEnd(() -> {
-      
       shootFromDistanceManual();
        m_spindexer.setSpeed(.7);
        m_kicker.setSpeed(.6);
