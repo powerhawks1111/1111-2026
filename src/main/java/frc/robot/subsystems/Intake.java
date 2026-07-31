@@ -40,7 +40,9 @@ public class Intake extends SubsystemBase{
 
         ExtendingMotorConfig.encoder.positionConversionFactor(IntakeConst.positionConversionFactor);
         ExtendingMotorConfig.closedLoop
-            .pid(IntakeConst.kPExtend, IntakeConst.kIExtend, IntakeConst.kDExtend);
+            .pid(IntakeConst.kPExtend, IntakeConst.kIExtend, IntakeConst.kDExtend)
+            .feedForward
+            .kS(.045);
         ExtendingMotor.getEncoder().setPosition(0);
         ExtendingMotor.configure(ExtendingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         ExtendingMotor.getClosedLoopController();
@@ -63,6 +65,7 @@ public class Intake extends SubsystemBase{
   
        ExtendingMotor.getClosedLoopController().setSetpoint(IntakeExtendSetPoint, ControlType.kPosition);
       }
+
 
 
       public void stopIntake(){

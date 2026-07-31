@@ -327,6 +327,7 @@ public void runContinuouslyForShotCalc() {
 
       SmartDashboard.putNumber("RPM From Math", realData[0]);
       SmartDashboard.putNumber("Hood From Math", realData[1]);
+      SmartDashboard.getNumber("IntakeExtendSetpoint", IntakeConst.IntakeExtendSetPoint);
  
   }
 
