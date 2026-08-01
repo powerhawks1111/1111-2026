@@ -17,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PathPlannerLogging;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import choreo.auto.AutoFactory;
 import edu.wpi.first.math.MathUtil;
@@ -142,8 +143,8 @@ public class RobotContainer {
             m_drivetrain.setDefaultCommand(
                 Commands.run(
                     () -> m_drivetrain.drive(
-                        -m_driver.getLeftX(),
                         -m_driver.getLeftY(),
+                        -m_driver.getLeftX(),
                         -m_driver.getRightX(), 5, 2),
                     m_drivetrain));
             // auto aligns and shoots simultaniously from the drivers right trigger
@@ -327,8 +328,10 @@ public void runContinuouslyForShotCalc() {
 
       SmartDashboard.putNumber("RPM From Math", realData[0]);
       SmartDashboard.putNumber("Hood From Math", realData[1]);
-      SmartDashboard.getNumber("IntakeExtendSetpoint", IntakeConst.IntakeExtendSetPoint);
- 
+      SmartDashboard.putNumber("IntakeExtendSetpoint", IntakeConst.IntakeExtendSetPoint);
+      SmartDashboard.putNumber("IntakeEncoderReading", m_intake.ExtendingMotor.getEncoder().getPosition());
+      SmartDashboard.putNumber("IntakeP",IntakeConst.kPExtend);
+
   }
 
   // public Command shootFromDistance() {

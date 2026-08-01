@@ -20,7 +20,7 @@ import frc.robot.Constants.CANID;
 import frc.robot.Constants.IntakeConst;
 
 public class Intake extends SubsystemBase{
-    private SparkFlex ExtendingMotor;
+    public SparkFlex ExtendingMotor;
     private SparkFlexConfig ExtendingMotorConfig;
 
     private SparkFlex rollerMotor;
@@ -79,6 +79,7 @@ public class Intake extends SubsystemBase{
 
     @Override
     public void periodic() {
+    
     }
     
   public Command setVoltageManual(double voltage) {

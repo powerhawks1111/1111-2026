@@ -21,9 +21,9 @@ public class Constants {
         public static final double IntakeExtendSetPoint = 11; //in inches
         public static final double velocityConversionFactor = 1; //for roller velocity
         
-        public static final double kPExtend = 0.035;
+        public static final double kPExtend = 0.06;
         public static final double kIExtend = 0;
-        public static final double kDExtend = 0;
+        public static final double kDExtend = 0.06;
         
         public static final double kPRoller = 0;
         public static final double kIRoller = 0;

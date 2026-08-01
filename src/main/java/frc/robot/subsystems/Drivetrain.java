@@ -139,7 +139,13 @@ public class Drivetrain extends SubsystemBase{
              * @param maxAllowedVelocity max velocity allowed for this run. this is not max overall velocity, just what we want it to have
              * @param maxRotsPerSec (input max rots per sec, we multiply by 2 pi in method)
              */
-            public void drive(double x, double y, double rot, double maxAllowedVelocity, double maxRotsPerSec) { 
+            public void drive(double x, double y, double rot, double maxAllowedVelocity, double maxRotsPerSec) {
+                if(Math.abs(x)<0.2){
+                    x=0;
+                } 
+                if(Math.abs(y)<0.2){
+                    y=0;
+                }
                 x *= maxAllowedVelocity;
                 y *= maxAllowedVelocity;
                 rot *= (maxRotsPerSec * Math.PI * 2);
