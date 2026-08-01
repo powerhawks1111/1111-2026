@@ -65,4 +65,9 @@ public class Hood extends SubsystemBase{
 
         SmartDashboard.putNumber("Hood Position", hoodMotor.getEncoder().getPosition());
     }
+
+    public double setSpeed(double d) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setSpeed'");
+    }
 }

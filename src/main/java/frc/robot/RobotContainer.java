@@ -164,7 +164,7 @@ public class RobotContainer {
             m_operator.rightTrigger(.5).whileTrue(
                 Commands.parallel(
                     Commands.run(
-                        () -> shootFromDistanceManual(), m_flywheel),
+                       () -> shootFromDistanceManual(), m_flywheel),
                     Commands.run(
                         () -> m_spindexer.setSpeed(.7), m_spindexer),
                     Commands.runEnd(
@@ -349,9 +349,8 @@ public void runContinuouslyForShotCalc() {
       m_flywheel.setSpeed(
         SmartDashboard.getNumber("RPM From Math", 0)
       );
-      m_hood.adjustHood(
-        SmartDashboard.getNumber("Hood From Math", 0)
-      );
+      
+        //SmartDashboard.getNumber("Hood From Math", 0)
   }
 
   public void shuttle() {
