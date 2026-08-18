@@ -349,8 +349,9 @@ public void runContinuouslyForShotCalc() {
       m_flywheel.setSpeed(
         SmartDashboard.getNumber("RPM From Math", 0)
       );
-      
-        //SmartDashboard.getNumber("Hood From Math", 0)
+      m_hood.adjustHood(
+        SmartDashboard.getNumber("Hood From Math", 0)
+      );
   }
 
   public void shuttle() {
