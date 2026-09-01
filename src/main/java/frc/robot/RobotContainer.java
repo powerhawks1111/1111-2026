@@ -4,52 +4,26 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Feet;
-import static edu.wpi.first.units.Units.Meters;
-
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.revrobotics.spark.config.SparkMaxConfig;
 
-import choreo.auto.AutoFactory;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructSubscriber;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.Timer; // Aded for PID Tuning
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.CameraConst;
 import frc.robot.Constants.FIELD_CONST;
 import frc.robot.Constants.IntakeConst;
-import frc.robot.commands.Shoot;
-import frc.robot.commands.ShootWithRange;
 import frc.robot.commands.StopShootCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -59,7 +33,6 @@ import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Shooter.Controller;
 import frc.robot.subsystems.Shooter.Flywheel;
 import frc.robot.subsystems.Shooter.Hood;
-import frc.robot.subsystems.Shooter.Turret;
 
 
 public class RobotContainer {
@@ -109,6 +82,9 @@ public class RobotContainer {
             NamedCommands.registerCommand("Run Intake",m_intake.runRollers(false).withTimeout(5).andThen(m_intake.stopRollers()));
             autoChooser = AutoBuilder.buildAutoChooser();
             SmartDashboard.putData("Auto Chooser", autoChooser);
+
+            SmartDashboard.putNumber("Target Flywheel", 0);
+            SmartDashboard.putNumber("Target Hood", 0.7);
       
             alliance = DriverStation.getAlliance();
               if (alliance.isPresent()) {
@@ -217,7 +193,7 @@ public class RobotContainer {
             //retracts intake
             m_operator.rightBumper().whileTrue(
                 Commands.runEnd(
-                    () -> m_intake.setExtend(0), 
+                    () -> m_intake.setExtend(-2.5), 
                     () -> m_intake.stopIntake(),
                     m_intake));
 
@@ -347,10 +323,12 @@ public void runContinuouslyForShotCalc() {
 
     public void shootFromDistanceManual() {
       m_flywheel.setSpeed(
-        SmartDashboard.getNumber("RPM From Math", 0)
+        //SmartDashboard.getNumber("RPM From Math", 0)
+        SmartDashboard.getNumber("Target Flywheel" , 4000)
       );
       m_hood.adjustHood(
-        SmartDashboard.getNumber("Hood From Math", 0)
+        //SmartDashboard.getNumber("Hood From Math", 0)
+        SmartDashboard.getNumber("Target Hood", 0.7)
       );
   }
 
@@ -467,6 +445,27 @@ public void tempsim() {
   );
 
   m_drivetrain.simulateAutoLock(currentPose.getTranslation(), our_hub);
+}
+
+
+
+public void loopPIDTuning(Timer timer, boolean status) {
+  if (timer.get() >=  3.0) {
+    if (status) { // if extended
+      Commands.runEnd(
+          () -> m_intake.setExtend(IntakeConst.IntakeExtendSetPoint),
+          () -> m_intake.stopIntake(),
+          m_intake);
+    } else {
+      Commands.runEnd(
+          () -> m_intake.setExtend(0), 
+          () -> m_intake.stopIntake(),
+          m_intake);
+    }
+    timer.reset();
+  }
+
+  
 }
 
 }

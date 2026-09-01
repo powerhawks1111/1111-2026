@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Timer; // Added for PID Tuning
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drivetrain;
@@ -71,5 +71,12 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     //m_robotContainer.runButtonNew();
+  }
+
+  Timer timer = new Timer();
+  boolean status = false;
+  @Override
+  public void testPeriodic() {
+    m_robotContainer.loopPIDTuning(timer, status);
   }
 }

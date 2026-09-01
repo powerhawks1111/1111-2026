@@ -18,12 +18,12 @@ public class Constants {
         public static double gearRatio = 42/11; // taking the bigger gear (42teeth) dived by the smaller pinion (11teeth), smaller gear is on the motor
         public static final double positionConversionFactor =((wheelDiameter * Math.PI) / gearRatio);
         // 0.08422; //previous number : 0.02777
-        public static final double IntakeExtendSetPoint = 11; //in inches
+        public static final double IntakeExtendSetPoint = 3; //in inches
         public static final double velocityConversionFactor = 1; //for roller velocity
         
-        public static final double kPExtend = 0.06;
+        public static final double kPExtend = 0.0273; // John changed from 0.06 173
         public static final double kIExtend = 0;
-        public static final double kDExtend = 0.06;
+        public static final double kDExtend = 0.0000002; // John changed from 0.06
         
         public static final double kPRoller = 0;
         public static final double kIRoller = 0;
