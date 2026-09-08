@@ -193,7 +193,7 @@ public class RobotContainer {
             //retracts intake
             m_operator.rightBumper().whileTrue(
                 Commands.runEnd(
-                    () -> m_intake.setExtend(-2.5), 
+                    () -> m_intake.setExtend(0), 
                     () -> m_intake.stopIntake(),
                     m_intake));
 
