@@ -9,6 +9,7 @@ import com.revrobotics.*;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.config.*;
+import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkBase.*;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -43,7 +44,10 @@ public class Intake extends SubsystemBase{
             .pid(IntakeConst.kPExtend, IntakeConst.kIExtend, IntakeConst.kDExtend)
             .feedForward
             .kS(.045);
+            
+       /*  ExtendingMotorConfig.closedLoop.
         ExtendingMotor.getEncoder().setPosition(0);
+        */
         ExtendingMotor.configure(ExtendingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         ExtendingMotor.getClosedLoopController();
 
@@ -54,6 +58,11 @@ public class Intake extends SubsystemBase{
     public void setRollerSpeed(double dutyCycle) {
         //rollerMotor.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
         rollerMotor.set(dutyCycle);
+    }
+
+    public void setExtendSpeed(double dutyCycle){
+
+      ExtendingMotor.set(dutyCycle);
     }
 
     // //TODO: Might need to use feed forward to overcome gravity the first 90 degrees and fight against it the last 90 degrees of rotation

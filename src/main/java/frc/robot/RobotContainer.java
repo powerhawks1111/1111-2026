@@ -83,7 +83,7 @@ public class RobotContainer {
             autoChooser = AutoBuilder.buildAutoChooser();
             SmartDashboard.putData("Auto Chooser", autoChooser);
 
-            SmartDashboard.putNumber("Target Flywheel", 0);
+            SmartDashboard.putNumber("Target Flywheel", 4000);
             SmartDashboard.putNumber("Target Hood", 0.7);
       
             alliance = DriverStation.getAlliance();
@@ -178,12 +178,26 @@ public class RobotContainer {
                     () -> m_intake.setRollerSpeed(0),
                     m_intake));
             //boost intake roller
-                      m_operator.a().whileTrue(
+              /*         m_operator.a().whileTrue(
                 Commands.runEnd(
                     () -> m_intake.setRollerSpeed(.6),
                     () -> m_intake.setRollerSpeed(0),
                     m_intake));
+              */
             // TODO JAM MODE
+            m_operator.x().whileTrue(
+              Commands.runEnd(
+                () -> m_intake.setExtendSpeed(.2),
+                () -> m_intake.setExtendSpeed(0),
+                m_intake));
+            m_operator.a().whileTrue(
+              Commands.runEnd(
+                () ->m_intake.setExtendSpeed(-.2),
+                () -> m_intake.setExtendSpeed(0),
+                m_intake));
+            
+              
+            
             //Extends intake
             m_operator.leftBumper().whileTrue(
                 Commands.runEnd(
@@ -307,6 +321,8 @@ public void runContinuouslyForShotCalc() {
       SmartDashboard.putNumber("IntakeExtendSetpoint", IntakeConst.IntakeExtendSetPoint);
       SmartDashboard.putNumber("IntakeEncoderReading", m_intake.ExtendingMotor.getEncoder().getPosition());
       SmartDashboard.putNumber("IntakeP",IntakeConst.kPExtend);
+      SmartDashboard.putNumber("intakeVelocity", m_intake.ExtendingMotor.getEncoder().getVelocity());
+      SmartDashboard.putNumber("intakeVoltage", m_intake.ExtendingMotor.getBusVoltage());
 
   }
 
@@ -344,7 +360,7 @@ public void runContinuouslyForShotCalc() {
 
    public void resetShooter() {
       m_flywheel.setSpeed(
-        2000
+        0
       );
       m_hood.adjustHood(
         0
