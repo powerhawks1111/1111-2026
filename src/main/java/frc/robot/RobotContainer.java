@@ -50,7 +50,7 @@ public class RobotContainer {
   private final Flywheel m_flywheel = new Flywheel();
   private final Controller m_controller = new Controller();
   private final CommandXboxController m_driver = new CommandXboxController(0);
-  private final CommandXboxController m_operator = new CommandXboxController(1);
+  //private final CommandXboxController m_operator = new CommandXboxController(1);
   private Optional<DriverStation.Alliance> alliance;
   
     private Translation2d our_hub;
@@ -114,7 +114,7 @@ public class RobotContainer {
           private void configureBindings() {
             m_driver.y().onTrue(resetNavX()); // Resets NavX , sets to 0
 
-            m_driver.b().onTrue(resetOdometry(new Pose2d())); // TODO RESET TO ALLIANCE HUB BASE
+           // m_driver.b().onTrue(resetOdometry(new Pose2d())); // TODO RESET TO ALLIANCE HUB BASE
 
             m_drivetrain.setDefaultCommand(
                 Commands.run(
@@ -124,7 +124,7 @@ public class RobotContainer {
                         -m_driver.getRightX(), 5, 2),
                     m_drivetrain));
             // auto aligns and shoots simultaniously from the drivers right trigger
-            m_driver.rightTrigger().whileTrue(
+           /*  m_driver.rightTrigger().whileTrue(
                 Commands.parallel(
                     m_drivetrain.aimDrivetrainCommand(m_drivetrain.getEstimatedPose(), our_hub),
                     Commands.run(
@@ -136,8 +136,9 @@ public class RobotContainer {
                         () -> m_kicker.setSpeed(0.0), m_kicker)
 
                 ));
+               */
             // SHOOTER
-            m_operator.rightTrigger(.5).whileTrue(
+            m_driver.rightTrigger(.5).whileTrue(
                 Commands.parallel(
                     Commands.run(
                        () -> shootFromDistanceManual(), m_flywheel),
@@ -150,7 +151,7 @@ public class RobotContainer {
                     Commands.run(() -> resetShooter()));
 
             // SHUTTLE
-            m_operator.b().whileTrue(
+            m_driver.b().whileTrue(
                 Commands.parallel(
                     Commands.run(
                         () -> shuttle(), m_flywheel),
@@ -161,7 +162,7 @@ public class RobotContainer {
                 .whileFalse(
                     Commands.run(() -> resetShooter()));
             //unjams spindexer and kicker
-            m_operator.y().whileTrue(
+            m_driver.a().whileTrue(
                 Commands.runEnd(
                     () -> m_spindexer.setSpeed(-.5),
                     () -> m_spindexer.setSpeed(0),
@@ -172,7 +173,7 @@ public class RobotContainer {
                             m_kicker)));
             
             //runs intake rollers
-            m_operator.leftTrigger(.5).whileTrue(
+            m_driver.leftTrigger(.5).whileTrue(
                 Commands.runEnd(
                     () -> m_intake.setRollerSpeed(.5),
                     () -> m_intake.setRollerSpeed(0),
@@ -185,27 +186,27 @@ public class RobotContainer {
                     m_intake));
               */
             // TODO JAM MODE
-            m_operator.x().whileTrue(
+           /*  m_driver.x().whileTrue(
               Commands.runEnd(
                 () -> m_intake.setExtendSpeed(.2),
                 () -> m_intake.setExtendSpeed(0),
                 m_intake));
-            m_operator.a().whileTrue(
+            m_driver.a().whileTrue(
               Commands.runEnd(
                 () ->m_intake.setExtendSpeed(-.2),
                 () -> m_intake.setExtendSpeed(0),
                 m_intake));
-            
+             */
               
             
             //Extends intake
-            m_operator.leftBumper().whileTrue(
+            m_driver.leftBumper().whileTrue(
                 Commands.runEnd(
                     () -> m_intake.setExtend(IntakeConst.IntakeExtendSetPoint),
                     () -> m_intake.stopIntake(),
                     m_intake));
             //retracts intake
-            m_operator.rightBumper().whileTrue(
+            m_driver.rightBumper().whileTrue(
                 Commands.runEnd(
                     () -> m_intake.setExtend(0), 
                     () -> m_intake.stopIntake(),
