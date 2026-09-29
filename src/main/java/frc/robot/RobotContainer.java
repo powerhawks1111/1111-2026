@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.CameraConst;
 import frc.robot.Constants.FIELD_CONST;
@@ -75,7 +76,7 @@ public class RobotContainer {
             NamedCommands.registerCommand("Retract Intake", m_intake.retractIntake());
            NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
       //    NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
-            NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(5.5));
+            NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(shootFromDistanceCommand(),  m_drivetrain.aimDrivetrainCommand(m_drivetrain.getEstimatedPose(), our_hub)));
             NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
             //ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
            // NamedCommands.registerCommand("Extend Intake", m_intake.setVoltageManual(2).until(
