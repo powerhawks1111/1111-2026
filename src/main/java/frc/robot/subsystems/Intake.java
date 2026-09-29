@@ -99,13 +99,13 @@ public class Intake extends SubsystemBase{
   }
 
   public Command deployIntake() { 
-    return this.runOnce(() -> setExtend(0));  //TODO: need to find position. 
+    return this.runOnce(() -> setExtend(IntakeConst.IntakeExtendSetPoint)); 
   }
   public Command retractIntake() {
-    return this.runOnce(() -> setExtend(0)); // TODO: will we want this?
+    return this.runOnce(() -> setExtend(0)); 
   }
-  public Command runRollers(boolean reversed) {
-    if(reversed) {
+  public Command runRollers(boolean inTake) {
+    if(inTake) {
     return this.run(() -> setRollerSpeed(.5
     ));
     } else {

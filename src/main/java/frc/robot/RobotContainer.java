@@ -71,7 +71,9 @@ public class RobotContainer {
             SmartDashboard.putNumber("HeightDifference", 0);
             SmartDashboard.putNumber("Impact Angle Degrees", 0);
       
-            NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
+           NamedCommands.registerCommand("Deploy InTake", m_intake.deployIntake()); 
+            NamedCommands.registerCommand("Retract Intake", m_intake.retractIntake());
+           NamedCommands.registerCommand("Stop Shooter", new StopShootCommand(m_flywheel, m_hood, m_spindexer, m_kicker));
       //    NamedCommands.registerCommand("Shoot", new ParallelCommandGroup().addCommands(m_flywheel.runFlywheel(), m_hood.positonHood(), m_spindexer.runSpindexer(), m_kicker.runKicker())));
             NamedCommands.registerCommand("Shoot", shootFromDistanceCommand().withTimeout(5.5));
             NamedCommands.registerCommand("Reset Pose", resetOdometry(new Pose2d(0, 0, new Rotation2d(-1*Math.PI/4))));
@@ -79,7 +81,7 @@ public class RobotContainer {
            // NamedCommands.registerCommand("Extend Intake", m_intake.setVoltageManual(2).until(
             //  () -> m_intake.stopIntakeCheck()
             //).andThen(m_intake.stopIntakeExtendCommand()));//andThen(m_intake.stopIntakeExtendCommand()));
-            NamedCommands.registerCommand("Run Intake",m_intake.runRollers(false).withTimeout(5).andThen(m_intake.stopRollers()));
+            NamedCommands.registerCommand("Run Intake",m_intake.runRollers(true).withTimeout(5).andThen(m_intake.stopRollers()));
             autoChooser = AutoBuilder.buildAutoChooser();
             SmartDashboard.putData("Auto Chooser", autoChooser);
 

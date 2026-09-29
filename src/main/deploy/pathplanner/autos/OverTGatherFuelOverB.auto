@@ -13,13 +13,26 @@
         {
           "type": "named",
           "data": {
-            "name": "Lower Intake"
+            "name": "Deploy InTake"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "intkake bump"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Run Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "intkake bump"
+                }
+              }
+            ]
           }
         },
         {
