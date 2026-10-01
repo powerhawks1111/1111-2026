@@ -182,9 +182,12 @@ public class RobotContainer {
             //runs intake rollers
             m_operator.leftTrigger(.5).whileTrue(
                 Commands.runEnd(
+                 
                     () -> m_intake.setRollerSpeed(.5),
                     () -> m_intake.setRollerSpeed(0),
                     m_intake));
+                    //SmartDashboard.getNumber("Setroller", .3);
+                    //SmartDashboard.putNumber("Setroller", 0);
             //boost intake roller
               /*         m_operator.a().whileTrue(
                 Commands.runEnd(
@@ -301,6 +304,7 @@ public void runContinuouslyForShotCalc() {
     our_hub, 
     currentPose.getTranslation()
   );
+     
 
     SmartDashboard.putNumber("DISTANCEFROMTARGET", distance);
 
