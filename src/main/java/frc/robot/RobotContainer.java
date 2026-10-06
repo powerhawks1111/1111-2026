@@ -67,6 +67,7 @@ public class RobotContainer {
             SmartDashboard.putNumber("ROTSIM", 0);
             SmartDashboard.putNumber("RPM for shuttle", 4000);
             SmartDashboard.putNumber("Hood for shuttle", 0.75);
+            SmartDashboard.putNumber("RollerSpeed", .3);
       
             SmartDashboard.putNumber("Distance X", 0);
             SmartDashboard.putNumber("HeightDifference", 0);
@@ -183,11 +184,11 @@ public class RobotContainer {
             m_operator.leftTrigger(.5).whileTrue(
                 Commands.runEnd(
                  
-                    () -> m_intake.setRollerSpeed(.5),
+                    () -> m_intake.setRollerSpeed(SmartDashboard.getNumber("RollerSpeed", .3)),
                     () -> m_intake.setRollerSpeed(0),
                     m_intake));
-                    //SmartDashboard.getNumber("Setroller", .3);
-                    //SmartDashboard.putNumber("Setroller", 0);
+                
+                    
             //boost intake roller
               /*         m_operator.a().whileTrue(
                 Commands.runEnd(
