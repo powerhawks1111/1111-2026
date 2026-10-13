@@ -23,6 +23,7 @@ import frc.robot.Constants.IntakeConst;
 public class Intake extends SubsystemBase{
     public SparkFlex ExtendingMotor;
     private SparkFlexConfig ExtendingMotorConfig;
+    private SparkClosedLoopController ExtendingMotorLoop;
 
     private SparkFlex rollerMotor;
     private SparkFlexConfig rollerMotorConfig;
@@ -36,6 +37,8 @@ public class Intake extends SubsystemBase{
         ExtendingMotorConfig = new SparkFlexConfig();
         rollerMotorConfig = new SparkFlexConfig();
         ExtendingMotorConfig.idleMode(IdleMode.kBrake);
+
+        ExtendingMotorLoop = ExtendingMotor.getClosedLoopController();
         
         ExtendingMotorConfig.inverted(true);
 
@@ -71,8 +74,7 @@ public class Intake extends SubsystemBase{
     //     ExtendDownMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition);
     // }
       public void setExtend(double IntakeExtendSetPoint){
-  
-       ExtendingMotor.getClosedLoopController().setSetpoint(IntakeExtendSetPoint, ControlType.kPosition);
+        ExtendingMotorLoop.setSetpoint(IntakeExtendSetPoint, ControlType.kPosition);
       }
 
 
