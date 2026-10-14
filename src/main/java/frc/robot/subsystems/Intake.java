@@ -17,8 +17,11 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.CANID;
 import frc.robot.Constants.IntakeConst;
+
+import edu.wpi.first.units.Units;
 
 public class Intake extends SubsystemBase{
     public SparkFlex ExtendingMotor;
@@ -52,7 +55,7 @@ public class Intake extends SubsystemBase{
         ExtendingMotor.getEncoder().setPosition(0);
         */
         ExtendingMotor.configure(ExtendingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        ExtendingMotor.getClosedLoopController();
+        // ExtendingMotor.getClosedLoopController();
 
         rollerMotor.configure(rollerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
 
@@ -142,6 +145,24 @@ public class Intake extends SubsystemBase{
       return false;
     }
   
+  }
+
+
+  SysIdRoutine routine = new SysIdRoutine(
+    new SysIdRoutine.Config(),
+    new SysIdRoutine.Mechanism(
+      (voltage) -> ExtendingMotor.setVoltage(voltage.in(Units.Volts)),
+      null,
+      this
+    )
+  );
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return routine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return routine.dynamic(direction);
   }
 
 }

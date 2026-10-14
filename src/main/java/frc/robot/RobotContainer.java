@@ -182,11 +182,18 @@ public class RobotContainer {
             
             //runs intake rollers
             m_operator.leftTrigger(.5).whileTrue(
+              Commands.parallel(
                 Commands.runEnd(
-                 
-                    () -> m_intake.setRollerSpeed(SmartDashboard.getNumber("RollerSpeed", .3)),
-                    () -> m_intake.setRollerSpeed(0),
-                    m_intake));
+                  () -> m_intake.setRollerSpeed(SmartDashboard.getNumber("RollerSpeed", .3)),
+                  () -> m_intake.setRollerSpeed(0),
+                  m_intake
+                ),
+                Commands.run(
+                  () -> m_intake.setExtend(IntakeConst.IntakeExtendSetPoint),
+                  m_intake
+                )
+              )
+            );
                 
                     
             //boost intake roller
