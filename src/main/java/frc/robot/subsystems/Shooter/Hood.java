@@ -35,10 +35,11 @@ public class Hood extends SubsystemBase{
         
 
       SmartDashboard.putNumber("Hood", 0);
+
     }
 
     public void adjustHood(double position) {
-
+        System.out.println(position);
         if(position < 1){
          hoodMotor.getClosedLoopController().setSetpoint(position, ControlType.kPosition); 
         }

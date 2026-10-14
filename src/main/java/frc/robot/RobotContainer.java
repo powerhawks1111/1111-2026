@@ -142,9 +142,10 @@ public class RobotContainer {
                         () -> m_spindexer.setSpeed(.7), m_spindexer),
                     Commands.runEnd(
                         () -> m_kicker.setSpeed(0.6),
-                        () -> m_kicker.setSpeed(0.0), m_kicker)
+                        () -> m_kicker.setSpeed(0.0), m_kicker)))
+                    .whileFalse(
+                      Commands.run(() -> resetShooter()));
 
-                ));
             // SHOOTER
             m_operator.rightTrigger(.5).whileTrue(
                 Commands.parallel(
@@ -183,7 +184,6 @@ public class RobotContainer {
             //runs intake rollers
             m_operator.leftTrigger(.5).whileTrue(
                 Commands.runEnd(
-                 
                     () -> m_intake.setRollerSpeed(SmartDashboard.getNumber("RollerSpeed", .3)),
                     () -> m_intake.setRollerSpeed(0),
                     m_intake));
@@ -352,12 +352,12 @@ public void runContinuouslyForShotCalc() {
 
     public void shootFromDistanceManual() {
       m_flywheel.setSpeed(
-        //SmartDashboard.getNumber("RPM From Math", 0)
-        SmartDashboard.getNumber("Target Flywheel" , 4000)
+        SmartDashboard.getNumber("RPM From Math", 0)
+        //SmartDashboard.getNumber("Target Flywheel" , 4000)
       );
       m_hood.adjustHood(
-        //SmartDashboard.getNumber("Hood From Math", 0)
-        SmartDashboard.getNumber("Target Hood", 0.7)
+        SmartDashboard.getNumber("Hood From Math", 0)
+        //SmartDashboard.getNumber("Target Hood", 0.7)
       );
   }
 
@@ -373,7 +373,7 @@ public void runContinuouslyForShotCalc() {
 
    public void resetShooter() {
       m_flywheel.setSpeed(
-        0
+        1500
       );
       m_hood.adjustHood(
         0
