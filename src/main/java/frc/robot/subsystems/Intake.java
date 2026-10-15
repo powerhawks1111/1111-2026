@@ -23,6 +23,7 @@ import frc.robot.Constants.IntakeConst;
 public class Intake extends SubsystemBase{
     public SparkFlex ExtendingMotor;
     private SparkFlexConfig ExtendingMotorConfig;
+    private SparkClosedLoopController ExtendingMotorLoopCont;
 
     private SparkFlex rollerMotor;
     private SparkFlexConfig rollerMotorConfig;
@@ -31,11 +32,16 @@ public class Intake extends SubsystemBase{
       SmartDashboard.putNumber("INTAKE", 0);
         ExtendingMotor = new SparkFlex(CANID.Extender, MotorType.kBrushless);
         rollerMotor = new SparkFlex(CANID.Rollers, MotorType.kBrushless);
+        ExtendingMotorLoopCont = ExtendingMotor.getClosedLoopController();
 
 
         ExtendingMotorConfig = new SparkFlexConfig();
         rollerMotorConfig = new SparkFlexConfig();
         ExtendingMotorConfig.idleMode(IdleMode.kBrake);
+        ExtendingMotorConfig.softLimit.forwardSoftLimit(12);
+        ExtendingMotorConfig.softLimit.reverseSoftLimit(0);
+        ExtendingMotorConfig.softLimit.forwardSoftLimitEnabled(true);
+        ExtendingMotorConfig.softLimit.reverseSoftLimitEnabled(true);
         
         ExtendingMotorConfig.inverted(true);
 
@@ -49,7 +55,7 @@ public class Intake extends SubsystemBase{
         ExtendingMotor.getEncoder().setPosition(0);
         */
         ExtendingMotor.configure(ExtendingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        ExtendingMotor.getClosedLoopController();
+        // ExtendingMotor.getClosedLoopController();
 
         rollerMotor.configure(rollerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);  
 
@@ -58,6 +64,7 @@ public class Intake extends SubsystemBase{
     public void setRollerSpeed(double dutyCycle) {
         //rollerMotor.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
         rollerMotor.set(dutyCycle);
+        ExtendingMotorLoopCont.setSetpoint(IntakeConst.IntakeExtendSetPoint, ControlType.kPosition);
     }
 
     public void setExtendSpeed(double dutyCycle){
@@ -72,7 +79,7 @@ public class Intake extends SubsystemBase{
     // }
       public void setExtend(double IntakeExtendSetPoint){
   
-       ExtendingMotor.getClosedLoopController().setSetpoint(IntakeExtendSetPoint, ControlType.kPosition);
+       ExtendingMotorLoopCont.setSetpoint(IntakeExtendSetPoint, ControlType.kPosition);
       }
 
 
