@@ -77,7 +77,7 @@ public class RobotContainer {
 
             SmartDashboard.putNumber("Target Flywheel", 4000);
             SmartDashboard.putNumber("Target Hood", 0.7);
-            SmartDashboard.putNumber("Fudge Factor", .5);
+            SmartDashboard.putNumber("Fudge Factor", .35);
       
             alliance = DriverStation.getAlliance();
               if (alliance.isPresent()) {
@@ -203,12 +203,17 @@ public class RobotContainer {
                 () -> m_intake.setExtendSpeed(.2),
                 () -> m_intake.setExtendSpeed(0),
                 m_intake));
+
             m_operator.a().whileTrue(
-              Commands.runEnd(
-                () ->m_intake.setExtendSpeed(-.2),
-                () -> m_intake.setExtendSpeed(0),
-                m_intake));
-            
+              Commands.parallel(
+                Commands.runEnd(
+                  () -> m_intake.setExtendSpeed(-.2),
+                  () -> m_intake.setExtendSpeed(0),m_intake),
+                Commands.runEnd(
+                  () -> m_intake.setRollers(.3),
+                  () -> m_intake.setRollers(0), m_intake)))
+                .whileFalse(
+                  Commands.run(() -> resetRollers()));
               
             
             //Extends intake
@@ -379,6 +384,12 @@ public void runContinuouslyForShotCalc() {
       m_hood.adjustHood(
         0
       );
+  }
+
+  public void resetRollers(){
+    m_intake.setRollers(
+      0
+    );
   }
 
   // public void test() {

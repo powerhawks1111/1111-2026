@@ -113,7 +113,7 @@ public class Controller extends SubsystemBase {
      * @param currentVelocities x, y velocities of the robot. 
      */
     public double[] shootOnTheMove(Translation3d target, Pose2d currentPose, ChassisSpeeds currentVelocities, double impactAngle) {
-        double distance = Math.sqrt((target.getY() -  currentPose.getY()) + (target.getX() -  currentPose.getX()))+SmartDashboard.getNumber("Fudge Factor", .5);
+        double distance = Math.sqrt((target.getY() -  currentPose.getY()) + (target.getX() -  currentPose.getX()))+SmartDashboard.getNumber("Fudge Factor", .35);
         double[] previousShot = Controller.calculateShooterStatic(distance, target.getZ(), impactAngle); //initial
         for (int i = 0; i < 10; i++) {
             previousShot = Controller.calculateShooterStatic(

@@ -70,6 +70,11 @@ public class Intake extends SubsystemBase{
     public void setExtendSpeed(double dutyCycle){
 
       ExtendingMotor.set(dutyCycle);
+      rollerMotor.set(dutyCycle);
+    }
+
+    public void setRollers(double dutyCycle){
+      rollerMotor.set(dutyCycle);
     }
 
     // //TODO: Might need to use feed forward to overcome gravity the first 90 degrees and fight against it the last 90 degrees of rotation
@@ -80,9 +85,10 @@ public class Intake extends SubsystemBase{
       public void setExtend(double IntakeExtendSetPoint){
   
        ExtendingMotorLoopCont.setSetpoint(IntakeExtendSetPoint, ControlType.kPosition);
-       rollerMotor.set(SmartDashboard.getNumber("Roller Speed", .5));
+       rollerMotor.set(SmartDashboard.getNumber("Roller Speed", .3));
       }
 
+     
 
 
       public void stopIntake(){
