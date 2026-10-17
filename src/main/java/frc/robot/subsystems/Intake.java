@@ -80,6 +80,7 @@ public class Intake extends SubsystemBase{
       public void setExtend(double IntakeExtendSetPoint){
   
        ExtendingMotorLoopCont.setSetpoint(IntakeExtendSetPoint, ControlType.kPosition);
+       rollerMotor.set(SmartDashboard.getNumber("Roller Speed", .5));
       }
 
 
