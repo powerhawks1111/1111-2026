@@ -70,6 +70,7 @@ public class Intake extends SubsystemBase{
     public void setExtendSpeed(double dutyCycle){
 
       ExtendingMotor.set(dutyCycle);
+      rollerMotor.set(SmartDashboard.getNumber("RollerSpeed", .3));
     }
 
     // //TODO: Might need to use feed forward to overcome gravity the first 90 degrees and fight against it the last 90 degrees of rotation
