@@ -50,7 +50,7 @@ public class RobotContainer {
   private final Hood m_hood = new Hood();
   private final Flywheel m_flywheel = new Flywheel();
   private final Controller m_controller = new Controller();
-  private final CommandXboxController m_driver = new CommandXboxController(0);
+  // private final CommandXboxController m_driver = new CommandXboxController(0);
   private final CommandXboxController m_operator = new CommandXboxController(1);
   private Optional<DriverStation.Alliance> alliance;
   
@@ -122,30 +122,30 @@ public class RobotContainer {
           }
         
           private void configureBindings() {
-            m_driver.y().onTrue(resetNavX()); // Resets NavX , sets to 0
+            // m_driver.y().onTrue(resetNavX()); // Resets NavX , sets to 0
 
-            m_driver.b().onTrue(resetOdometry(new Pose2d())); // TODO RESET TO ALLIANCE HUB BASE
+            // m_driver.b().onTrue(resetOdometry(new Pose2d())); // TODO RESET TO ALLIANCE HUB BASE
 
-            m_drivetrain.setDefaultCommand(
-                Commands.run(
-                    () -> m_drivetrain.drive(
-                        -m_driver.getLeftY(),
-                        -m_driver.getLeftX(),
-                        -m_driver.getRightX(), 5, 2),
-                    m_drivetrain));
-            // auto aligns and shoots simultaniously from the drivers right trigger
-            m_driver.rightTrigger(.5).whileTrue(
-                Commands.parallel(
-                    m_drivetrain.aimDrivetrainCommand(m_drivetrain.getEstimatedPose(), our_hub),
-                    Commands.run(
-                        () -> shootFromDistanceManual(), m_flywheel),
-                    Commands.run(
-                        () -> m_spindexer.setSpeed(.7), m_spindexer),
-                    Commands.runEnd(
-                        () -> m_kicker.setSpeed(0.6),
-                        () -> m_kicker.setSpeed(0.0), m_kicker)))
-                    .whileFalse(
-                      Commands.run(() -> resetShooter()));
+            // m_drivetrain.setDefaultCommand(
+            //     Commands.run(
+            //         () -> m_drivetrain.drive(
+            //             -m_driver.getLeftY(),
+            //             -m_driver.getLeftX(),
+            //             -m_driver.getRightX(), 5, 2),
+            //         m_drivetrain));
+            // // auto aligns and shoots simultaniously from the drivers right trigger
+            // m_driver.rightTrigger(.5).whileTrue(
+            //     Commands.parallel(
+            //         m_drivetrain.aimDrivetrainCommand(m_drivetrain.getEstimatedPose(), our_hub),
+            //         Commands.run(
+            //             () -> shootFromDistanceManual(), m_flywheel),
+            //         Commands.run(
+            //             () -> m_spindexer.setSpeed(.7), m_spindexer),
+            //         Commands.runEnd(
+            //             () -> m_kicker.setSpeed(0.6),
+            //             () -> m_kicker.setSpeed(0.0), m_kicker)))
+            //         .whileFalse(
+            //           Commands.run(() -> resetShooter()));
 
             // SHOOTER
             m_operator.rightTrigger(.5).whileTrue(
@@ -161,16 +161,16 @@ public class RobotContainer {
                     Commands.run(() -> resetShooter()));
 
             // SHUTTLE
-            m_operator.b().whileTrue(
-                Commands.parallel(
-                    Commands.run(
-                        () -> shuttle(), m_flywheel),
-                    Commands.run(
-                        () -> m_spindexer.setSpeed(.7), m_spindexer),
-                    Commands.run(
-                        () -> m_kicker.setSpeed(0.6), m_kicker)))
-                .whileFalse(
-                    Commands.run(() -> resetShooter()));
+            // m_operator.b().whileTrue(
+            //     Commands.parallel(
+            //         Commands.run(
+            //             () -> shuttle(), m_flywheel),
+            //         Commands.run(
+            //             () -> m_spindexer.setSpeed(.7), m_spindexer),
+            //         Commands.run(
+            //             () -> m_kicker.setSpeed(0.6), m_kicker)))
+            //     .whileFalse(
+            //         Commands.run(() -> resetShooter()));
             //unjams spindexer and kicker
             m_operator.y().whileTrue(
                 Commands.runEnd(
@@ -183,11 +183,11 @@ public class RobotContainer {
                             m_kicker)));
             
             //runs intake rollers
-            m_operator.leftTrigger(.5).whileTrue(
-                Commands.runEnd(
-                    () -> m_intake.setRollerSpeed(SmartDashboard.getNumber("RollerSpeed", .3)),
-                    () -> m_intake.setRollerSpeed(0),
-                    m_intake));
+            // m_operator.leftTrigger(.5).whileTrue(
+            //     Commands.runEnd(
+            //         () -> m_intake.setRollerSpeed(SmartDashboard.getNumber("RollerSpeed", .3)),
+            //         () -> m_intake.setRollerSpeed(0),
+            //         m_intake));
                 
                     
             //boost intake roller
@@ -198,22 +198,22 @@ public class RobotContainer {
                     m_intake));
               */
             // TODO JAM MODE
-            m_operator.x().whileTrue(
-              Commands.runEnd(
-                () -> m_intake.setExtendSpeed(.2),
-                () -> m_intake.setExtendSpeed(0),
-                m_intake));
+            // m_operator.x().whileTrue(
+            //   Commands.runEnd(
+            //     () -> m_intake.setExtendSpeed(.2),
+            //     () -> m_intake.setExtendSpeed(0),
+            //     m_intake));
 
-            m_operator.a().whileTrue(
-              Commands.parallel(
-                Commands.runEnd(
-                  () -> m_intake.setExtendSpeed(-.2),
-                  () -> m_intake.setExtendSpeed(0),m_intake),
-                Commands.runEnd(
-                  () -> m_intake.setRollers(.3),
-                  () -> m_intake.setRollers(0), m_intake)))
-                .whileFalse(
-                  Commands.run(() -> resetRollers()));
+            // m_operator.a().whileTrue(
+            //   Commands.parallel(
+            //     Commands.runEnd(
+            //       () -> m_intake.setExtendSpeed(-.2),
+            //       () -> m_intake.setExtendSpeed(0),m_intake),
+            //     Commands.runEnd(
+            //       () -> m_intake.setRollers(.3),
+            //       () -> m_intake.setRollers(0), m_intake)))
+            //     .whileFalse(
+            //       Commands.run(() -> resetRollers()));
               
             
             //Extends intake
@@ -272,10 +272,10 @@ public Command shootFromDistanceCommand(){
     });
   }
 
-public void runIntake(double roller, double voltage) {
-  m_intake.setRollerSpeed(roller);
-  m_intake.setExtend(voltage);
-}
+// public void runIntake(double roller, double voltage) {
+//   m_intake.setRollerSpeed(roller);
+//   m_intake.setExtend(voltage);
+// }
       
 public static double scaleImpactAngle(double distance) {
   return (80 - (3.8598 * distance));
@@ -358,12 +358,12 @@ public void runContinuouslyForShotCalc() {
 
     public void shootFromDistanceManual() {
       m_flywheel.setSpeed(
-        SmartDashboard.getNumber("RPM From Math", 0)
-        //SmartDashboard.getNumber("Target Flywheel" , 4000)
+        // SmartDashboard.getNumber("RPM From Math", 0)
+        SmartDashboard.getNumber("Target Flywheel" , 4000)
       );
       m_hood.adjustHood(
-        SmartDashboard.getNumber("Hood From Math", 0)
-        //SmartDashboard.getNumber("Target Hood", 0.7)
+        // SmartDashboard.getNumber("Hood From Math", 0)
+        SmartDashboard.getNumber("Target Hood", 0.7)
       );
   }
 
@@ -386,11 +386,11 @@ public void runContinuouslyForShotCalc() {
       );
   }
 
-  public void resetRollers(){
-    m_intake.setRollers(
-      0
-    );
-  }
+  // public void resetRollers(){
+  //   m_intake.setRollers(
+  //     0
+  //   );
+  // }
 
   // public void test() {
   //   double[] input = Controller.getShooterSimple(7.75);
