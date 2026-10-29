@@ -77,7 +77,7 @@ public class RobotContainer {
 
             SmartDashboard.putNumber("Target Flywheel", 4000);
             SmartDashboard.putNumber("Target Hood", 0.7);
-            SmartDashboard.putNumber("Fudge Factor", .35);
+            SmartDashboard.putNumber("Fudge Factor", 1);
       
             alliance = DriverStation.getAlliance();
               if (alliance.isPresent()) {
@@ -186,8 +186,7 @@ public class RobotContainer {
             m_operator.leftTrigger(.5).whileTrue(
                 Commands.runEnd(
                     () -> m_intake.setRollerSpeed(SmartDashboard.getNumber("RollerSpeed", .3)),
-                    () -> m_intake.setRollerSpeed(0),
-                    m_intake));
+                    () -> m_intake.setRollerSpeed(0), m_intake));
                 
                     
             //boost intake roller
@@ -199,21 +198,17 @@ public class RobotContainer {
               */
             // TODO JAM MODE
             m_operator.x().whileTrue(
-              Commands.runEnd(
+              Commands.runEnd( 
                 () -> m_intake.setExtendSpeed(.2),
                 () -> m_intake.setExtendSpeed(0),
                 m_intake));
-
+                
             m_operator.a().whileTrue(
-              Commands.parallel(
-                Commands.runEnd(
-                  () -> m_intake.setExtendSpeed(-.2),
-                  () -> m_intake.setExtendSpeed(0),m_intake),
-                Commands.runEnd(
-                  () -> m_intake.setRollers(.3),
-                  () -> m_intake.setRollers(0), m_intake)))
-                .whileFalse(
-                  Commands.run(() -> resetRollers()));
+              Commands.runEnd(
+                () ->m_intake.setExtendSpeed(-.2),
+                () -> m_intake.setExtendSpeed(0),
+                m_intake));
+            
               
             
             //Extends intake
@@ -384,12 +379,6 @@ public void runContinuouslyForShotCalc() {
       m_hood.adjustHood(
         0
       );
-  }
-
-  public void resetRollers(){
-    m_intake.setRollers(
-      0
-    );
   }
 
   // public void test() {
